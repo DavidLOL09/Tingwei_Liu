@@ -8,7 +8,10 @@ from NuRadioReco.utilities import units
 from pathlib import Path
 from NuRadioReco.framework.parameters import showerParameters as shp
 from NuRadioReco.framework.parameters import eventParameters as evtp
+import NuRadioReco
+# print(NuRadioReco.framework.parameters.__file__)
 import NuRadioReco.modules.io.eventWriter
+
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
 def avail_check():
     return 'File loaded'
@@ -122,6 +125,8 @@ def getParametersPerEvent(simulation_files_folder, trigger, output_path, max_dis
         n_trig_per_bin, trig_rate_per_bin = getTriggerRatePerBin(simulation_files_folder, e_bins, sin2Val, [trigger])
         aeff_per_bin = getAeffRatePerBin(trig_rate_per_bin, [trigger], max_distance)
         rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, [trigger])
+        ic(n_trig_per_bin, trig_rate_per_bin, aeff_per_bin, rate_per_bin)
+#        quit()
 
     # Get the parameters per event
     nurFiles= []
@@ -137,9 +142,9 @@ def getParametersPerEvent(simulation_files_folder, trigger, output_path, max_dis
 
     eventReader = NuRadioRecoio.NuRadioRecoio(nurFiles)
     tot_N = eventReader.get_n_events()
-    print(tot_N)
+    ic(nurFiles)
     for i, evt in enumerate(eventReader.get_events()):
-        print(f'{i*100/tot_N:.2f}%')
+        # print(f'{i*100/tot_N:.2f}%')
         station_ids = evt.get_station_ids()
         for stn_id in station_ids:
             station = evt.get_station(stn_id)
@@ -152,8 +157,13 @@ def getParametersPerEvent(simulation_files_folder, trigger, output_path, max_dis
                 trig_azimuth.append(sim_shower[shp.azimuth])    # in radians
                 trig_id.append(f'R{evt.get_run_number()}E{evt.get_id()}')
                 # Need to know which bin this event falls into
-                e_digit = np.digitize(np.log10(sim_shower[shp.energy]), e_bins)
-                zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)
+                e_digit = np.digitize(np.log10(sim_shower[shp.energy]), e_bins)-1
+                # zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)
+                zen_digit = np.digitize(np.rad2deg(sim_shower[shp.zenith]), zen_bins)-1
+                # ic(e_digit, np.log10(sim_shower[shp.energy]), e_bins)
+                # ic(zen_digit)
+                # ic(rate_per_bin[trigger][zen_digit])
+                # ic(rate_per_bin[trigger][:][e_digit])
 
                 # This splits up the weight of evnts/yr for the bin into each individual event that triggered equally
                 if rate_per_bin[trigger][zen_digit][e_digit] ==0 and n_trig_per_bin[trigger][zen_digit][e_digit] ==0:
@@ -161,6 +171,7 @@ def getParametersPerEvent(simulation_files_folder, trigger, output_path, max_dis
                 else:
                     evtrate = rate_per_bin[trigger][zen_digit][e_digit] / n_trig_per_bin[trigger][zen_digit][e_digit]
                 # evtrate = rate_per_bin[trigger][zen_digit][e_digit] / n_trig_per_bin[trigger][zen_digit][e_digit]
+                # ic(evtrate)
                 trig_weight.append(evtrate) 
                 evt.set_parameter(evtp.event_rate,evtrate)
                 eventWriter.run(evt)

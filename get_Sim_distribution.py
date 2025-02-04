@@ -13,8 +13,8 @@ trig_energy, trig_zenith, trig_azimuth, trig_weight, events_id=get_PPE(simulatio
 '''
 raw_sim = '/dfs8/sbarwick_lab/ariannaproject/rricesmi/simStn51/1.23.25/Stn51_IceTop_18.4-18.5eV_0.*'
 test_raw= '/Users/david/PycharmProjects/Demo1/test_files'
-# output  = '/pub/tingwel4/station_51/sim_with_weights'
-output='/Users/david/PycharmProjects/Demo1/test_files'
+output  = '/pub/tingwel4/station_51/sim_with_weights'
+# output='/Users/david/PycharmProjects/Demo1/test_files'
 thresh23_3      ='direct_LPDA_2of3_3.5sigma'
 for a in os.listdir(test_raw):
     if a.endswith('.nur'):
@@ -23,7 +23,7 @@ for a in os.listdir(test_raw):
 # trig_energy, trig_zenith, trig_azimuth, trig_weight = get_PPE(sim_folder, trigger_names[0], e_range, sin2Val, rate_per_bin, n_trig_per_bin)
 if not os.path.isdir(output):
     os.makedirs(output)
-E,Z,A,W,I=get_PPE(test_raw,thresh23_3,output)
+E,Z,A,W,I=get_PPE(raw_sim,thresh23_3,output)
 dic = {
     'Trig_id':I,
     'Trig_energy':E,
