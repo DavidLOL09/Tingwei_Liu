@@ -1,0 +1,319 @@
+ic| f'Raw:   {get_raw(read)}'           : 'Raw:   157289'
+ic| f'Goso:  {get_read_det(raw_goso)}'  : 'Goso:  8736'
+ic| f'X:     {get_read_det(Xcorr)}'     : 'X:     2840'
+ic| f'Ratio: {get_read_det(Ratio)}'     : 'Ratio: 528'
+ic| f'Zen:   {get_read_det(Zen)}'       : 'Zen:   158'
+
+ic| f'No-Bicone  : {get_read_weights(NoBic)}': 'No-Bicone    : 534.3893317296894'
+
+ic| f'raw_sim    : {get_read_weights(raw_sim):.2f}': 'raw_sim    : 3237.10'
+ic| f'X_sim      : {get_read_weights(X_sim):.2f}': 'X_sim      : 1026.44' Chi3rq>0.4*3
+ic| f'Ratio_sim  : {get_read_weights(Ratio_sim):.2f}': 'Ratio_sim  : 255.86'
+ic| f'Zen_sim    : {get_read_weights(Zen_sim):.2f}': 'Zen_sim    : 254.19'
+
+Direction error:
+ic| np.rad2deg(space_angle(np.deg2rad(A),np.deg2rad(B))): np.float64(20.00000000000001)
+ic| np.max(error): np.float64(33.88267544430227)
+    np.min(error): np.float64(0.027367227778181326)
+    np.mean(error): np.float64(4.791965901312169)
+
+
+Trigger-rate:
+# ic| len(pass_trig): 29
+# ic| readARIANNAData.get_n_events(): 157
+# ic| Live_time: datetime.timedelta(days=38, seconds=75651)
+#     Dead_time: datetime.timedelta(seconds=300)
+#     num_per_h: 12
+# ic| Live_time*254/datetime.timedelta(356): 27.73707845661673
+
+# ic| len(pass_trig): 24
+# ic| readARIANNAData.get_n_events(): 157
+# ic| Live_time: datetime.timedelta(days=32, seconds=69891)
+#     Dead_time: datetime.timedelta(seconds=360)
+#     num_per_h: 10
+# ic| Live_time*254/datetime.timedelta(356): 23.408614037141074
+
+# ic| len(pass_trig): 21
+# ic| readARIANNAData.get_n_events(): 158
+# ic| Live_time: datetime.timedelta(days=23, seconds=61251)
+#     Dead_time: datetime.timedelta(seconds=450)
+#     num_per_h: 8
+# ic| Live_time*254/datetime.timedelta(356): 16.91591740792759
+
+# ic| len(pass_trig): 14
+# ic| readARIANNAData.get_n_events(): 157
+# ic| Live_time: datetime.timedelta(days=8, seconds=46851)
+#     Dead_time: datetime.timedelta(seconds=600)
+#     num_per_h: 6
+# ic| Live_time*254/datetime.timedelta(356): 6.094756359238452
+
+Det Ch1,2 fft Chi
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.28,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.29,0.76'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.28,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.26,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.29,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.35,0.80'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.29,0.80'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.18,0.86'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.41,0.84'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.22,0.80'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.23,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.20,0.80'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.22,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.37,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.19,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.36,0.82'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.26,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.23,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.45,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.42,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.31,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.41,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.36,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.24,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.20,0.84'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.25,0.82'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.24,0.83'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.20,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.24,0.81'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.28,0.85'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.35,0.80'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.25,0.84'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.20,0.79'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.21,0.78'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.21,0.83'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.25,0.75'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.22,0.80'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.23,0.85'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.25,0.78'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.19,0.83'
+ic| f'{np.abs(Chi_trace):.2f},{np.abs(Chi_freqs):.2f}': '0.24,0.81'
+
+
+Suspicious:
+
+R243E1398
+R256E420
+R256E421
+R247E1093
+R256E417
+R256E418
+R256E423
+R247E1087
+R256E419
+R256E422
+R247E1060
+R247E1079
+R247E1098
+R247E1089
+R247E1069
+R247E1090
+R247E1053
+R247E1063
+R247E1066
+R247E1141
+R247E1140
+R247E1054
+R247E1064
+R247E1088
+R247E1095
+R247E1059
+
+
+Cut_table for Trig-rate
+
+Sim			: np.float64(3237.101300522219)
+Freqs			: np.float64(3237.1008838925272)
+Freqs_X			: np.float64(1026.438467934671)
+Freqs_X_SNR		: np.float64(1024.1819689186768)
+Freqs_X_SNR_Zen		: np.float64(1014.8409795943958)
+Freqs_X_SNR_Zen_Ratio	: np.float64(1012.2692338013674)
+
+Trig                       : 3672
+Trig_Freqs                 : 2637
+Trig_Freqs_X               : 153
+Trig_Freqs_X_SNR           : 96
+Trig_Freqs_X_SNR_Zen       : 47
+Trig_Freqs_X_SNR_Zen_Ratio : 36
+
+ic| readARIANNAData.get_n_events(): 8736
+ic| Live_time: datetime.timedelta(days=23, seconds=61251)
+    Dead_time: datetime.timedelta(seconds=450)
+    num_per_h: 8
+ic| Live_time*simulation/datetime.timedelta(365): 65.7529148988345
+
+
+ic| f'sim                    : {get_read_weights(raw_sim)}': 'sim                    : 3237.101300522219'
+ic| f'Freqs_sim              : {get_read_weights(Freqs_sim)}': 'Freqs_sim              : 3237.1008838925272'
+ic| f'Freqs_X_sim            : {get_read_weights(Freqs_X_sim)}': 'Freqs_X_sim            : 1026.438467934671'
+ic| f'Freqs_X_SNR_sim        : {get_read_weights(Freqs_X_SNR_sim)}': 'Freqs_X_SNR_sim        : 1024.1819689186768'
+
+Running time:
+datetime.timedelta(days=78, seconds=64888) 
+
+Without nGOSO:
+datetime.timedelta(days=69, seconds=18051)
+
+After Trigger-rate:
+datetime.timedelta(days=50, seconds=41694), error:3h
+
+Real live_time:
+datetime.timedelta(days=31, seconds=8844), error:3h
+
+
+
+
+
+ic| f'{key}——{len(value)}': '2018-07-24 18:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-24 19:02:26——12'
+ic| f'{key}——{len(value)}': '2018-07-24 20:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-24 21:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-24 22:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-24 23:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-25 00:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-25 01:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 02:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 03:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 04:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 05:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 06:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 07:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 08:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 09:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-25 10:02:26——12'
+ic| f'{key}——{len(value)}': '2018-07-25 11:02:26——3'
+ic| f'{key}——{len(value)}': '2018-07-25 12:02:26——3'
+ic| f'{key}——{len(value)}': '2018-07-25 13:02:26——7'
+ic| f'{key}——{len(value)}': '2018-07-25 14:02:26——6'
+ic| f'{key}——{len(value)}': '2018-07-25 15:02:26——7'
+ic| f'{key}——{len(value)}': '2018-07-25 16:02:26——3'
+ic| f'{key}——{len(value)}': '2018-07-25 17:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-25 18:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-25 19:02:26——6'
+ic| f'{key}——{len(value)}': '2018-07-25 20:02:26——7'
+ic| f'{key}——{len(value)}': '2018-07-25 21:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-25 22:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-25 23:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-26 00:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 01:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 02:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 03:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-26 04:02:26——12'
+ic| f'{key}——{len(value)}': '2018-07-26 05:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-26 06:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-26 07:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 08:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 09:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-26 10:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 11:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-26 12:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 13:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 14:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 15:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 16:02:26——6'
+ic| f'{key}——{len(value)}': '2018-07-26 17:02:26——5'
+ic| f'{key}——{len(value)}': '2018-07-26 18:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-26 19:02:26——5'
+ic| f'{key}——{len(value)}': '2018-07-24 18:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-24 19:02:26——12'
+ic| f'{key}——{len(value)}': '2018-07-24 20:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-24 21:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-24 22:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-24 23:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-25 00:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-25 01:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 02:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 03:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 04:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 05:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-25 06:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 07:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 08:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-25 09:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-25 10:02:26——12'
+ic| f'{key}——{len(value)}': '2018-07-25 11:02:26——3'
+ic| f'{key}——{len(value)}': '2018-07-25 12:02:26——3'
+ic| f'{key}——{len(value)}': '2018-07-25 13:02:26——7'
+ic| f'{key}——{len(value)}': '2018-07-25 14:02:26——6'
+ic| f'{key}——{len(value)}': '2018-07-25 15:02:26——7'
+ic| f'{key}——{len(value)}': '2018-07-25 16:02:26——3'
+ic| f'{key}——{len(value)}': '2018-07-25 17:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-25 18:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-25 19:02:26——6'
+ic| f'{key}——{len(value)}': '2018-07-25 20:02:26——7'
+ic| f'{key}——{len(value)}': '2018-07-25 21:02:26——8'
+ic| f'{key}——{len(value)}': '2018-07-25 22:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-25 23:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-26 00:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 01:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 02:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 03:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-26 04:02:26——12'
+ic| f'{key}——{len(value)}': '2018-07-26 05:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-26 06:02:26——11'
+ic| f'{key}——{len(value)}': '2018-07-26 07:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 08:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 09:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-26 10:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 11:02:26——14'
+ic| f'{key}——{len(value)}': '2018-07-26 12:02:26——13'
+ic| f'{key}——{len(value)}': '2018-07-26 13:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 14:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 15:02:26——9'
+ic| f'{key}——{len(value)}': '2018-07-26 16:02:26——6'
+ic| f'{key}——{len(value)}': '2018-07-26 17:02:26——5'
+ic| f'{key}——{len(value)}': '2018-07-26 18:02:26——10'
+ic| f'{key}——{len(value)}': '2018-07-26 19:02:26——5'
+
+
+R243E46 	90	8
+R243E1258	28.5	6
+R243E1399	64.7	6
+
+R243E329	90	
+R243E1729	90
+R247E1073	63
+R247E1482	73.3 Excellent
+R243E512	79.5 Excellent
+R263E365	50.6 Excellent
+R242E10		32.4 Excellent
+R242E16		36.7 Excellent
+
+R247E1072	90
+
+R247E943	55.5
+
+R263E368	59.9
+R256E1414	46.2
+R256E2152	39.9
+
+
+
+
+
+
+
+Bad with RBL
+R243E572	90	human noise with reflection
+R243E56		90
+
+R243E1385	61.8
+R243E89		4.93
+R263E762	67.1 Worst
+R263E740	90
+R243E104	90
+
+R243E614	90
+R247E1402	90 	Worst
+R266E1201 	90 	Worst Typical
+R243E1505	74	Worst
+
+R243E542	31.5 	Worst
+R256E1351	90 	Worst
+
+R243E30		30.2 	Worst
+
+
+5.242， 0.400
+44.1028，0.6
