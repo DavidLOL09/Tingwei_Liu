@@ -1,6 +1,9 @@
 from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
+import sys
+from icecream import ic
 import readCoREASStationGrid
+ic(readCoREASStationGrid.__file__)
 import NuRadioReco.modules.io.coreas.simulationSelector
 import NuRadioReco.modules.efieldToVoltageConverter
 import NuRadioReco.modules.channelGenericNoiseAdder
@@ -14,26 +17,24 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
-import NuRadioReco.modules.triggerTimeAdjuster
+import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 import astropy
 import argparse
 import NuRadioReco.modules.io.eventWriter
 import numpy as np
 import os
 import datetime
-from icecream import ic
 from scipy import constants
 
 from NuRadioReco.detector import detector
 from NuRadioReco.detector import generic_detector
 
-from SimpleFootprintSimulation.modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection
+import modifyEfieldForSurfaceReflection
 from NuRadioReco.framework.parameters import showerParameters as shp
 
 import logging
 logger=logging.getLogger("module")
 logger.setLevel(logging.WARNING)
-
 
 def calculateNoisePerChannel(det, station, amp=True):
     """
