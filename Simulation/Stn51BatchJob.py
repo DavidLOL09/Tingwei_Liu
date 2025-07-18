@@ -3,6 +3,7 @@ import numpy as np
 from pathlib import Path
 import os
 import shutil
+import send2trash
 
 n_cores = 10 #1000
 num_icetop = 10 #30
@@ -12,7 +13,12 @@ output_folder = '/pub/tingwel4/output/CR_BL_template/'
 output_filename = 'Stn51_IceTop'
 
 # Make directory if it doesn't exist
-Path(output_folder).mkdir(parents=True, exist_ok=True)
+# Path(output_folder).mkdir(parents=True, exist_ok=True)
+try:
+    os.makedirs(output_folder)
+except(FileExistsError):
+    send2trash.send2trash(output_folder)
+    os.makedirs(output_folder)
 
 min_energy = 16.0
 max_energy = 18.6
