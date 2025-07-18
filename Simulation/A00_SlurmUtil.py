@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='run/', n_cpus=1):
+def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='run/', n_cpus=10):
 
     print(f'Running job {jobName} with error files {runDirectory}/logs/{jobName}.out')
     os.makedirs(runDirectory, exist_ok=True)
@@ -27,8 +27,8 @@ def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='r
     header += "#SBATCH --mem-per-cpu=18G		            ##18GB memory per job\n"
     header += "#SBATCH --output={}\n".format(os.path.join(runDirectory, 'logs', f'{jobName}.out'))
     header += "#SBATCH --error={}\n".format(os.path.join(runDirectory, 'logs', f'{jobName}.err'))
-    header += "#SBATCH --mail-type=fail\n"
-    header += "#SBATCH --mail-user=rricesmi@uci.edu\n"
+    header += "#SBATCH --mail-type=fail,end,begin\n"
+    header += "#SBATCH --mail-user=tingwel4@uci.edu\n"
 
     #Add software to the python path
     header += "export PYTHONPATH=$NuM:$PYTHONPATH\n"
@@ -58,7 +58,7 @@ def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='r
 if __name__ == "__main__":
 
     cmd = 'python DeepLearning/angularReconstructionProcessing.py'
-    station_id = 30
+    station_id = 51
 
     station_path = f"../../../ariannaproject/station_nur/station_{station_id}/"
 

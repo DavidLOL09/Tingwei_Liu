@@ -103,7 +103,7 @@ def pullFilesForSimulation(sim_type, min_energy, max_energy, num_icetop=10, icet
             sin2Val = [icetop_sin]
         for sin2 in sin2Val:
             num_in_bin = 0
-            folder = f'../../../../../dfs8/sbarwick_lab/arianna/SIM/southpole/IceTop/lgE_{i:.1f}/sin2_{sin2:.1f}/'
+            folder = f'../../../../../../../../dfs8/sbarwick_lab/arianna/SIM/southpole/IceTop/lgE_{i:.1f}/sin2_{sin2:.1f}/'
             for (dirpath, dirnames, filenames) in os.walk(folder):
                 for file in filenames:
                     if num_in_bin == num_icetop:
@@ -115,7 +115,7 @@ def pullFilesForSimulation(sim_type, min_energy, max_energy, num_icetop=10, icet
         i += 0.1
 
     return input_files
-ic('here')
+
 # Read in settings for simulation
 parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
 parser.add_argument('output_filename', type=str, help='Output filename for simulation')
@@ -126,9 +126,7 @@ parser.add_argument('--sin2', type=float, default=-1, help='Sin^2(zenith) value 
 parser.add_argument('--num_icetop', type=int, default=10, help='Number of IceTop footprints to simulate per bin')
 parser.add_argument('--sim_amp', default=True, help='Include amplifier in simulation')
 parser.add_argument('--add_noise', default=False, help='Include noise in simulation')
-ic(129)
 args = parser.parse_args()
-ic(131)
 output_filename = args.output_filename
 n_cores = args.n_cores
 min_energy = args.min_energy
