@@ -7,8 +7,8 @@ import shutil
 n_cores = 10 #1000
 num_icetop = 10 #30
 amp = True
-add_noise = True
-output_folder = '/pub/tingwel4/output/CR_BL'
+add_noise = False
+output_folder = '/pub/tingwel4/output/CR_BL_template/'
 output_filename = 'Stn51_IceTop'
 
 # Make directory if it doesn't exist
