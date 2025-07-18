@@ -1,4 +1,4 @@
 import matplotlib.pyplot as plt
-
-plt.text(0.5, 0.5, fr"$\alpha$={5}", fontsize=20)
-plt.show()
+import os
+print(os.getcwd())
+print(os.path.exists('CrossChi.py'))
