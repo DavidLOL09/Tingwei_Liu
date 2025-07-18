@@ -1,7 +1,7 @@
 import A00_SlurmUtil
 import numpy as np
 from pathlib import Path
-
+import os
 
 n_cores = 10 #1000
 num_icetop = 10 #30
@@ -24,7 +24,8 @@ for e in e_range:
     for sin2 in sin2Val:
         # e = 18.4
         # sin2 = 0.0
+        print(os.getcwd())
+        print(os.path.exists('Stn51Simulation.py'))
         cmd = f'python Stn51Simulation.py {output_folder}{output_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores.nur {n_cores} --min_energy {e:.1f} --max_energy {e+0.1:.1f} --sin2 {sin2:.1f} --num_icetop {num_icetop} --sim_amp {amp} --add_noise {add_noise}'
-
         A00_SlurmUtil.makeAndRunJob(cmd, f'Stn51_{e:.1f}_{sin2:.1f}sin2', runDirectory='run', partition='standard')
         # quit()
