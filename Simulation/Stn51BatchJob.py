@@ -5,10 +5,10 @@ import os
 import shutil
 import send2trash
 
-n_cores = 10 #1000
-num_icetop = 10 #30
+n_cores     =   1000    #10 Temp    #1000 Sim
+num_icetop  =   10      #10 Temp    #30   Sim  
 amp = True
-add_noise = False
+add_noise = True
 output_folder = '/pub/tingwel4/output/CR_BL_template/'
 output_filename = 'Stn51_IceTop'
 
