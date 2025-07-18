@@ -2,6 +2,7 @@ import A00_SlurmUtil
 import numpy as np
 from pathlib import Path
 import os
+import shutil
 
 n_cores = 10 #1000
 num_icetop = 10 #30
@@ -20,6 +21,11 @@ e_range = np.arange(min_energy, max_energy, 0.1)
 sin2Val = np.arange(0, 1.01, 0.1)
 
 
+try:
+    os.mkdir('run')
+except(FileExistsError):
+    shutil.rmtree('run')
+    os.mkdir('run')
 for e in e_range:
     for sin2 in sin2Val:
         # e = 18.4
