@@ -143,7 +143,8 @@ ic(f'files for running {input_files}')
 
 # Setup detector
 # det = detector.Detector(json_filename=f'configurations/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
-det = detector.Detector(json_filename=f'configurations/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
+
+det = detector.Detector(json_filename=f'$pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 station_id = 51
 
