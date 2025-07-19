@@ -28,7 +28,7 @@ def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='r
     header += "#SBATCH --output={}\n".format(os.path.join(runDirectory, 'logs', f'{jobName}.out'))
     header += "#SBATCH --error={}\n".format(os.path.join(runDirectory, 'logs', f'{jobName}.err'))
     # header += "#SBATCH --mail-type=fail,end,begin\n"
-    header += "#SBATCH --mail-type=end\n"
+    # header += "#SBATCH --mail-type=end\n"
     header += "#SBATCH --mail-user=tingwel4@uci.edu\n"
 
     #Add software to the python path
