@@ -9,7 +9,7 @@ n_cores     =   1000    #10 Temp    #1000 Sim
 num_icetop  =   30      #10 Temp    #30   Sim  
 amp = True
 add_noise = True
-output_folder = '../../../../../../../../dfs8/sbarwick_lab/ariannaproject/Tingwei_liu/CR_BL_Simulation1/'
+output_folder = '/pub/tingwel4/output/CR_BL_Simulation/'
 output_filename = 'Stn51_IceTop'
 
 # Make directory if it doesn't exist
@@ -31,7 +31,7 @@ try:
     os.mkdir('run')
 except(FileExistsError):
     shutil.rmtree('run')
-    os.mkdir('run')
+    os.makedirs('run')
 for e in e_range:
     for sin2 in sin2Val:
         # e = 18.4
