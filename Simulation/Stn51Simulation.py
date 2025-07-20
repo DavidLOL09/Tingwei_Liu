@@ -207,7 +207,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     new_efields = []
     efields = station.get_electric_fields()
-    ic('here')
     for efield in efields:
         # modify the Efield for surface reflection
         # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at

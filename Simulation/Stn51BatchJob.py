@@ -9,7 +9,7 @@ n_cores     =   10    #10 Temp    #1000 Sim
 num_icetop  =   30      #10 Temp    #30   Sim  
 amp = True
 add_noise = True
-output_folder = '../../../../../../../../dfs8/sbarwick_lab/ariannaproject/Tingwei_liu/CR_BL_Simulation/'
+output_folder = '../../../../../../../../dfs8/sbarwick_lab/ariannaproject/Tingwei_liu/CR_BL_Template/'
 output_filename = 'Stn51_IceTop'
 
 # Make directory if it doesn't exist

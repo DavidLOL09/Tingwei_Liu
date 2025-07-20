@@ -12,6 +12,7 @@ import send2trash
 goso=[242,243,247,249,256,260,263,264,266]
 det = generic_detector.GenericDetector(json_filename=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json', assume_inf=False, antenna_by_depth=True, default_station=51)
 import os
+import ToolsPac
 import math
 ic(NuRadioRecoio.__file__)
 Vrms=(9.71+9.66+8.94)/3
@@ -19,13 +20,15 @@ det.update(datetime.datetime(2019, 1, 1))
 files = []
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut_no_Incorp/sim_bef_cut'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR'
 candidate_path=os.path.join(candi,'Waveform')
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_output/extract'
 output=candidate_path
 # output='/Users/david/PycharmProjects/Demo1/Research/Repository/candi_waveform'
 Zen_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output/X_335sig_Ratio_zen'
 # output='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_output/extract'
+
+bad_Bic=['R243E324','R243E1271','R243E1330','R243E314','R243E1811','R243E6','R243E327','R243E2']
 
 try:
     os.makedirs(output)
@@ -145,14 +148,14 @@ def plot_wave(evt,temp_output='Nothing'):
             color = 'green'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
             ax.set_ylabel('Amplitude (mV)')
         elif i == 5:
             ax = axes[2, 1]
             color = 'blue'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
         elif i == 6:
             ax = axes[3, 0]
             color = 'red'
@@ -160,7 +163,7 @@ def plot_wave(evt,temp_output='Nothing'):
             ax.set_ylabel('Amplitude (mV)')
             ax.set_xlabel('Time (ns)')
             channel = stn.get_channel(i)
-            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
         elif i == 7:
             ax = axes[3, 1]
             color = '0.5'
@@ -174,10 +177,9 @@ def plot_wave(evt,temp_output='Nothing'):
         # ax.plot(time,-np.full(256,5*Vrms),c='0.5')
         # ax.set_title(f'channel{i}_max_amp:{max:.4f}')
         ax.plot(time, amplitude, color=color, lw=1)
-        zen = stn.get_parameter(stnp.zenith)/units.deg
-        azi = stn.get_parameter(stnp.azimuth)/units.deg
         if i in [4,5,6]:
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{100*X:.2g}')
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{100*X:.2g}')
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
         else:
             ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
         ax.grid()
@@ -186,7 +188,7 @@ def plot_wave(evt,temp_output='Nothing'):
     Xcorr=[]     
     for i in [4,5,6]:
         channel = stn.get_channel(i)
-        Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
+        Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp]['R243E512']['chi_max'])))
     Xcorr=np.max(Xcorr)
     id=evt.get_id()
     run=evt.get_run_number()
@@ -204,7 +206,8 @@ def plot_wave(evt,temp_output='Nothing'):
     # fig.suptitle(f'U/D:{trace_up/trace_down:.1f} recon[{zen:.1f},{azi:.1f}] sim[{sim_zen:.1f},{sim_azi:.1f}]X:{np.max(Xcorr):.2f}')
     # region=SNR_cut_line(SNR)
     # fig.suptitle(f'recon[{zen:.1f},{azi:.1f}] X:{np.max(Xcorr):.2f} SNR:{SNR:.2f} Area:{region} T{evt_time}')
-    fig.suptitle(f'SNR:{SNR:.2f}, T{evt_time}, D:{zen:.3g},{azi:.3g}')
+    # fig.suptitle(f'SNR:{SNR:.2f}, T{evt_time}, D:{zen:.3g},{azi:.3g}')
+    fig.suptitle(f'SNR:{SNR:.2f}, T{evt_time}')
     # plt.show()
     # temp_output=os.path.join(output,f'Region{region}')
     if temp_output is 'Nothing':
@@ -217,7 +220,9 @@ def plot_wave(evt,temp_output='Nothing'):
         os.makedirs(temp_output)
         plt.savefig(os.path.join(temp_output,f'X{100*Xcorr:.2g}R{run}E{id}.png'))
 for evt in data.get_events():
-    plot_wave(evt,temp_output=candidate_path)
+    iden=ToolsPac.get_id_info(evt)
+    if iden in bad_Bic:
+        plot_wave(evt,temp_output=candidate_path)
 
 # True
 # 0.6955312335093126

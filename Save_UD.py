@@ -15,7 +15,7 @@ eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
 
 import send2trash
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/SNR_cut1'
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs_X_SNR'
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR'
 # output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/'
 output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output/'
 def get_input(input):
@@ -120,7 +120,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     pm=ax.pcolormesh(S,X,hist.T,norm=matplotlib.colors.LogNorm(),zorder=0)
     ax.figure.colorbar(pm,ax=ax)
     ax.set_xlabel(f'Amp(mV)',fontsize=20)
-    ax.set_ylabel('Ratio(U/D)',fontsize=20)
+    ax.set_ylabel('Ratio(U/Bic)',fontsize=20)
     x=np.linspace(1,10000,1001)
     y=log_cut_line(x)
     ax.plot(x,y,color='orange',linestyle='--',zorder=3)
@@ -170,9 +170,9 @@ def Plot_Ratio_Amp(input_path,det_input):
     # annotate_scatter(ax,Amp_max,Ratio,Iden)
     ax.legend(fontsize=20)
     plt.tight_layout()
-    # plt.show()
-    plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/UD_Ratio.png')
-det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR'
+    plt.show()
+    # plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/UD_Ratio.png')
+det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
 # k=(2.7-1)/(np.log10(210)-np.log10(77))
 # ic(k)
 # ic(log_cut_line(77))

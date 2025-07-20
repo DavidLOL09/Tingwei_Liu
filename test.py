@@ -45,6 +45,20 @@ import pickle
 with open(template_path, 'rb') as file:
     template = pickle.load(file)
 
-ic(template[0].keys())
+def get_klog(arr1,arr2):
+    k=(arr1[1]-arr2[1])/(np.log10(arr1[0])-np.log10(arr2[0]))
+    b=arr1[1]-k*np.log10(arr1[0])
+    return k,b
+
+def test_logeqs(k,b,arr1):
+    exp=k*np.log10(arr1[0])+b
+    ic(exp)
+    return exp==arr1[1]
+
+arr1=[7,0.35] 
+arr2=[10,0.46]
+k,b=get_klog(arr1,arr2)
+ic(k,b)
+ic(test_logeqs(k,b,arr1))
 # self.__cr_templates[station_id][0][zen_ref][az_ref]
 # 'templates_cr_station_{}.pickle'.format(station_id))

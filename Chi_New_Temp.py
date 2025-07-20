@@ -13,6 +13,12 @@ from NuRadioReco.detector import generic_detector
 import send2trash
 import matplotlib.pyplot as plt
 from NuRadioReco.framework.parameters import eventParameters as evtp
+from NuRadioReco.modules.channelStopFilter import channelStopFilter
+channelStopFilter=channelStopFilter()
+import NuRadioReco.modules.channelBandPassFilter
+channelBandPassFilter = NuRadioReco.modules.channelBandPassFilter.channelBandPassFilter()
+json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
+det=detector.Detector(json_filename=json_file_origin)
 import NuRadioReco.modules.io.eventWriter
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
 goso=[242,243,247,249,256,260,263,264,266]
@@ -23,6 +29,7 @@ Vrms=(9.71+9.66+8.94)/3
 import ToolsPac
 
 sim = '/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs_X_SNR_with_direct/Candi_with_direct/withTemp_R243E512'
+detected = '/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs'
 
 def get_corr(arr1:np.array,arr2:np.array):
     return np.abs(np.dot(arr1,arr2)/np.sqrt(np.dot(arr1,arr1)*np.dot(arr2,arr2)))
@@ -43,10 +50,10 @@ def calculate_xcorr(arr1:np.array,arr2:np.array):
             chi_phase   = i
     return {'xcorrelation':xcorrelation,'chi_max':chi_max,'chi_phase':chi_phase}
 # {'xcorrelation':chi,'chi_max':chi_max,'max_phase':chi_phase}
-    
+
 Temp_id='R243E512'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct'
-output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr'
+output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr'
 def get_Temp_input_path(Temp_id):
     return f'/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/event_sep/{Temp_id}'
 def get_path_with_Temp(Temp_id):
@@ -82,6 +89,8 @@ def Get_Xcorr_with_Temp(input_path,Temp_path):
     for evt in Data_reader.get_events():
         stn=evt.get_station(51)
         # ic(evt[evtp.Pass_cut_line][Temp_id_1])
+        channelStopFilter.run(evt,stn,det,append=0,prepend=0)
+        channelBandPassFilter.run(evt, stn, det, passband=[80 * units.MHz, 500 * units.MHz], filter_type='butter', order = 10)
         for i in [4,5,6]:
             chn = stn.get_channel(i)
             trace   = chn.get_trace()/units.mV
@@ -92,6 +101,7 @@ def Get_Xcorr_with_Temp(input_path,Temp_path):
                 chn[chp.Chi_Temp]={Temp_id:calculate_xcorr(Temp_amp,trace)}
             # chn[chp.Chi_Temp]={'xcorrelation':chi,'xcorrelation_max':chi_max,'max_phase':chi_phase}
         Writer.run(evt)
+    return os.path.join(output_path,f"withTemp_{Temp_id}")
 
 # check:
 
@@ -109,9 +119,9 @@ def check_Chi_Temp(input_path):
 def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
     SNR_dic = []
     X_dic   = []
-    weights=[]
     # ax.set_title(f'{name} chn{chn}')
     ax.set_ylabel('Xcorr')
+    weights=[]
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
         Xcorr=[] 
@@ -130,7 +140,9 @@ def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
     # ax.set_xscale('log')
     # SNR_bins=np.linspace(np.min(SNR_dic),np.max(SNR_dic),101)
     SNR_bins = np.logspace(np.log10(np.min(SNR_dic)), np.log10(np.max(SNR_dic)), 101)
-    weights=np.array(weights)*31/365
+    weights=np.array(weights)*(datetime.timedelta(days=31, seconds=8844)/datetime.timedelta(days=365))
+    # for i in weights:
+    #     ic(i,type(i))
     X_bins=np.linspace(0,1,101)
     ax.set_xlim(3,900)
     ax.set_ylim(0.2,1)
@@ -139,18 +151,35 @@ def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
     pm=ax.pcolormesh(S,X,hist.T,norm=matplotlib.colors.LogNorm(),zorder=0)
     ax.figure.colorbar(pm,ax=ax)
     # patch = mpatches.Patch(color='lightblue', label='Your Label Here')
-    ax.set_xlabel(f'SNR',fontsize=40)
+    ax.set_xlabel(f'SNR:{np.sum(weights):.3g}',fontsize=40)
     ax.set_ylabel(fr'$\chi$',fontsize=40)
     # ax.legend(handles=[patch],fontsize=20)
     ax.legend(loc='lower right',fontsize=40)
 
+
 def SNR_cut_line_cut(x):
     k=0.21622342843989703
     y=k*np.log10(x)+0.2444278883161825
-    for i in y:
-        if i<=0.235:
-            i=0.235
+    y=np.zeros_like(x)
+    for i,elmt in enumerate(x):
+        if elmt >= 10:
+            y[i] = SNR_cut_line_cut_10_2753(x[i])
+        if elmt < 10:
+            y[i] = SNR_cut_line_cut_0_10(x[i])
+    y[y <= 0.35] = 0.35
+    y[y >= 0.6] = 0.6
     return y
+
+def SNR_cut_line_cut_10_2753(x):
+    k=0.3183220163182149
+    y=k*np.log10(x)+0.14167798368178514
+    return y
+
+def SNR_cut_line_cut_0_10(x):
+    k=0.7101265859394174
+    y=k*np.log10(x)-0.2501265859394173
+    return y
+
 
 def SNR_cut_line(ax):
     x=np.linspace(1,1000,1001)
@@ -191,7 +220,7 @@ def annotate_scatter(ax,x,y,labels):
             ha='left', va='bottom'
         )
 
-def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.io,Temp_id,Temp_id_1,zorder=1,color='r',alfa=1):
+def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.io,Temp_id,Temp_id_1,zorder=1,color='r',alfa=1,has_cutline=False):
     # ax.set_title('SNR')
     # ax.set_xlabel('SNR')
     SNR_dic=[]
@@ -201,6 +230,7 @@ def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.i
     SNR_dic_g=[]
     X_dic_g=[]
     iden=[]
+    weights=[]
     for evt in readARIANNAData.get_events():   
         stn = evt.get_station(51)
         Xcorr=[]    
@@ -212,50 +242,63 @@ def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.i
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
         Xcorr=np.max(Xcorr)
         trace_up=np.max(trace_up)
-        if evt[evtp.Pass_cut_line][Temp_id_1]:
+        if has_cutline:
+            if evt[evtp.Pass_cut_line][Temp_id_1]:
+                SNR_dic.append(trace_up/Vrms)
+                X_dic.append(Xcorr)
+                iden.append(ToolsPac.get_id_info(evt))
+            else:
+                SNR_dic_g.append(trace_up/Vrms)
+                X_dic_g.append(Xcorr)
+        else:
             SNR_dic.append(trace_up/Vrms)
             X_dic.append(Xcorr)
             iden.append(ToolsPac.get_id_info(evt))
-        else:
-            SNR_dic_g.append(trace_up/Vrms)
-            X_dic_g.append(Xcorr)
     # annotate_scatter(ax,SNR_dic,X_dic,iden)
     ax.set_ylim(0.2,1)
     ax.set_xlim(3,900)
-    ax.scatter(SNR_dic,X_dic,s=20,c=color,label=f'{Temp_id}',zorder=zorder,alpha=alfa)
-    ax.scatter(SNR_dic_g,X_dic_g,s=20,c='grey',label=f'failed: {Temp_id}',zorder=0)
+    ax.scatter(SNR_dic,X_dic,s=20,c=color,label=f'{len(SNR_dic)}',zorder=zorder,alpha=alfa)
+    # ax.scatter(SNR_dic_g,X_dic_g,s=20,c='grey',label=f'failed: {Temp_id}',zorder=0)
     # ax.scatter(SNR_dic_g,X_dic_g,s=5,c='grey',label=f'No-pass:{len(SNR_dic_g)}',zorder=zorder,alpha=alfa)
     ax.set_xscale('log')
 Temp_id='R243E512'
 Temp_id_1='R243E512'
-reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input('/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/withTemp_R243E512'))
+# reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input('/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/withTemp_R243E512'))
+
 # make_cut(reader,'R243E512',output_path)
 # exit()
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/R243E512_cut'
 input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/withTemp_R243E512'
+input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR_Ratio'
+# input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X'
 # test_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/withTemp_R242E10'
 Temp_path=get_Temp_input_path(Temp_id)
 # check_Chi_Temp(input_path)
 # exit()
 # Get_Xcorr_with_Temp(input_sim,Temp_path)
 # Get_Xcorr_with_Temp(test_path,Temp_path)
+# detected=Get_Xcorr_with_Temp(detected,Temp_path)
+detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/withTemp_R243E512'
+# detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X'
+# detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR'
+detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
+reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(detected))
 
 fig,ax = plt.subplots(figsize=(10,8),layout='constrained')
 # reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
 
-sim_Reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(sim))
+sim_Reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_sim))
+
 SNR_Xcorr_Scatter_sim(ax,sim_Reader)
 
-# SNR_Xcorr_Scatter(ax,'SNR',reader,Temp_id,Temp_id_1)
+SNR_Xcorr_Scatter(ax,'SNR',reader,Temp_id,Temp_id_1)
 ax.grid()
 ax.set_xscale('log')
 # ax.tick_params(axis='x', labelsize=40)
 # ax.tick_params(axis='y', labelsize=40)
-ax.set_xlabel('SNR',fontsize=40)
-ax.set_ylabel(r'$\chi$',fontsize=40)
 SNR_cut_line(ax)
 plt.legend()
-# # plt.savefig(os.path.join(f'/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/event_sep/{Temp_id}','SNR.png'))
+plt.savefig(os.path.join(output_path,'Trig-rate_Freqs_3X_SNR_Ratio.png'))
 plt.show()
 
     

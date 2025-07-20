@@ -38,9 +38,9 @@ from NuRadioReco.framework.parameters import channelParameters as chp
 import ToolsPac
 
 Candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Final_Candi'
-Candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Final_Candi'
+Candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
 # zen_diff='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/zen_diff'
-sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs_X_SNR'
+sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR_Ratio'
 output_path=''
 cut=0
 
@@ -138,7 +138,7 @@ ax.tick_params(axis='both', labelsize=28)
 ax.legend(fontsize=30)
 ax.grid()
 # plt.show()
-plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Amp_hist.png')
+plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Amp_hist.png')
 
 
     
