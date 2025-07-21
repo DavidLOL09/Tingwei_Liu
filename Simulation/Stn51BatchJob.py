@@ -5,7 +5,7 @@ import os
 import shutil
 import send2trash
 
-n_cores     =   1000    #10 Temp    #1000 Sim
+n_cores     =   400    #10 Temp    #1000 Sim
 num_icetop  =   30      #10 Temp    #30   Sim  
 amp = True
 add_noise = True
