@@ -52,8 +52,7 @@ directory='/pub/tingwel4/output/CR_BL_Simulation_demo'
 input_files=get_input(start,'.nur',directory)
 output='/pub/tingwel4/output/CR_BL_Simulation_weighted'
 # trig_energy, trig_zenith, trig_azimuth, trig_weight = get_PPE(sim_folder, trigger_names[0], e_range, sin2Val, rate_per_bin, n_trig_per_bin)
-if not os.path.isdir(output):
-    os.makedirs(output)
+os.makedirs(output,exist_ok=True)
 E,Z,A,W,I=get_PPE(input_files,thresh23_3,output,working_file)
 dic = {
     'Trig_id':I,
