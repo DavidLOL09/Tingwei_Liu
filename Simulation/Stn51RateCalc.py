@@ -147,7 +147,7 @@ def getParametersPerEvent(simulation_files_folder, trigger_name, output, filenam
                     evtrate=0
                 else:
                     evtrate=rate_per_bin[trigger][zen_digit][e_digit] / n_trig_per_bin[trigger][zen_digit][e_digit]
-                    
+
                 if evtrate==0:
                     continue
                 else:
