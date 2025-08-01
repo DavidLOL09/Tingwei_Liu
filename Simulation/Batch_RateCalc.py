@@ -17,7 +17,7 @@ num_icetop  =   30      #10 Temp    #30   Sim
 working_folder = '/pub/tingwel4/output/CR_BL_Simulation_demo/'
 working_filename = 'Stn51_IceTop'
 batch_path='/pub/tingwel4/Tingwei_Liu/Simulation/evtRateCalc'
-run_py_file='get_Sim_distribution.py'
+run_py_file='get_Sim_distribution'
 
 
 # Make directory if it doesn't exist
