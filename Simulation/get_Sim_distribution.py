@@ -32,11 +32,7 @@ parser.add_argument('--working_file', type=str, help='working filename for simul
 args = parser.parse_args()
 working_dir = args.working_dir
 working_file = args.working_file
-n_cores = args.n_cores
-min_energy = args.min_energy
-max_energy = args.max_energy
-sin2 = args.sin2
-num_icetop = args.num_icetop
+
 
 def get_input(start_with,stop_with,directory=os.getcwd()):
     input_files=[]
