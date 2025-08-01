@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 import shutil
 import send2trash
-
+from icecream import ic
 
 
 
@@ -41,6 +41,7 @@ for e in e_range:
     for sin2 in sin2Val:
         # e = 18.4
         # sin2 = 0.0
+        ic('here')
         cmd = f'python {run_py_file}.py --working_dir {working_folder} --working_file {working_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores'
         A00_SlurmUtil.makeAndRunJob(cmd, f'Stn51_{e:.1f}_{sin2:.1f}sin2', runDirectory=batch_path, partition='standard')
         # quit()
