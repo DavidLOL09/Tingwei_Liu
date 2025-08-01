@@ -4,7 +4,7 @@ import numpy as np
 from NuRadioReco.utilities import units
 import matplotlib.pyplot as plt
 from NuRadioReco.framework.parameters import eventParameters as evtp
-
+Vrms=(9.71+9.66+8.94)/3
 
 input_dir='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_X_output/X_Ratio_Zen_TrigR8_cut'
 def get_input(input):
@@ -22,6 +22,8 @@ def get_trace_real(input_dir):
     max_trace=[]
     for evt in readARIANNAData.get_events():
         stn=evt.get_station(51)
+        if not evt[evtp.Pass_cut_line]['R243E512']:
+            continue
         trace_up=[]
         for channel in stn.iter_channels(use_channels=[4,5,6]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
@@ -36,6 +38,8 @@ def get_trace_sim(input_dir):
     weights=[]
     for evt in readARIANNAData.get_events():
         stn=evt.get_station(51)
+        if not evt[evtp.Pass_cut_line]['R243E512']:
+            continue
         trace_up=[]
         weights.append(evt.get_parameter(evtp.event_rate))
         for channel in stn.iter_channels(use_channels=[4,5,6]):
@@ -43,9 +47,11 @@ def get_trace_sim(input_dir):
         max_trace.append(max(trace_up))
     return max_trace,weights
 def E_scatter(trace,bins,ax,name=None,weights=None):
+    bins=np.array(bins)/Vrms
+    trace=np.array(trace)/Vrms
     if weights==None:
         ax.set_title(name)
-        ax.hist(trace,bins,alpha=0.8,color='r')
+        ax.hist(trace,bins,alpha=0.8,color='r',label=len(trace))
         ax.set_xscale('log')
         ax.grid()
         # ax.legend()
@@ -89,6 +95,7 @@ def trace_hist(     path1,name1,
     E_scatter(sim_tra2,bins,Axes[0][1],weights=weights2)
     E_scatter(sim_tra3,bins,Axes[1][0],weights=weights3)
     E_scatter(sim_tra4,bins,Axes[1][1],weights=weights4)
+    plt.legend()
     plt.show()
 
 Xcorr='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_X_output/X'
@@ -105,10 +112,13 @@ sim_Xcorr='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_3Xc
 sim_Ratio='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_3Xcorr/X_Ratio'
 sim_Zen='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_3Xcorr/X_Ratio_Zen'
 
+sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_cut'
+SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_cut'
+
 # trace_hist(Xcorr,'X',Ratio,'X_Ratio',Ratio,'X_Ratio_Zen','Nothing','Nothing',
 #                sim_Xcorr,sim_Ratio,sim_Zen,'Nothing')
-trace_hist('Nothing','X','Nothing','X_Ratio','Nothing','X_Ratio_Zen',SNR_R8,'Candi8',
-               'Nothing','Nothing','Nothing',sim_Zen)
+trace_hist('Nothing','X','Nothing','X_Ratio','Nothing','X_Ratio_Zen',SNR,'Candi8',
+               'Nothing','Nothing','Nothing',sim)
 
 
 

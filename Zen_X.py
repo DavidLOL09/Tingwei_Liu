@@ -41,6 +41,9 @@ Candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Fi
 Candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
 # zen_diff='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/zen_diff'
 sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR_Ratio'
+sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_cut'
+sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_Ratio_3X'
+Candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
 output_path=''
 cut=0
 
@@ -65,12 +68,14 @@ def get_weights(input_path):
     weights=[]
     count=0
     for evt in Data.get_events():
+        if not evt[evtp.Pass_cut_line]['R243E512']:
+            continue
         stn=evt.get_station(51)
         trace_max=ToolsPac.get_Max_trace(stn,np.linspace(0,7,8))
         if trace_max<=cut:
             continue
         try:
-            weights.append(evt.get_parameter(evtp.event_rate))
+            weights.append(evt[evtp.event_rate])
         except(KeyError):
             count+=1
     ic(count)
@@ -81,6 +86,8 @@ def get_trace(input_path):
     Data = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
     trace=[]
     for evt in Data.get_events():
+        if not evt[evtp.Pass_cut_line]['R243E512']:
+            continue
         stn=evt.get_station(51)
         trace_max=ToolsPac.get_Max_trace(stn,np.linspace(0,7,8))
         if trace_max<=cut:
@@ -137,8 +144,8 @@ ax.hist(sim_trace,bins=bins,histtype='step',color='black',stacked=True,fill=Fals
 ax.tick_params(axis='both', labelsize=28)
 ax.legend(fontsize=30)
 ax.grid()
-# plt.show()
-plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Amp_hist.png')
+plt.show()
+# plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Amp_hist.png')
 
 
     

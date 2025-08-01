@@ -6,7 +6,10 @@ import matplotlib.pyplot as plt
 from icecream import ic
 from NuRadioReco.utilities import units
 from pathlib import Path
-
+from NuRadioReco.framework.parameters import showerParameters as shp
+from NuRadioReco.framework.parameters import eventParameters as evtp
+import NuRadioReco.modules.io.eventWriter
+evt_writer = NuRadioReco.modules.io.eventWriter.eventWriter()
 
 def getTriggerRatePerBin(simulation_files_folder, e_bins, zen_bins, trigger_names):
     # simulation_files_folder   : path/to/simulation/files --NOTE!: The simulation needs to be configured to save non-triggering events too
@@ -92,7 +95,7 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
 
     return rate_per_bin, rate_sin_sum
 
-def getParametersPerEvent(simulation_files_folder, trigger_name, e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
+def getParametersPerEvent(simulation_files_folder, trigger_name, output, filename, e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
     # Trigger names should be a single string
 
     # Default e_bins and zen_bins
@@ -110,10 +113,11 @@ def getParametersPerEvent(simulation_files_folder, trigger_name, e_bins=None, ze
         rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names)
 
     # Get the parameters per event
-    nurFiles= []
-    for file in os.listdir(simulation_files_folder):
-        if file.endswith('.nur'):
-            nurFiles.append(os.path.join(simulation_files_folder, file))
+    # nurFiles= []
+    # for file in os.listdir(simulation_files_folder):
+    #     if file.endswith('.nur'):
+    #         nurFiles.append(os.path.join(simulation_files_folder, file))
+    nurFiles=simulation_files_folder
     
     trig_energy = []
     trig_zenith = []
@@ -121,6 +125,9 @@ def getParametersPerEvent(simulation_files_folder, trigger_name, e_bins=None, ze
     trig_weight = []
 
     eventReader = NuRadioRecoio.NuRadioRecoio(nurFiles)
+
+    evt_writer.begin(os.path.join(output,f'{filename}.nur'))
+
     for i, evt in enumerate(eventReader.get_events()):
         station_ids = evt.get_station_ids()
         for stn_id in station_ids:
@@ -136,7 +143,19 @@ def getParametersPerEvent(simulation_files_folder, trigger_name, e_bins=None, ze
                 zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)
 
                 # This splits up the weight of evnts/yr for the bin into each individual event that triggered equally
-                trig_weight.append(rate_per_bin[trigger][zen_digit][e_digit] / n_trig_per_bin[trigger][zen_digit][e_digit]) 
+                if n_trig_per_bin[trigger][zen_digit][e_digit]==0 and rate_per_bin[trigger][zen_digit][e_digit]==0:
+                    evtrate=0
+                else:
+                    evtrate=rate_per_bin[trigger][zen_digit][e_digit] / n_trig_per_bin[trigger][zen_digit][e_digit]
+                    
+                if evtrate==0:
+                    continue
+                else:
+                    trig_weight.append(evtrate) 
+                    evt.set_parameter(evtp.event_rate,evtrate)
+                    evt_writer.run(evt)
+
+
 
     return trig_energy, trig_zenith, trig_azimuth, trig_weight
 

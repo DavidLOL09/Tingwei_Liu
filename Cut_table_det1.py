@@ -7,6 +7,8 @@ from NuRadioReco.modules.ARIANNA import hardwareResponseIncorporator as Chardwar
 import NuRadioReco.modules.templateDirectionFitter
 from NuRadioReco.framework.parameters import stationParameters as stnp
 from NuRadioReco.modules.io import NuRadioRecoio
+from NuRadioReco.framework.parameters import eventParameters as evtp
+import NuRadioReco.framework.event
 from icecream import ic
 import numpy as np
 import datetime
@@ -113,6 +115,17 @@ def Bic_Ratio_cut_line(x):
     y=k*np.log10(x)-6.360165150568652
     return y
 
+def not_has_triggered(evt:NuRadioReco.framework.event.Event):
+    # 2/3 of 4.5 sigma threshold
+    stn=evt.get_station(51)
+    threshold=0
+    for channel in stn.iter_channels(use_channels=[4,5,6]):
+        trace = np.max(np.abs(channel.get_trace()/units.mV))
+        if trace/Vrms>=4.5:
+            threshold+=1
+    return threshold<2
+
+
 def Analyze_Ratio(input):
     # 33Vrms_Ratio
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input))
@@ -122,9 +135,13 @@ def Analyze_Ratio(input):
     except(FileExistsError):
         send2trash.send2trash(Ratio)
         os.makedirs(Ratio)
-    eventWriter.begin(os.path.join(Ratio,'3X_SNR_Ratio.nur'))
+    eventWriter.begin(os.path.join(Ratio,'SNR_Ratio.nur'))
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
+        if not_has_triggered(evt):
+            continue
+        if not evt[evtp.Pass_cut_line]['R243E512']:
+            continue
         time = stn.get_station_time().datetime
         det.update(time)
         trace_down  = []
@@ -153,14 +170,13 @@ def Analyze_X(input):
     # X
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input))
     n=readARIANNAData.get_n_events()
-    c=0
-    X = os.path.join(output_path,'3X')
+    X = os.path.join(output_path,'SNR_Ratio_3X')
     try:
         os.makedirs(X)
     except(FileExistsError):
         send2trash.send2trash(X)
         os.makedirs(X)
-    eventWriter.begin(os.path.join(X,'3X.nur'))
+    eventWriter.begin(os.path.join(X,'SNR_Ratio_3X.nur'))
     for evt in readARIANNAData.get_events():
         run=evt.get_run_number()
         # if run not in goso:
@@ -171,15 +187,17 @@ def Analyze_X(input):
         save0=True
         for i in [4,5,6]:
             channel = stn.get_channel(i)
-            Xmax=channel[chp.Chi_Temp]['R243E512']['chi_max']
-            if Xmax<0.3:
-                c+=1
+            # Xmax=channel[chp.Chi_Temp]['R243E512']['chi_max']
+            Xmax=channel[chp.cr_xcorrelations]['cr_ref_xcorr']
+            if Xmax<0.35:
                 save0=False
                 break
         if not save0:
             continue
+        templateDirectionFitter.run(evt,stn,det,channels_to_use=[4,5,6], cosmic_ray=True)
         eventWriter.run(evt)
-    ic(n,c)
+        break
+    # ic(n,c)
     print('3X Completed')
     return X
 
@@ -237,14 +255,18 @@ def Analyze_zen(input):
     print('Zen Complete')
     return zen_path
 
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR'
-output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/'
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/without_Freqs/3X_SNR_Ratio'
+input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_cut'
+# output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/'
+# for detect data
+output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/'
 # if os.path.isdir(output_path):
 #     os.makedirs(output_path)
 # X=Analyze_X(input_path)
 # Ratio=Analyze_Ratio(input_path)
 # SNR=Analyze_SNR(X)
-Ratio=Analyze_Ratio(input_path)
+# Ratio=Analyze_Ratio(input_sim)
+X=Analyze_X(input_sim)
 
 
 

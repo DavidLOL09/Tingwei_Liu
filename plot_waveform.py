@@ -20,7 +20,7 @@ det.update(datetime.datetime(2019, 1, 1))
 files = []
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut_no_Incorp/sim_bef_cut'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
 candidate_path=os.path.join(candi,'Waveform')
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_output/extract'
 output=candidate_path
@@ -188,7 +188,7 @@ def plot_wave(evt,temp_output='Nothing'):
     Xcorr=[]     
     for i in [4,5,6]:
         channel = stn.get_channel(i)
-        Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp]['R243E512']['chi_max'])))
+        Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
     Xcorr=np.max(Xcorr)
     id=evt.get_id()
     run=evt.get_run_number()
@@ -221,8 +221,7 @@ def plot_wave(evt,temp_output='Nothing'):
         plt.savefig(os.path.join(temp_output,f'X{100*Xcorr:.2g}R{run}E{id}.png'))
 for evt in data.get_events():
     iden=ToolsPac.get_id_info(evt)
-    if iden in bad_Bic:
-        plot_wave(evt,temp_output=candidate_path)
+    plot_wave(evt,temp_output=candidate_path)
 
 # True
 # 0.6955312335093126
@@ -280,3 +279,4 @@ for evt in data.get_events():
 # ic| np.rad2deg(err): np.float64(59.49479862826895)
 #     np.rad2deg(np.array([zen,azi])): array([ 61.2745762 , 109.80062177])
 #     np.rad2deg(np.array([sim_zen,sim_azi])): array([36.5474, 33.2559])
+# R266E1531

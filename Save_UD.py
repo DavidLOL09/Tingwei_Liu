@@ -15,7 +15,7 @@ eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
 
 import send2trash
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/SNR_cut1'
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR'
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_Ratio_3X'
 # output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/'
 output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output/'
 def get_input(input):
@@ -107,7 +107,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     Amp_max = np.array(Amp_up)
     Amp_Bic  = np.array(Amp_Bic)
     Amp_down= np.array(Amp_down)
-    Ratio=Amp_max/Amp_down
+    Ratio=Amp_max/Amp_Bic
     Amp_bins=np.linspace(np.min(Amp_max),np.max(Amp_max),101)
     Ratio_bins=np.linspace(np.min(Ratio),np.max(Ratio),101)
     ax.set_xscale('log')
@@ -150,7 +150,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     Amp_max=np.array(Amp_max)
     Amp_down=np.array(Amp_down)
     Amp_Bic=np.array(Amp_Bic)
-    Ratio = Amp_max/Amp_down
+    Ratio = Amp_max/Amp_Bic
     # Ratio=evt.get_parameter(evtp.UD_Ratio)
     ic(len(Amp_max),len(Ratio))
     ax.tick_params(axis='x', labelsize=20)
@@ -172,7 +172,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     plt.tight_layout()
     plt.show()
     # plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/UD_Ratio.png')
-det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
+det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
 # k=(2.7-1)/(np.log10(210)-np.log10(77))
 # ic(k)
 # ic(log_cut_line(77))

@@ -2,12 +2,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 from NuRadioReco.modules.io import NuRadioRecoio
+import NuRadioReco.modules.templateDirectionFitter
 import os
 from NuRadioReco.utilities import units
 from NuRadioReco.framework.parameters import stationParameters as stnp
 from NuRadioReco.framework.parameters import eventParameters as evtp
 import NuRadioReco
-
+from NuRadioReco.framework.parameters import channelParameters as chp
+templateDirectionFitter = NuRadioReco.modules.templateDirectionFitter.templateDirectionFitter()
+templateDirectionFitter.begin()
+from NuRadioReco.detector import detector 
+json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
+det=detector.Detector(json_filename=json_file_origin)
 
 def get_input(input):
     input_dir=[]
@@ -55,14 +61,32 @@ def annotate_scatter(ax,x,y,labels):
             ha='left', va='bottom'
         )
 
-
+import ToolsPac
+from icecream import ic
 def direction_plot_detect(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.io,zorder,color='r',alfa=1):
     direct=[]
     Iden=[]
+    pass_Ratio=[]
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
         zen = stn.get_parameter(stnp.zenith)/units.deg
         azi = stn.get_parameter(stnp.azimuth)/units.rad
+        pass_Ratio.append(zen)
+        if zen>89:
+            continue
+        if zen<=5:
+            for chn_id in [4,5,6]:
+                chn=stn.get_channel(chn_id)
+                Xmax=chn[chp.cr_xcorrelations]['cr_ref_xcorr_time']
+                # if Xmax!=0:
+                #     chn[chp.cr_xcorrelations]['cr_ref_xcorr_time']
+                ic(Xmax)
+            ic(ToolsPac.get_id_info(evt))
+            time=stn.get_station_time().datetime
+            det.update(time)
+            templateDirectionFitter.run(evt,stn,det,channels_to_use=[4,5,6], cosmic_ray=True)
+            ic(zen)
+            exit()
         Iden.append(f'R{evt.get_run_number()}E{evt.get_id()}')
         direct.append([zen,azi])
     # ax.set_title('Direct')
@@ -75,7 +99,7 @@ def direction_plot_detect(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modul
     # else:
     #     al=0.1
     # annotate_scatter(ax,azi,zen,Iden)
-    ax.scatter(azi,zen,s=20,alpha=alfa,zorder=zorder,color=color)
+    ax.scatter(azi,zen,s=20,alpha=alfa,zorder=zorder,color=color,label=f'direct:{len(direct)}\nPass:{len(pass_Ratio)}')
     ax.legend()
 
 
@@ -132,8 +156,9 @@ def direct_Scattering(path1,name1,
     plt.show()
 
 # sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut'
-sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs_X_SNR_with_direct'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Final_Candi'
+sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_Ratio_3X'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
+# candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/direct_New_Temp/Trig'
 # raw_goso='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw'
 # raw_ngoso='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw_non_goso'
 raw='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'
@@ -143,7 +168,7 @@ raw='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'
 #                sim_Zen,sim_Zen,sim_Zen,sim_Zen)
 fig,ax = plt.subplots(1,1,figsize=(10,8),layout='constrained',subplot_kw={'projection': 'polar'})
 Reader_candi = NuRadioRecoio.NuRadioRecoio(get_input(candi))
-direction_plot_detect(ax,'Trig_Freqs_X_SNR_Zen',Reader_candi,2,color='red',alfa=1)
+direction_plot_detect(ax,'Trig',Reader_candi,2,color='red',alfa=1)
 
 # Reader_raw=NuRadioRecoio.NuRadioRecoio(get_input(raw))
 # direction_plot_detect(ax,'Trig',Reader_raw,1,color='grey',alfa=0.4)
@@ -156,7 +181,7 @@ ax.tick_params(axis='x', labelsize=20)
 ax.tick_params(axis='y', labelsize=20)
 ax.set_rlabel_position(165)  
 
-plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Direction_32')
+# plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Direction_NewDirect.png')
 plt.show()
 
 

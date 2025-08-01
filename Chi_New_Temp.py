@@ -42,8 +42,8 @@ def calculate_xcorr(arr1:np.array,arr2:np.array):
     for i in range(len(arr1)):
         arr_pre = arr1[:i]
         arr_pos = arr1[i:]
-        arr1    = np.concatenate((arr_pos,arr_pre))
-        Xcorr   = get_corr(arr1,arr2)
+        Temp_arr1    = np.concatenate((arr_pos,arr_pre))
+        Xcorr   = get_corr(Temp_arr1,arr2)
         xcorrelation.append(Xcorr)
         if Xcorr > chi_max:
             chi_max     = Xcorr
@@ -53,7 +53,7 @@ def calculate_xcorr(arr1:np.array,arr2:np.array):
 
 Temp_id='R243E512'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct'
-output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr'
+output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig'
 def get_Temp_input_path(Temp_id):
     return f'/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/event_sep/{Temp_id}'
 def get_path_with_Temp(Temp_id):
@@ -69,6 +69,10 @@ def set_writer(output,filename):
         os.makedirs(output)
     eventWriter.begin(os.path.join(output,f'{filename}.nur'))
     return eventWriter
+
+# def Make_Template(input_path,Temp_path):
+    
+
 
 def Get_Xcorr_with_Temp(input_path,Temp_path):
     Data_reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
@@ -116,7 +120,16 @@ def check_Chi_Temp(input_path):
             ic(chn[chp.Chi_Temp])
     exit()
 
-def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
+# xcorrelations['{}_ref_xcorr'.format(ref_str)] = np.abs(xcorrs_ch).mean()
+# xcorrelations['{}_ref_xcorr_all'.format(ref_str)] = np.abs(xcorrs_ch)
+# xcorrelations['{}_ref_xcorr_max'.format(ref_str)] = np.abs(xcorrs_ch[np.argmax(np.abs(xcorrs_ch))])
+# xcorrelations['{}_ref_xcorr_time'.format(ref_str)] = np.mean(xcorrpos_ch[np.argmax(np.abs(xcorrs_ch))]) * dt
+# xcorrelations['{}_ref_xcorr_template'.format(ref_str)] = template_key[np.argmax(np.abs(xcorrs_ch))]
+# channel[chp.cr_xcorrelations] = xcorrelations
+
+
+
+def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io,has_cutline=False):
     SNR_dic = []
     X_dic   = []
     # ax.set_title(f'{name} chn{chn}')
@@ -124,10 +137,23 @@ def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
     weights=[]
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
+        # if not stn.has_triggered('direct_LPDA_2of3_3.5sigma'):
+        #     continue
+        if has_cutline:
+            if not evt[evtp.Pass_cut_line][Temp_id_1]:
+                continue
+
+        trace_up    = []
+        for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
+            trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
+        # if max(trace_up)/Vrms<=4.5:
+        #     continue
+
         Xcorr=[] 
         for chn in [4,5,6]:  
             channel = stn.get_channel(chn)
-            Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp]['R243E512']['chi_max'])))
+            # Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp]['R243E512']['chi_max'])))
+            Xcorr.append(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])
         trace_up    = []
         for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
@@ -160,14 +186,24 @@ def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
 def SNR_cut_line_cut(x):
     k=0.21622342843989703
     y=k*np.log10(x)+0.2444278883161825
-    y=np.zeros_like(x)
-    for i,elmt in enumerate(x):
-        if elmt >= 10:
-            y[i] = SNR_cut_line_cut_10_2753(x[i])
-        if elmt < 10:
-            y[i] = SNR_cut_line_cut_0_10(x[i])
-    y[y <= 0.35] = 0.35
-    y[y >= 0.6] = 0.6
+    if type(x) is np.float64:
+        if x >= 10:
+            y = SNR_cut_line_cut_10_2753(x)
+        if x <10:
+            y = SNR_cut_line_cut_0_10(x)
+        if y<=0.42:
+            y=0.42
+        if y>=0.6:
+            y=0.6
+    else:
+        y=np.zeros_like(x)
+        for i,elmt in enumerate(x):
+            if elmt >= 10:
+                y[i] = SNR_cut_line_cut_10_2753(x[i])
+            if elmt < 10:
+                y[i] = SNR_cut_line_cut_0_10(x[i])
+        y[y <= 0.42] = 0.42
+        y[y >= 0.6] = 0.6
     return y
 
 def SNR_cut_line_cut_10_2753(x):
@@ -186,14 +222,15 @@ def SNR_cut_line(ax):
     y = SNR_cut_line_cut(x)
     ax.plot(x,y,color='blue',linestyle='--',zorder=3)
 
-def make_cut(Reader:NuRadioReco.modules.io,Temp_id,output):
-    eventWriter=ToolsPac.set_writer(output,'R243E512_cut')
+def make_cut_no_remove(Reader:NuRadioReco.modules.io,Temp_id,output):
+    eventWriter=ToolsPac.set_writer(output,'SNR_cut')
     for evt in Reader.get_events():
         stn = evt.get_station(51)
         Xcorr=[]    
         for i in [4,5,6]:
             channel = stn.get_channel(i)
-            Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp][Temp_id]['chi_max'])))
+            # Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp][Temp_id]['chi_max'])))
+            Xcorr.append(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])
         trace_up    = []
         for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
@@ -206,6 +243,26 @@ def make_cut(Reader:NuRadioReco.modules.io,Temp_id,output):
         except(KeyError):
             evt[evtp.Pass_cut_line]={Temp_id:Xcorr>SNR_cut_line_cut(trace_up)}
         eventWriter.run(evt)
+
+def make_cut_remove_bad(Reader:NuRadioReco.modules.io,Temp_id,output):
+    eventWriter=ToolsPac.set_writer(output,'SNR_cut')
+    for evt in Reader.get_events():
+        stn = evt.get_station(51)
+        Xcorr=[]    
+        for i in [4,5,6]:
+            channel = stn.get_channel(i)
+            # Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp][Temp_id]['chi_max'])))
+            Xcorr.append(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])
+        trace_up    = []
+        for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
+            trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
+        Xcorr=np.max(Xcorr)
+        trace_up=np.max(trace_up)/Vrms
+        # ic(trace_up,Xcorr)
+        # ic(Xcorr>SNR_cut_line_cut(trace_up))
+        if Xcorr>SNR_cut_line_cut(trace_up):
+            eventWriter.run(evt)
+
         
         
         # {Template id:True/False}
@@ -233,16 +290,20 @@ def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.i
     weights=[]
     for evt in readARIANNAData.get_events():   
         stn = evt.get_station(51)
+        if not stn.has_triggered():
+            continue
         Xcorr=[]    
         for i in [4,5,6]:
-            channel = stn.get_channel(i)
-            Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp][Temp_id]['chi_max'])))
+            chn = stn.get_channel(i)
+            # Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp][Temp_id]['chi_max'])))
+            Xcorr.append(chn[chp.cr_xcorrelations]['cr_ref_xcorr'])
         trace_up    = []
         for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
         Xcorr=np.max(Xcorr)
         trace_up=np.max(trace_up)
         if has_cutline:
+            ic(evt[evtp.Pass_cut_line])
             if evt[evtp.Pass_cut_line][Temp_id_1]:
                 SNR_dic.append(trace_up/Vrms)
                 X_dic.append(Xcorr)
@@ -268,8 +329,8 @@ Temp_id_1='R243E512'
 # make_cut(reader,'R243E512',output_path)
 # exit()
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/R243E512_cut'
-input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/withTemp_R243E512'
-input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR_Ratio'
+input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs'
+# input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X_SNR_Ratio'
 # input_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/New_temp_Xcorr/3X'
 # test_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/withTemp_R242E10'
 Temp_path=get_Temp_input_path(Temp_id)
@@ -278,18 +339,26 @@ Temp_path=get_Temp_input_path(Temp_id)
 # Get_Xcorr_with_Temp(input_sim,Temp_path)
 # Get_Xcorr_with_Temp(test_path,Temp_path)
 # detected=Get_Xcorr_with_Temp(detected,Temp_path)
-detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/withTemp_R243E512'
+detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/Trig'
+# detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_cut'
+# detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
 # detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X'
 # detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR'
-detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
-reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(detected))
+# detected='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/3X_SNR_Ratio'
+# detected=Get_Xcorr_with_Temp(detected,Temp_path)
+# reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(detected))
+# make_cut(reader,Temp_id,output_path)
 
 fig,ax = plt.subplots(figsize=(10,8),layout='constrained')
-# reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
+reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(detected))
+# simulated=Get_Xcorr_with_Temp(input_sim,Temp_path)
+simulated='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/Trig'
+# simulated='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_Ratio_3X'
+sim_Reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(simulated))
+output='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/'
+# make_cut_remove_bad(reader,Temp_id,output)
 
-sim_Reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_sim))
-
-SNR_Xcorr_Scatter_sim(ax,sim_Reader)
+SNR_Xcorr_Scatter_sim(ax,sim_Reader) 
 
 SNR_Xcorr_Scatter(ax,'SNR',reader,Temp_id,Temp_id_1)
 ax.grid()
@@ -298,7 +367,7 @@ ax.set_xscale('log')
 # ax.tick_params(axis='y', labelsize=40)
 SNR_cut_line(ax)
 plt.legend()
-plt.savefig(os.path.join(output_path,'Trig-rate_Freqs_3X_SNR_Ratio.png'))
+# plt.savefig(os.path.join(output_path,'Trig.png'))
 plt.show()
 
     

@@ -141,11 +141,11 @@ class channelTemplateCorrelation:
                     ref_template_resampled = self.match_sampling(ref_template, resampling_factor)
 
                     xcorr_trace = hp.get_normalized_xcorr(trace, ref_template_resampled)
-                    xcorrpos = np.argmax(np.abs(xcorr_trace))
+                    xcorrpos = np.argmax(np.abs(xcorr_trace)) 
                     xcorr = np.abs(xcorr_trace[xcorrpos])
 
-                    xcorrpos_ch.append(xcorrpos)
-                    xcorrs_ch.append(xcorr)
+                    xcorrpos_ch.append(xcorrpos)    # [posTemp1,posTemp2,posTemp3]
+                    xcorrs_ch.append(xcorr)         # [XmaxT1,XmaxT2,XmaxT3]
                     template_key.append(key)
 
                 if self.__debug:
