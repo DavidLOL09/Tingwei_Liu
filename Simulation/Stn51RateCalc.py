@@ -23,16 +23,16 @@ def getTriggerRatePerBin(simulation_files_folder, e_bins, zen_bins, trigger_name
     trig_rate_per_bin = {}
     n_trig_per_bin = {}
     for trigger in trigger_names:
-        trig_rate_per_bin[trigger] = np.zeros((len(zen_bins)-1,len(e_range)-1))
-        n_trig_per_bin[trigger] = np.zeros((len(zen_bins)-1,len(e_range)-1))
+        trig_rate_per_bin[trigger] = np.zeros((len(zen_bins)-1,len(e_bins)-1))
+        n_trig_per_bin[trigger] = np.zeros((len(zen_bins)-1,len(e_bins)-1))
 
-    for iE in range(len(e_range)-1):
+    for iE in range(len(e_bins)-1):
         for iS in range(len(zen_bins)-1):
             # Load files for given bin only
             nurFiles= []
 
             for file in os.listdir(sim_folder):
-                if file.endswith('.nur') and (f'{e_range[iE]:.1f}-{e_range[iE+1]:.1f}eV_{zen_bins[iS]:.1f}sin2' in file):
+                if file.endswith('.nur') and (f'{e_bins[iE]:.1f}-{e_bins[iE+1]:.1f}eV_{zen_bins[iS]:.1f}sin2' in file):
                     nurFiles.append(os.path.join(sim_folder, file))
             if nurFiles == []:
                 continue
@@ -82,12 +82,12 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
     # the function auger.event_rate returns the flux in events/year, as aeff is passed in
     for iT, trigger in enumerate(trigger_names):
         rate_per_bin[trigger] = np.zeros_like(aeff_per_bin[trigger])
-        rate_sin_sum[trigger] = np.zeros(len(e_range)-1)
-        for iE in range(len(e_range)-1):
+        rate_sin_sum[trigger] = np.zeros(len(e_bins)-1)
+        for iE in range(len(e_bins)-1):
             for iS in range(len(sin2Val)-1):
                 ic(aeff_per_bin[trigger][iS][iE] )
-                high_flux = auger.event_rate(e_range[iE], e_range[iE+1], zmax=angle_bins[iS+1], area=aeff_per_bin[trigger][iS][iE])
-                low_flux = auger.event_rate(e_range[iE], e_range[iE+1], zmax=angle_bins[iS], area=aeff_per_bin[trigger][iS][iE])
+                high_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=angle_bins[iS+1], area=aeff_per_bin[trigger][iS][iE])
+                low_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=angle_bins[iS], area=aeff_per_bin[trigger][iS][iE])
                 rate_per_bin[trigger][iS][iE] = high_flux - low_flux
 
         for iS in range(len(sin2Val)-1):
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     min_energy = 16.0
     max_energy = 18.6
     # sin2Val = -0.1
-    e_range = np.arange(min_energy, max_energy, 0.1)
+    e_bins = np.arange(min_energy, max_energy, 0.1)
     sin2Val = np.arange(0, 1.01, 0.1)                   # Current simulations are ran in bins of sin^2(angle) in radians
     angle_bins = np.rad2deg(np.arcsin(np.sqrt(sin2Val)))
 
@@ -189,16 +189,16 @@ if __name__ == '__main__':
     trigger_names = ['direct_LPDA_2of3_3.5sigma', 'direct_LPDA_3of3_3.5sigma', 'direct_LPDA_3of3_5sigma']
     colors = ['b', 'g', 'r']
 
-    n_trig_per_bin, trig_rate_per_bin = getTriggerRatePerBin(sim_folder, e_range, sin2Val, trigger_names)
+    n_trig_per_bin, trig_rate_per_bin = getTriggerRatePerBin(sim_folder, e_bins, sin2Val, trigger_names)
     aeff_per_bin = getAeffRatePerBin(trig_rate_per_bin, trigger_names, max_distance)
-    rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_range, angle_bins, trigger_names)
+    rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, angle_bins, trigger_names)
 
 
     # Plot each trigger separately, showing different sin bins
     for iT, trigger in enumerate(trigger_names):
         for iS in range(len(sin2Val)-1):
-            # plt.bar(e_range[:-1], aeff_per_bin[trigger][iS], width=0.1, alpha=0.5, label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f}sin2')
-            plt.hist(e_range[:-1], weights=aeff_per_bin[trigger][iS], bins=e_range, histtype='step', label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f} deg')
+            # plt.bar(e_bins[:-1], aeff_per_bin[trigger][iS], width=0.1, alpha=0.5, label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f}sin2')
+            plt.hist(e_bins[:-1], weights=aeff_per_bin[trigger][iS], bins=e_bins, histtype='step', label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f} deg')
         plt.xlabel('Energy [eV]')
         plt.ylabel('Effective Area [km^2]')
         plt.yscale('log')
@@ -209,11 +209,11 @@ if __name__ == '__main__':
     # Plot all triggers together, sum of all sin bins
     aeff_sin_sum = {}
     for iT, trigger in enumerate(trigger_names):
-        aeff_sin_sum[trigger] =  np.zeros(len(e_range)-1)
+        aeff_sin_sum[trigger] =  np.zeros(len(e_bins)-1)
         for iS in range(len(sin2Val)-1):
             aeff_sin_sum[trigger] += aeff_per_bin[trigger][iS]
-        # plt.bar(e_range[:-1], aeff_sin_sum[trigger], width=0.1, alpha=0.5, label=f'{trigger}')
-        plt.hist(e_range[:-1], weights=aeff_sin_sum[trigger], bins=e_range, histtype='step', label=f'{trigger}, {np.sum(aeff_sin_sum[trigger]):.0f} total Aeff', color=colors[iT])
+        # plt.bar(e_bins[:-1], aeff_sin_sum[trigger], width=0.1, alpha=0.5, label=f'{trigger}')
+        plt.hist(e_bins[:-1], weights=aeff_sin_sum[trigger], bins=e_bins, histtype='step', label=f'{trigger}, {np.sum(aeff_sin_sum[trigger]):.0f} total Aeff', color=colors[iT])
     plt.xlabel('Energy [eV]')
     plt.ylabel('Effective Area [km^2]')
     plt.yscale('log')
@@ -226,8 +226,8 @@ if __name__ == '__main__':
     # Plot event rate showing different angle bins per trigger
     for iT, trigger in enumerate(trigger_names):
         for iS in range(len(sin2Val)-1):
-            # plt.bar(e_range[:-1], rate_per_bin[trigger][iS], width=0.1, alpha=0.5, label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f}sin2')
-            plt.hist(e_range[:-1], weights=rate_per_bin[trigger][iS], bins=e_range, histtype='step', label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f} deg')
+            # plt.bar(e_bins[:-1], rate_per_bin[trigger][iS], width=0.1, alpha=0.5, label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f}sin2')
+            plt.hist(e_bins[:-1], weights=rate_per_bin[trigger][iS], bins=e_bins, histtype='step', label=f'{angle_bins[iS]:.1f}-{angle_bins[iS+1]:.1f} deg')
         plt.xlabel('Energy [eV]')
         plt.ylabel('Events / Year')
         plt.yscale('log')
@@ -236,9 +236,9 @@ if __name__ == '__main__':
         plt.clf()
 
     for iT, trigger in enumerate(trigger_names):
-        # plt.bar(e_range[:-1], rate_sin_sum[trigger], width=0.1, alpha=0.5, label=trigger)
+        # plt.bar(e_bins[:-1], rate_sin_sum[trigger], width=0.1, alpha=0.5, label=trigger)
         evts_in_data = station_livetime * np.sum(rate_sin_sum[trigger])
-        plt.hist(e_range[:-1], weights=rate_sin_sum[trigger], bins=e_range, histtype='step', label=f'{trigger}, {evts_in_data:.1f} events in data', color=colors[iT])
+        plt.hist(e_bins[:-1], weights=rate_sin_sum[trigger], bins=e_bins, histtype='step', label=f'{trigger}, {evts_in_data:.1f} events in data', color=colors[iT])
     plt.xlabel('Energy [eV]')
     plt.ylabel('Events / Year')
     plt.yscale('log')
@@ -250,17 +250,17 @@ if __name__ == '__main__':
     # Calc rate after cutting at ~40deg. Doing cut at 39.2deg since that's bin edge
     rate_sin_sum_cut = {}
     for trigger in trigger_names:
-        rate_sin_sum_cut[trigger] = np.zeros(len(e_range)-1)
+        rate_sin_sum_cut[trigger] = np.zeros(len(e_bins)-1)
         for iS in range(len(sin2Val)-1):
             if angle_bins[iS] > 39:
                 rate_sin_sum_cut[trigger] += rate_per_bin[trigger][iS]
 
     for iT, trigger in enumerate(trigger_names):
-        # plt.bar(e_range[:-1], rate_sin_sum[trigger], width=0.1, alpha=0.5, label=trigger)
+        # plt.bar(e_bins[:-1], rate_sin_sum[trigger], width=0.1, alpha=0.5, label=trigger)
         evts_in_data = station_livetime * np.sum(rate_sin_sum[trigger])
         evts_in_data_cut = station_livetime * np.sum(rate_sin_sum_cut[trigger])
-        plt.hist(e_range[:-1], weights=rate_sin_sum[trigger], bins=e_range, histtype='step', label=f'{trigger}, {evts_in_data:.1f} events in data', color=colors[iT])
-        plt.hist(e_range[:-1], weights=rate_sin_sum_cut[trigger], bins=e_range, histtype='step', label=f'39deg cut, {evts_in_data_cut:.1f} events in data', color=colors[iT], linestyle='--')
+        plt.hist(e_bins[:-1], weights=rate_sin_sum[trigger], bins=e_bins, histtype='step', label=f'{trigger}, {evts_in_data:.1f} events in data', color=colors[iT])
+        plt.hist(e_bins[:-1], weights=rate_sin_sum_cut[trigger], bins=e_bins, histtype='step', label=f'39deg cut, {evts_in_data_cut:.1f} events in data', color=colors[iT], linestyle='--')
     plt.xlabel('Energy [eV]')
     plt.ylabel('Events / Year')
     plt.yscale('log')
@@ -270,5 +270,5 @@ if __name__ == '__main__':
 
 
     # Now can do plots of parameters
-    trig_energy, trig_zenith, trig_azimuth, trig_weight = getParametersPerEvent(sim_folder, trigger_names[0], e_range, sin2Val, rate_per_bin, n_trig_per_bin)
+    trig_energy, trig_zenith, trig_azimuth, trig_weight = getParametersPerEvent(sim_folder, trigger_names[0], e_bins, sin2Val, rate_per_bin, n_trig_per_bin)
     # TODO
