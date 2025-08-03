@@ -60,7 +60,7 @@ def getTriggerRatePerBin(simulation_files_folder, e_bins, zen_bins, trigger_name
 
     return n_trig_per_bin, trig_rate_per_bin
 
-def getAeffRatePerBin(trigger_names, max_distance):
+def getAeffRatePerBin(trig_rate_per_bin,trigger_names, max_distance):
     # Returns the effective area per bin in energy/zenith assuming a circular simulation area with maximum distance max_distance
 
     aeff_per_bin = {}
@@ -85,7 +85,7 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
         rate_per_bin[trigger] = np.zeros_like(aeff_per_bin[trigger])
         rate_sin_sum[trigger] = np.zeros(len(e_bins)-1)
         for iE in range(len(e_bins)-1):
-            for iS in range(len(sin2Val)-1):
+            for iS in range(len(zen_bins)-1):
                 ic(aeff_per_bin[trigger][iS][iE] )
                 high_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=angle_bins[iS+1], area=aeff_per_bin[trigger][iS][iE])
                 low_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=angle_bins[iS], area=aeff_per_bin[trigger][iS][iE])
@@ -110,7 +110,7 @@ def getParametersPerEvent(simulation_files_folder, trigger_names, output, filena
     # If work has not already been done to get rate and trig per bin, do it here
     if rate_per_bin is None or n_trig_per_bin is None:
         n_trig_per_bin, trig_rate_per_bin = getTriggerRatePerBin(simulation_files_folder, e_bins, sin2Val, trigger_names)
-        aeff_per_bin = getAeffRatePerBin(trig_rate_per_bin, max_distance)
+        aeff_per_bin = getAeffRatePerBin(trig_rate_per_bin,trigger_names,max_distance)
         rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names)
 
     # Get the parameters per event
