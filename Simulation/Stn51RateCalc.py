@@ -87,11 +87,11 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
         for iE in range(len(e_bins)-1):
             for iS in range(len(zen_bins)-1):
                 ic(aeff_per_bin[trigger][iS][iE] )
-                high_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=angle_bins[iS+1], area=aeff_per_bin[trigger][iS][iE])
-                low_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=angle_bins[iS], area=aeff_per_bin[trigger][iS][iE])
+                high_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=zen_bins[iS+1], area=aeff_per_bin[trigger][iS][iE])
+                low_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=zen_bins[iS], area=aeff_per_bin[trigger][iS][iE])
                 rate_per_bin[trigger][iS][iE] = high_flux - low_flux
 
-        for iS in range(len(sin2Val)-1):
+        for iS in range(len(zen_bins)-1):
             rate_sin_sum[trigger] += rate_per_bin[trigger][iS]
 
     return rate_per_bin, rate_sin_sum
