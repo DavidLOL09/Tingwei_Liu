@@ -148,12 +148,12 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
                 zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)-1
 
                 # This splits up the weight of evnts/yr for the bin into each individual event that triggered equally
-                # ic('line:147')
-                # ic(n_trig_per_bin)
-                # ic(rate_per_bin)
-                # ic(e_digit)
-                # ic(zen_digit)
-                # ic('line:150')
+                ic('line:147')
+                ic(n_trig_per_bin)
+                ic(rate_per_bin)
+                ic(e_digit)
+                ic(zen_digit)
+                ic('line:150')
                 if n_trig_per_bin[trigger][zen_digit][e_digit]==0 and rate_per_bin[trigger][zen_digit][e_digit]==0:
                     evtrate=0
                 else:
