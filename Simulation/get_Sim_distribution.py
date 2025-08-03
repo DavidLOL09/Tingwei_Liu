@@ -9,7 +9,7 @@ import argparse
 from icecream import ic
 import shutil
 import numpy as np
-
+ic('here')
 
 def get_PPE(sim_file,trigger_name,output_path,filename,high_e,low_e,sin2V):
     return S51RC.getParametersPerEvent(sim_file,trigger_name,output_path, filename,e_bins=[low_e,high_e],sin2Val=[sin2V,sin2V+0.1])
