@@ -12,7 +12,7 @@ import numpy as np
 
 
 def get_PPE(sim_file,trigger_name,output_path,filename,high_e,low_e,sin2V):
-    return S51RC.getParametersPerEvent(sim_file,trigger_name,output_path, filename,e_bins=[low_e,high_e],zen_bins=[sin2V,sin2V+0.1])
+    return S51RC.getParametersPerEvent(sim_file,trigger_name,output_path, filename,e_bins=[low_e,high_e],sin2V=[sin2V,sin2V+0.1])
 '''
 trig_energy, trig_zenith, trig_azimuth, trig_weight, events_id=get_PPE(simulation_files_folder, trigger_name, e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
 '''

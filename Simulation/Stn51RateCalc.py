@@ -96,7 +96,7 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
 
     return rate_per_bin, rate_sin_sum
 
-def getParametersPerEvent(simulation_files_folder, trigger_names, output, filename, e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
+def getParametersPerEvent(simulation_files_folder, trigger_names, output, filename, sin2V=np.arange(0, 1.01, 0.1),e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
     # Trigger names should be a single string
 
     # Default e_bins and zen_bins
@@ -104,8 +104,8 @@ def getParametersPerEvent(simulation_files_folder, trigger_names, output, filena
         # Range of IceTop energy simulations
         e_bins = np.arange(16, 18.6, 0.1)
     if zen_bins is None:
-        sin2Val = np.arange(0, 1.01, 0.1)   #Bin edges evenly spaces in sin^2(angle) in radians
-        angle_bins = np.rad2deg(np.arcsin(np.sqrt(sin2Val)))    #Bin edges in degrees
+        # sin2Val = np.arange(0, 1.01, 0.1)   #Bin edges evenly spaces in sin^2(angle) in radians
+        zen_bins = np.rad2deg(np.arcsin(np.sqrt(sin2Val)))    #Bin edges in degrees
 
     # If work has not already been done to get rate and trig per bin, do it here
     if rate_per_bin is None or n_trig_per_bin is None:
