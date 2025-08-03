@@ -21,9 +21,11 @@ run_py_file='get_Sim_distribution'
 # Path(output_folder).mkdir(parents=True, exist_ok=True)
 
 
-min_energy = 16.0
-max_energy = 18.6
-max_energy = 16.5
+# min_energy = 16.0
+# max_energy = 18.6
+# max_energy = 16.5
+max_energy=17.5
+min_energy=17.0
 
 e_range = np.arange(min_energy, max_energy, 0.1)
 sin2Val = np.arange(0, 1.01, 0.1)
