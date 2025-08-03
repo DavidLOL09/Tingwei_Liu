@@ -159,9 +159,7 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
                     trig_id.append(f'R{evt.get_run_number()}E{evt.get_id}')
                     evt.set_parameter(evtp.event_rate,evtrate)
                     evt_writer.run(evt)
-
-
-
+    ic(len(trig_id))
     return trig_energy, trig_zenith, trig_azimuth, trig_weight, trig_id
 
 
