@@ -19,6 +19,9 @@ trig_energy, trig_zenith, trig_azimuth, trig_weight, events_id=get_PPE(simulatio
 
 # output='/Users/david/PycharmProjects/Demo1/test_files'
 thresh23_3      ='direct_LPDA_2of3_3.5sigma'
+
+
+
 # python get_Sim_distribution.py --working_dir --working_file --n_cores --low_e --high_e --sin2 --num_icetop
 parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
 parser.add_argument('--working_dir',type=str, help='working directory of simulation')

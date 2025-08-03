@@ -8,6 +8,23 @@ def get_input(input):
         if i.endswith('.nur'):
             input_dir.append(os.path.join(input,i))
     return input_dir
+
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Test/'
+readARIANNAData=NuRadioRecoio.NuRadioRecoio(get_input(input_path))
+trigger='direct_LPDA_3of3_5sigma'
+for evt in readARIANNAData.get_events():
+    station_ids = evt.get_station_ids()
+    for stn_id in station_ids:
+        station = evt.get_station(stn_id)
+        ic(stn_id)
+        if not station.has_triggered():
+            ic('Not Triggered')
+            continue
+        trigger_names=station.get_trigger_names()
+        ic(trigger_names)
+exit()
+
+
 num_p_h=8-2
 input_path=f'/Users/david/PycharmProjects/Demo1/Research/Repository/raw_X_output/X_Ratio_Zen_TrigR{num_p_h}_cut/SNR_cut'
 readARIANNAData=NuRadioRecoio.NuRadioRecoio(get_input(input_path))

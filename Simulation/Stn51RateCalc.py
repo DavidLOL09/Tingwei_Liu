@@ -86,7 +86,7 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
         rate_sin_sum[trigger] = np.zeros(len(e_bins)-1)
         for iE in range(len(e_bins)-1):
             for iS in range(len(zen_bins)-1):
-                ic(aeff_per_bin[trigger][iS][iE] )
+                # ic(aeff_per_bin[trigger][iS][iE] )
                 high_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=zen_bins[iS+1], area=aeff_per_bin[trigger][iS][iE])
                 low_flux = auger.event_rate(e_bins[iE], e_bins[iE+1], zmax=zen_bins[iS], area=aeff_per_bin[trigger][iS][iE])
                 rate_per_bin[trigger][iS][iE] = high_flux - low_flux
@@ -133,6 +133,8 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
         station_ids = evt.get_station_ids()
         for stn_id in station_ids:
             station = evt.get_station(stn_id)
+            if not station.has_triggered():
+                continue
             if station.has_triggered(trigger_name=trigger):
                 sim_shower = evt.get_sim_shower(0)
                 trig_energy.append(sim_shower[shp.energy])  # in eV
