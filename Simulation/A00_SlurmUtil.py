@@ -17,6 +17,7 @@ def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='r
     #now adding settings for slurm scheduler
     header = "#!/bin/bash\n"
     header += f"#SBATCH --job-name={jobName}            ##Name of the job.\n"
+    header += f"#SBATCH --array=0-499%30                ##Run 500 jobs in total, max 30 jobs concurrently.\n"
     header += "#SBATCH -A sbarwick_lab                  ##Account to charge to\n"
     header += f"#SBATCH -p {partition}                          ##Partition/queue name\n"
 #    header += "#SBATCH -p free                          ##Partition/queue name\n"

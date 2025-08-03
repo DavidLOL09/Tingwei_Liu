@@ -31,11 +31,12 @@ def getTriggerRatePerBin(simulation_files_folder, e_bins, zen_bins, trigger_name
             # Load files for given bin only
             nurFiles= []
 
-            for file in os.listdir(sim_folder):
+            for file in os.listdir(simulation_files_folder):
                 if file.endswith('.nur') and (f'{e_bins[iE]:.1f}-{e_bins[iE+1]:.1f}eV_{zen_bins[iS]:.1f}sin2' in file):
                     nurFiles.append(os.path.join(sim_folder, file))
             if nurFiles == []:
                 continue
+
 
 
             eventReader = NuRadioRecoio.NuRadioRecoio(nurFiles)
@@ -113,11 +114,11 @@ def getParametersPerEvent(simulation_files_folder, trigger_names, output, filena
         rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names)
 
     # Get the parameters per event
-    # nurFiles= []
-    # for file in os.listdir(simulation_files_folder):
-    #     if file.endswith('.nur'):
-    #         nurFiles.append(os.path.join(simulation_files_folder, file))
-    nurFiles=simulation_files_folder
+    nurFiles= []
+    for file in os.listdir(simulation_files_folder):
+        if file.endswith('.nur'):
+            nurFiles.append(os.path.join(simulation_files_folder, file))
+
     
     trig_energy = []
     trig_zenith = []
