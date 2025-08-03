@@ -75,7 +75,7 @@ dic = {
 ic(I,E,Z,A,W)
 ic(len(I))
 df = pd.DataFrame(dic)
-df.to_excel(os.path.join(output,'Data_output.xlsx'))
+df.to_excel(os.path.join(output,f'Data_output{low_e:.1f}eV{sin2:.1f}sin2V.xlsx'))
 ic(start)
 ic(directory)
 ic(len(input_files))
