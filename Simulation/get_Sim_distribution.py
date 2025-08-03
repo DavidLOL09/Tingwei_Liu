@@ -74,6 +74,9 @@ dic = {
 }
 df = pd.DataFrame(dic)
 df.to_excel(os.path.join(output,'Data_output.xlsx'))
+ic(start)
+ic(directory)
+ic(len(input_files))
 for i in input_files:
     ic(i)
 remove_files(input_files)
