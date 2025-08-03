@@ -6,6 +6,7 @@ import sys
 # sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
 sys.path.insert(0,'NuRadioMC')
 from NuRadioReco.modules.io import NuRadioRecoio
+import NuRadioReco
 ic(NuRadioReco.__file__)
 import matplotlib.pyplot as plt
 from NuRadioReco.utilities import units
