@@ -46,15 +46,10 @@ num_icetop = args.num_icetop
 
 def get_input(start_with,stop_with,directory=os.getcwd()):
     input_files=[]
-    ic(start_with)
-    ic(stop_with)
-    ic(directory)
     for i in os.listdir(directory):
-        ic(i)
-        abspath=os.path.abspath(i)
-        ic(abspath)
-        if abspath.startswith(start_with) and abspath.endswith(stop_with):
-            input_files.append(abspath)
+        # abspath=os.path.abspath(i)
+        if i.startswith(start_with) and i.endswith(stop_with):
+            input_files.append(os.path.abspath(i))
     return input_files
 
 def remove_files(files):
@@ -62,7 +57,7 @@ def remove_files(files):
         shutil.rmtree(file)
     
 
-start=os.path.join(working_dir,working_file)
+start=working_file
 directory='/pub/tingwel4/output/CR_BL_Simulation_demo'
 input_files=get_input(start,'.nur',directory)
 output='/pub/tingwel4/output/CR_BL_Simulation_weighted'
@@ -79,7 +74,6 @@ dic = {
 }
 df = pd.DataFrame(dic)
 df.to_excel(os.path.join(output,'Data_output.xlsx'))
-print()
 ic(start)
 ic(directory)
 ic(len(input_files))
@@ -87,11 +81,3 @@ for i in input_files:
     ic(i)
 remove_files(input_files)
 
-# ic| 'here'
-# ic| len(trig_id): 0
-# ic| start: '/pub/tingwel4/output/CR_BL_Simulation_demo/Stn51_IceTop_16.0-16.1eV_0.0sin2_200cores'
-# ic| directory: '/pub/tingwel4/output/CR_BL_Simulation_demo'
-# ic| len(input_files): 0
-
-# /pub/tingwel4/output/CR_BL_Simulation_demo
-# Stn51_IceTop_16.0-16.1eV_0.0sin2_200cores.nur
