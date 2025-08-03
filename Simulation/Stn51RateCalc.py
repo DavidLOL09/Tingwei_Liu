@@ -96,7 +96,7 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
 
     return rate_per_bin, rate_sin_sum
 
-def getParametersPerEvent(simulation_files_folder, trigger_names, output, filename, max_distance=2,sin2Val=np.arange(0, 1.01, 0.1),e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
+def getParametersPerEvent(simulation_files_folder, trigger, output, filename, max_distance=2,sin2Val=np.arange(0, 1.01, 0.1),e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
     # Trigger names should be a single string
 
     # Default e_bins and zen_bins
@@ -109,9 +109,9 @@ def getParametersPerEvent(simulation_files_folder, trigger_names, output, filena
 
     # If work has not already been done to get rate and trig per bin, do it here
     if rate_per_bin is None or n_trig_per_bin is None:
-        n_trig_per_bin, trig_rate_per_bin = getTriggerRatePerBin(simulation_files_folder, e_bins, sin2Val, trigger_names)
-        aeff_per_bin = getAeffRatePerBin(trig_rate_per_bin,trigger_names,max_distance)
-        rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names)
+        n_trig_per_bin, trig_rate_per_bin = getTriggerRatePerBin(simulation_files_folder, e_bins, sin2Val, [trigger])
+        aeff_per_bin = getAeffRatePerBin(trig_rate_per_bin,[trigger],max_distance)
+        rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, [trigger])
 
     # Get the parameters per event
     nurFiles= []
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # Livetime of station data in years
     station_livetime = (46 + (10 + (57 + 27.6/60)/60)/24) / 364.25 # 46 days, 10 hours, 57 minutes, 27.6 seconds
-    ic(station_livetime)
+
 
     max_distance = 2
     n_cores = 100
