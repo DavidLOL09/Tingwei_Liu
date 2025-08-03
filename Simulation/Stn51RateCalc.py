@@ -1,13 +1,13 @@
 import os
 import numpy as np
 import astrotools.auger as auger
+from icecream import ic
 import sys
 # sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
 sys.path.insert(0,'NuRadioMC')
 from NuRadioReco.modules.io import NuRadioRecoio
 ic(NuRadioReco.__file__)
 import matplotlib.pyplot as plt
-from icecream import ic
 from NuRadioReco.utilities import units
 from pathlib import Path
 from NuRadioReco.framework.parameters import showerParameters as shp
