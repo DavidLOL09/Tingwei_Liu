@@ -38,7 +38,7 @@ def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='r
     header += "export PYTHONPATH=$Radio:$PYTHONPATH\n"
  
     header += "module load python/3.8.0\n"
-    header += "cd $pub/tingwel4/Tingwei_Liu/Simulation\n"
+    header += "cd /pub/tingwel4/Tingwei_Liu/Simulation\n"
     header += "pwd\n"
 
     slurm_name = os.path.join(runDirectory, os.path.basename(jobName)) + ".sh"
