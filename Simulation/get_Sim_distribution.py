@@ -44,12 +44,12 @@ num_icetop = args.num_icetop
 
 
 
-def get_input(start_with,stop_with,directory=os.getcwd()):
+def get_input(start_with,stop_with,directory):
     input_files=[]
     for i in os.listdir(directory):
         # abspath=os.path.abspath(i)
         if i.startswith(start_with) and i.endswith(stop_with):
-            input_files.append(os.path.abspath(i))
+            input_files.append(os.path.join(directory,i))
     return input_files
 
 def remove_files(files):
