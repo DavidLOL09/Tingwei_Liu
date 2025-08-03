@@ -96,7 +96,7 @@ def getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, trigger_names):
 
     return rate_per_bin, rate_sin_sum
 
-def getParametersPerEvent(simulation_files_folder, trigger_names, output, filename, sin2V=np.arange(0, 1.01, 0.1),e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
+def getParametersPerEvent(simulation_files_folder, trigger_names, output, filename, sin2Val=np.arange(0, 1.01, 0.1),e_bins=None, zen_bins=None, rate_per_bin=None, n_trig_per_bin=None):
     # Trigger names should be a single string
 
     # Default e_bins and zen_bins
