@@ -33,7 +33,7 @@ def getTriggerRatePerBin(simulation_files_folder, e_bins, zen_bins, trigger_name
 
             for file in os.listdir(simulation_files_folder):
                 if file.endswith('.nur') and (f'{e_bins[iE]:.1f}-{e_bins[iE+1]:.1f}eV_{zen_bins[iS]:.1f}sin2' in file):
-                    nurFiles.append(os.path.join(sim_folder, file))
+                    nurFiles.append(os.path.join(simulation_files_folder, file))
             if nurFiles == []:
                 continue
 
