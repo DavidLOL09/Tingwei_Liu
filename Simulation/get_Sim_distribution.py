@@ -54,7 +54,7 @@ def get_input(start_with,stop_with,directory=os.getcwd()):
 
 def remove_files(files):
     for file in files:
-        shutil.rmtree(file)
+        os.remove(file)
     
 
 start=working_file
