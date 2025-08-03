@@ -10,11 +10,6 @@ from icecream import ic
 import shutil
 import numpy as np
 
-sin2Val = np.arange(0, 1.01, 0.1) 
-for i in sin2Val:
-    ic(i)
-
-exit()
 
 def get_PPE(sim_file,trigger_name,output_path,filename,high_e,low_e,sin2V):
     return S51RC.getParametersPerEvent(sim_file,trigger_name,output_path, filename,e_bins=[low_e,high_e],zen_bins=[sin2V,sin2V+0.1])
