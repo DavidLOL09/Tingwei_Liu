@@ -122,8 +122,9 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
     
     trig_energy = []
     trig_zenith = []
-    trig_azimuth = []
+    trig_azimuth= []
     trig_weight = []
+    trig_id     = []
 
     eventReader = NuRadioRecoio.NuRadioRecoio(nurFiles)
 
@@ -137,9 +138,6 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
                 continue
             if station.has_triggered(trigger_name=trigger):
                 sim_shower = evt.get_sim_shower(0)
-                trig_energy.append(sim_shower[shp.energy])  # in eV
-                trig_zenith.append(sim_shower[shp.zenith])  # in radians
-                trig_azimuth.append(sim_shower[shp.azimuth])    # in radians
 
                 # Need to know which bin this event falls into
                 e_digit = np.digitize(np.log10(sim_shower[shp.energy]), e_bins)
@@ -154,13 +152,17 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
                 if evtrate==0:
                     continue
                 else:
+                    trig_energy.append(sim_shower[shp.energy])  # in eV
+                    trig_zenith.append(sim_shower[shp.zenith])  # in radians
+                    trig_azimuth.append(sim_shower[shp.azimuth])    # in radians
                     trig_weight.append(evtrate) 
+                    trig_id.append(f'R{evt.get_run_number()}E{evt.get_id}')
                     evt.set_parameter(evtp.event_rate,evtrate)
                     evt_writer.run(evt)
 
 
 
-    return trig_energy, trig_zenith, trig_azimuth, trig_weight
+    return trig_energy, trig_zenith, trig_azimuth, trig_weight, trig_id
 
 
 
