@@ -140,8 +140,8 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
                 sim_shower = evt.get_sim_shower(0)
 
                 # Need to know which bin this event falls into
-                e_digit = np.digitize(np.log10(sim_shower[shp.energy]), e_bins)
-                zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)
+                e_digit = np.digitize(np.log10(sim_shower[shp.energy]), e_bins)-1
+                zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)-1
 
                 # This splits up the weight of evnts/yr for the bin into each individual event that triggered equally
                 ic('line:147')
