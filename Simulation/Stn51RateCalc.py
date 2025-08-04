@@ -118,11 +118,14 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
         rate_per_bin, rate_sin_sum = getEventRatePerBin(aeff_per_bin, e_bins, zen_bins, [trigger])
 
     # Get the parameters per event
-    nurFiles= []
-    for file in os.listdir(simulation_files_folder):
-        if file.endswith('.nur'):
-            nurFiles.append(os.path.join(simulation_files_folder, file))
 
+    nurFiles= []
+
+    for file in os.listdir(sim_folder):
+        if file.endswith('.nur') and (f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{zen_bins[0]:.1f}sin2' in file):
+            nurFiles.append(os.path.join(sim_folder, file))
+    if nurFiles == []:
+        return [],[],[],[],[]
     
     trig_energy = []
     trig_zenith = []
@@ -157,7 +160,7 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
                 ic(np.rad2deg(sim_shower[shp.zenith]))
                 ic(zen_bins)
                 ic(zen_digit)
-
+                ic(filename)
                 
                 for path in sys.path:
                     ic(path)
