@@ -4,7 +4,7 @@ import astrotools.auger as auger
 from icecream import ic
 import sys
 # sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
-sys.path.insert(0,'../NuRadioMC')
+sys.path.insert(0,'/dfs6/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 from NuRadioReco.modules.io import NuRadioRecoio
 import NuRadioReco
 import matplotlib.pyplot as plt
@@ -145,16 +145,17 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
 
                 # Need to know which bin this event falls into
                 e_digit = np.digitize(np.log10(sim_shower[shp.energy]), e_bins)-1
-                zen_digit = np.digitize(np.rad2deg(np.arcsin(np.sqrt(np.sin(sim_shower[shp.zenith])**2))), zen_bins)-1
+                zen_digit = np.digitize(np.rad2deg(sim_shower[shp.zenith]), zen_bins)-1
 
                 # This splits up the weight of evnts/yr for the bin into each individual event that triggered equally
                 print()
                 ic(n_trig_per_bin)
                 ic(rate_per_bin)
                 ic(sim_shower[shp.energy],np.log10(sim_shower[shp.energy]))
-                ic(zen_bins)
                 ic(e_bins)
                 ic(e_digit)
+                ic(np.rad2deg(sim_shower[shp.zenith]))
+                ic(zen_bins)
                 ic(zen_digit)
 
                 
