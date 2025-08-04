@@ -57,7 +57,7 @@ def remove_files(files):
     
 
 start=working_file
-directory='/pub/tingwel4/output/CR_BL_Simulation_demo'
+directory='/pub/tingwel4/output/CR_BL_Simulation'
 input_files=get_input(start,'.nur',directory)
 output='/pub/tingwel4/output/CR_BL_Simulation_weighted'
 # trig_energy, trig_zenith, trig_azimuth, trig_weight = get_PPE(sim_folder, trigger_names[0], e_range, sin2Val, rate_per_bin, n_trig_per_bin)
