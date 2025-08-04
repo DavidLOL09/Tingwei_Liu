@@ -124,6 +124,8 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
 
     for file in os.listdir(simulation_files_folder):
         if file.endswith('.nur') and (f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{zen_bins[0]:.1f}sin2' in file):
+            ic(f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{zen_bins[0]:.1f}sin2')
+            ic(file)
             nurFiles.append(os.path.join(simulation_files_folder, file))
     if nurFiles == []:
         return [],[],[],[],[]
