@@ -71,14 +71,5 @@ dic = {
     'Trig_azimuth':A,
     'Trig_weight':W
 }
-ic(I,E,Z,A,W)
-ic(len(I))
-df = pd.DataFrame(dic)
-df.to_excel(os.path.join(output,f'Data_output{low_e:.1f}eV{sin2:.1f}sin2V.xlsx'))
-ic(start)
-ic(directory)
-ic(len(input_files))
-for i in input_files:
-    ic(i)
-# remove_files(input_files)
+remove_files(input_files)
 
