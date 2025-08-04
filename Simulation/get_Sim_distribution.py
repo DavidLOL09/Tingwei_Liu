@@ -1,15 +1,14 @@
 import sys
 import os
-from NuRadioReco.utilities import units
-import healpy
-import Stn51RateCalc
+sys.modules.pop('NuRadioMC', None)
+sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 import pandas as pd
 import Stn51RateCalc as S51RC
 import argparse
 from icecream import ic
 import shutil
 import numpy as np
-ic('here')
+
 
 def get_PPE(sim_file,trigger_name,output_path,filename,high_e,low_e,sin2V):
     return S51RC.getParametersPerEvent(sim_file,trigger_name,output_path, filename,e_bins=[low_e,high_e],sin2Val=[sin2V,sin2V+0.1])

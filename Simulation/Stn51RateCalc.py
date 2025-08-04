@@ -4,8 +4,6 @@ import astrotools.auger as auger
 from icecream import ic
 import sys
 # sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
-sys.modules.pop('NuRadioMC', None)
-sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 import NuRadioReco
 ic(f'line11{NuRadioReco.__file__}')
 from NuRadioReco.modules.io import NuRadioRecoio
@@ -156,16 +154,6 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
 
                 # This splits up the weight of evnts/yr for the bin into each individual event that triggered equally
                 print()
-                ic(n_trig_per_bin)
-                ic(rate_per_bin)
-                ic(sim_shower[shp.energy],np.log10(sim_shower[shp.energy]))
-                ic(e_bins)
-                ic(e_digit)
-                ic(np.rad2deg(sim_shower[shp.zenith]))
-                ic(zen_bins)
-                ic(zen_digit)
-                ic(filename)
-                
                 for path in sys.path:
                     ic(path)
                 ic(NuRadioReco.__file__)
