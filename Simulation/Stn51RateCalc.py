@@ -8,6 +8,7 @@ sys.path.insert(0,'/dfs6/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 sys.path.insert(1,'/dfs6/pub/tingwel4/Tingwei_Liu/NuRadioMC/NuRadioReco')
 from NuRadioReco.modules.io import NuRadioRecoio
 import NuRadioReco
+ic(f'line11{NuRadioReco.__file__}')
 import matplotlib.pyplot as plt
 from NuRadioReco.utilities import units
 from pathlib import Path
@@ -123,9 +124,9 @@ def getParametersPerEvent(simulation_files_folder, trigger, output, filename, ma
     nurFiles= []
 
     for file in os.listdir(simulation_files_folder):
-        ic(f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{zen_bins[0]:.1f}sin2')
-        ic(file)
-        if file.endswith('.nur') and (f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{zen_bins[0]:.1f}sin2' in file):
+        # ic(f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{zen_bins[0]:.1f}sin2')
+        # ic(file)
+        if file.endswith('.nur') and (f'{e_bins[0]:.1f}-{e_bins[1]:.1f}eV_{sin2Val[0]:.1f}sin2' in file):
             nurFiles.append(os.path.join(simulation_files_folder, file))
     if nurFiles == []:
         return [],[],[],[],[]
