@@ -5,6 +5,7 @@ from icecream import ic
 import sys
 # sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
 sys.path.insert(0,'/dfs6/pub/tingwel4/Tingwei_Liu/NuRadioMC')
+sys.path.insert(1,'/dfs6/pub/tingwel4/Tingwei_Liu/NuRadioMC/NuRadioReco')
 from NuRadioReco.modules.io import NuRadioRecoio
 import NuRadioReco
 import matplotlib.pyplot as plt
