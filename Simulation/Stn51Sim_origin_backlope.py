@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
+sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC_custimized')
 from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
 import sys
@@ -19,7 +19,7 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
-from NuRadioReco.framework.parameters import eventParameters as evtp
+from NuRadioReco_custimized.framework.parameters import eventParameters as evtp
 import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 import astropy
 import argparse
