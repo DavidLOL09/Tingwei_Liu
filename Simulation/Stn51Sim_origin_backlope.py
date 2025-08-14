@@ -218,6 +218,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             reflected_voltage_fft = []
             efields = station.get_electric_fields()
             for iE, efield in enumerate(efields):
+                ic(efields.get_sampling_rate())
                 # modify the Efield for surface reflection
                 # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
                 new_efields.append(modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
