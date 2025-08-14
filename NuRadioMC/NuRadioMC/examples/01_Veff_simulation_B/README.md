@@ -1,1 +1,0 @@
-This example shows how to simulate a station with non consecutive channel ids and trigger channels. The trigger channels will be simulated first, and only if a trigger occurs, the remaining channels will be simulated as well.
