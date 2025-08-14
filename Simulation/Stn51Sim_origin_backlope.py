@@ -1,5 +1,4 @@
 import sys
-sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC_custimized')
 from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
 import sys
@@ -19,7 +18,6 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
-from NuRadioReco_custimized.framework.parameters import eventParameters as evtp
 import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 import astropy
 import argparse
@@ -200,7 +198,7 @@ preAmpVrms_per_channel = {}
 # Start simulation
 efield_id=0
 for iE, evt in enumerate(readCoREAS.run(detector=det)):
-    evt.set_parameter(evtp.event_id,efield_id)
+    evt.set_id(efield_id)
     efield_id+=1
     for backlope in [True,False]:
         logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
