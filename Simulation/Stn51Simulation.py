@@ -17,6 +17,7 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
+ic(NuRadioReco.__file__)
 import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 import astropy
 import argparse
