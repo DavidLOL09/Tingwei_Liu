@@ -39,6 +39,6 @@ for e in e_range:
     for sin2 in sin2Val:
         # e = 18.4
         # sin2 = 0.0
-        cmd = f'python Stn51Sim_origin_backlope.py --output_filename {output_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores {n_cores} --min_energy {e:.1f} --max_energy {e+0.1:.1f} --sin2 {sin2:.1f} --num_icetop {num_icetop} --output_origin{output_origin} --output_backlope{output_backlope}'
-        A00_SlurmUtil.makeAndRunJob(cmd, f'Stn51_{e:.1f}_{sin2:.1f}sin2', runDirectory='run_RateCalc', partition='standard')
+        cmd = f'python Stn51Sim_origin_backlope.py --output_filename {output_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores {n_cores} --min_energy {e:.1f} --max_energy {e+0.1:.1f} --sin2 {sin2:.1f} --num_icetop {num_icetop} --output_origin {output_origin} --output_backlope {output_backlope}'
+        A00_SlurmUtil.makeAndRunJob(cmd, f'Stn51_{e:.1f}_{sin2:.1f}sin2', runDirectory='run_backlope', partition='standard')
         # quit()
