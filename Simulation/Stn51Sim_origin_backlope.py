@@ -235,6 +235,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                 channel = station.get_channel(iCh)
 
                 channel_fft = channel.get_frequency_spectrum()
+                ic(channel_fft.shape)
                 channel_fft += reflected_voltage_fft[iCh]
                 channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
 
