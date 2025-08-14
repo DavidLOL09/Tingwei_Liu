@@ -193,6 +193,29 @@ writer_origin.begin(output_origin)
 writer_backlope = NuRadioReco.modules.io.eventWriter.eventWriter()
 writer_backlope.begin(output_backlope)
 
+
+def add_with_zeros(a, b, align="left"):
+    a = np.asarray(a)
+    b = np.asarray(b)
+    N = max(a.size, b.size)
+    out = np.zeros(N, dtype=np.result_type(a, b))
+
+    if align == "left":        # start at index 0
+        out[:a.size] += a
+        out[:b.size] += b
+    elif align == "right":     # align ends
+        out[-a.size:] += a
+        out[-b.size:] += b
+    elif align == "center":    # center align (rounds shorter-left)
+        def place(x):
+            pad = N - x.size
+            left = pad // 2
+            out[left:left + x.size] += x
+        place(a); place(b)
+    else:
+        raise ValueError("align must be 'left', 'right', or 'center'")
+    return out
+
 preAmpVrms_per_channel = {}
 
 # Start simulation
@@ -235,11 +258,12 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                 channel = station.get_channel(iCh)
 
                 channel_fft = channel.get_frequency_spectrum()
-                ic(channel_fft.shape)
-                ic(reflected_voltage_fft[iCh].shape)
-                ic(channel.get_sampling_rate())
-                ic(len(reflected_voltage_fft))
-                channel_fft += reflected_voltage_fft[iCh]
+                # ic(channel_fft.shape)
+                # ic(reflected_voltage_fft[iCh].shape)
+                # ic(channel.get_sampling_rate())
+                # ic(len(reflected_voltage_fft))
+                # channel_fft += reflected_voltage_fft[iCh]
+                channel_fft = add_with_zeros(reflected_voltage_fft[iCh],channel_fft)
                 channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
 
 
