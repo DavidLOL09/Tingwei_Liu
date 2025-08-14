@@ -77,43 +77,22 @@ def get_input(input):
 # strange='R3E89'
 # candidate=['R256E13', 'R256E588', 'R256E628', 'R256E735', 'R256E736', 'R256E1973', 'R256E2152', 'R256E2177', 'R263E368', 'R263E734', 'R263E736', 'R263E762', 'R263E764', 'R266E7', 'R266E59', 'R266E60', 'R266E1236', 'R266E1423', 'R266E1517', 'R266E1990', 'R260E112', 'R249E9', 'R249E13', 'R249E251', 'R249E355', 'R249E394', 'R243E110', 'R243E531', 'R243E542', 'R243E555', 'R243E589', 'R243E590', 'R243E591', 'R243E995', 'R243E1064', 'R243E1120', 'R243E1126', 'R243E1142', 'R243E1270', 'R243E1403', 'R243E1441', 'R243E1447', 'R243E1460', 'R243E1720', 'R243E1823', 'R243E1848', 'R264E8', 'R264E17', 'R264E244', 'R264E466', 'R264E476', 'R264E483', 'R264E496', 'R247E818', 'R247E821', 'R247E1193', 'R247E1281', 'R247E1319', 'R247E1482', 'R247E1732']
 
-ic(get_input(candi))
-data=NuRadioRecoio.NuRadioRecoio(get_input(candi))
+# ic(get_input(candi))
+# data=NuRadioRecoio.NuRadioRecoio(get_input(candi))
 # data=NuRadioRecoio.NuRadioRecoio(get_input(Zen_sim))
 
 # for evt in data.get_events():
 
-def plot_wave(evt,temp_output='Nothing'):
+def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f'waveform'):
     stn = evt.get_station(51)
     run = evt.get_run_number()
     id = evt.get_id()
-    # requirement
-    # Xcorr=[]
-    # if_plot=False
-    # for i in [4,5,6]:
-        # channel=stn.get_channel(i)
-        # trace=channel.get_trace()/units.mV
-        # Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
-    # if np.max(Xcorr)<=0.8:
-    #     continue
-
     trace_list=[]
     for i in range(8):
         chn=stn.get_channel(i)
         trace=chn.get_trace()/units.mV
         trace_list.append(np.max(np.abs(trace)))
     trace_max=np.max(np.array(trace_list))
-
-    # if trace_up<=100:
-    #     continue
-    # if trace_up/trace_down>=2:
-    #     continue
-
-        
-    #     if np.max(np.abs(trace)) >=100 and X<=0.6:
-    #         if_plot=True
-    # zen=stn.get_parameter(stnp.zenith)/units.rad
-    # azi=stn.get_parameter(stnp.azimuth)/units.rad
 
     n_chns = 8
     if n_chns == 4:
@@ -188,8 +167,8 @@ def plot_wave(evt,temp_output='Nothing'):
     Xcorr=[]     
     for i in [4,5,6]:
         channel = stn.get_channel(i)
-        Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
-    Xcorr=np.max(Xcorr)
+        # Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
+    # Xcorr=np.max(Xcorr)
     id=evt.get_id()
     run=evt.get_run_number()
     evt_time=stn.get_station_time().datetime
@@ -207,21 +186,29 @@ def plot_wave(evt,temp_output='Nothing'):
     # region=SNR_cut_line(SNR)
     # fig.suptitle(f'recon[{zen:.1f},{azi:.1f}] X:{np.max(Xcorr):.2f} SNR:{SNR:.2f} Area:{region} T{evt_time}')
     # fig.suptitle(f'SNR:{SNR:.2f}, T{evt_time}, D:{zen:.3g},{azi:.3g}')
-    fig.suptitle(f'SNR:{SNR:.2f}, T{evt_time}')
+    fig.suptitle(suptitle)
     # plt.show()
     # temp_output=os.path.join(output,f'Region{region}')
     if temp_output is 'Nothing':
         plt.show()
         return 
     # temp_output=os.path.join(temp_output,f'Re{SNR_cut_line(SNR)}')
+    if filename == None:
+        filename=f'R{run}E{id}.png'
+    else:
+        filename=f'{filename}.png'
     try:
-        plt.savefig(os.path.join(temp_output,f'X{100*Xcorr:.2g}R{run}E{id}.png'))
+        # plt.savefig(os.path.join(temp_output,f'X{100*Xcorr:.2g}R{run}E{id}.png'))
+        plt.savefig(os.path.join(temp_output,filename))
     except(FileNotFoundError):
         os.makedirs(temp_output)
-        plt.savefig(os.path.join(temp_output,f'X{100*Xcorr:.2g}R{run}E{id}.png'))
-for evt in data.get_events():
-    iden=ToolsPac.get_id_info(evt)
-    plot_wave(evt,temp_output=candidate_path)
+        # plt.savefig(os.path.join(temp_output,f'X{100*Xcorr:.2g}R{run}E{id}.png'))
+        plt.savefig(os.path.join(temp_output,filename))
+    if plt_close:
+        plt.close()
+# for evt in data.get_events():
+#     iden=ToolsPac.get_id_info(evt)
+#     plot_wave(evt,temp_output=candidate_path)
 
 # True
 # 0.6955312335093126

@@ -18,13 +18,18 @@ def get_input(input):
         if i.endswith('.nur'):
             input_dir.append(os.path.join(input,i))
     return input_dir
-def set_writer(output,filename):
-    output_file = os.path.join(output,filename)
-    try:
-        os.makedirs(output_file)
-    except(FileExistsError):
-        send2trash.send2trash(output_file)
-        os.makedirs(output_file)
+def set_writer(output,filename,sub_dir=True):
+    if sub_dir:
+        output_file = os.path.join(output,filename)
+        try:
+            os.makedirs(output_file)
+        except(FileExistsError):
+            send2trash.send2trash(output_file)
+            os.makedirs(output_file)
+    else:
+        output_file = output
+        if not os.path.isdir(output_file):
+            os.mkdir(output_file)
     eventWriter.begin(os.path.join(output_file,f'{filename}.nur'))
     return eventWriter
 
@@ -37,6 +42,18 @@ def get_Xcorr(stn:NuRadioReco.framework.station.Station,used_chn:list):
     Xcorr=np.max(Xcorr)
     return Xcorr
 
+def evt_to_template(evt:NuRadioReco.framework.event.Event,Temp_id):
+    stn = evt.get_station(51)
+    sampling_rate=0
+    chn = stn.get_channel(Temp_id)
+    trace = chn.get_trace()
+    for i in [0,1,2,3,4,5,6,7]:
+        chn = stn.get_channel(i)
+        sampling_rate = chn.get_sampling_rate()
+        chn.set_trace(trace=trace,sampling_rate=sampling_rate)
+    return evt
+
+
 def get_Max_trace(stn:NuRadioReco.framework.station.Station,used_chn:list):
     trace_max    = []
     for channel in stn.iter_channels(use_channels=used_chn):
@@ -45,6 +62,17 @@ def get_Max_trace(stn:NuRadioReco.framework.station.Station,used_chn:list):
 
 def get_id_info(evt:NuRadioReco.framework.event.Event):
     return f'R{evt.get_run_number()}E{evt.get_id()}'
+
+def makedirs(directory,exist_ok=False):
+    try:
+        os.makedirs(directory)
+    except(FileExistsError):
+        if exist_ok:
+            pass
+        else:
+            send2trash.send2trash(directory)
+            os.makedirs(directory)
+
 
 def channelTemplateCorrelation_custimized(
         evt:NuRadioReco.framework.event.Event,
@@ -134,6 +162,32 @@ def plot_waveform_compare_pase(Temp_wave,trace_wave,phase,X_max=None,X_now=None,
     ax.plot(range(256),trace_wave,zorder=0)
     ax.set_title(fr'Now={X_now:.4f} Max={X_max:.4f}')
     plt.show()
+
+def annotate_scatter(ax,x,y,labels):
+    for xi, yi, txt in zip(x, y, labels):
+        ax.annotate(
+            txt,                 # text to draw
+            xy=(xi, yi),         # point to annotate
+            xytext=(5, 5),       # (dx, dy) offset in points
+            textcoords='offset points',
+            fontsize=9, weight='bold',
+            ha='left', va='bottom'
+        )
+
+def direction_plot(ax:plt.axes,zen,azi,alpha=1,zorder=0,color='r',label=None,annotate=False,iden=[],s=20):
+    # azi in rad, zen in degree
+    ax.set_rlim(0,90)
+    if annotate:
+        if iden==[]:
+            raise IndexError('Need identity info.')
+        else:
+            annotate_scatter(ax,azi,zen,iden)
+    if label is None:
+        ax.scatter(azi,zen,s=s,alpha=alpha,zorder=zorder,color=color,label=f'num: {len(azi)}')
+    else:
+        ax.scatter(azi,zen,s=s,alpha=alpha,zorder=zorder,color=color,label=f'{label}: {len(azi)}')
+    ax.legend()
+    return ax
 
     
 

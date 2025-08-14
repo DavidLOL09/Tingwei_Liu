@@ -228,3 +228,4 @@ class eventParameters(Enum):
     hash_NuRadioMC = 3 #: git hash of the NuRadioMC commit that the file was created with
 
     event_rate = 4 #Event_rate
+    event_id = 5
