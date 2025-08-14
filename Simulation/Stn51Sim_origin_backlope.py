@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
 import sys
