@@ -132,6 +132,7 @@ parser.add_argument('--add_noise', default=False, help='Include noise in simulat
 args = parser.parse_args()
 output_origin = args.output_origin
 output_backlope = args.output_backlope
+output_filename = args.output_filename
 n_cores = args.n_cores
 min_energy = args.min_energy
 max_energy = args.max_energy
@@ -189,9 +190,9 @@ triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 
 writer_origin = NuRadioReco.modules.io.eventWriter.eventWriter()
-writer_origin.begin(output_origin)
+writer_origin.begin(os.path.join(output_origin,output_filename))
 writer_backlope = NuRadioReco.modules.io.eventWriter.eventWriter()
-writer_backlope.begin(output_backlope)
+writer_backlope.begin(os.path.join(output_backlope,output_filename))
 
 
 def add_with_zeros(a, b, align="left"):
