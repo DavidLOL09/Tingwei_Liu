@@ -228,7 +228,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     for backlope in [True,False]:
         # logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
 
-
         station = evt.get_station(station_id)
         station.set_station_time(datetime.datetime(2018, 10, 1))
         det.update(station.get_station_time())
@@ -253,9 +252,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                 reflected_voltage_fft.append(getVoltageFFTFromEfield(new_efields[-1], zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=0))
 
         # Now we convert the original Efields to voltage FFTs
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
+        # ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         efieldToVoltageConverter.run(evt, station, det)
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
+        # ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         if backlope:
         # Add the reflected voltage FFT to the station
             for iCh in range(len(reflected_voltage_fft)):
@@ -331,13 +330,10 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         # Now every event is saved regardless of if it triggers or not
         # When checking events in nur, now check if station.has_triggered()
         if backlope:
-            break
-            pass
-            # writer_backlope.run(evt, det)
+            writer_backlope.run(evt, det)
         else:
             pass
-            # writer_origin.run(evt,det)
-    break
+            writer_origin.run(evt,det)
         
 
 
