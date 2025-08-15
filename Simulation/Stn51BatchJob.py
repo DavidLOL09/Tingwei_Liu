@@ -8,7 +8,7 @@ import time
 from icecream import ic
 import inspect
 
-n_cores     =   100    #10 Temp    #1000 Sim
+n_cores     =   30    #10 Temp    #1000 Sim
 num_icetop  =   10      #10 Temp    #30   Sim  
 amp = True
 add_noise = True
