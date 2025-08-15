@@ -329,11 +329,13 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         # Now every event is saved regardless of if it triggers or not
         # When checking events in nur, now check if station.has_triggered()
         if backlope:
+            break
             pass
             # writer_backlope.run(evt, det)
         else:
             pass
             # writer_origin.run(evt,det)
+    break
         
 
 
