@@ -52,13 +52,20 @@ def modifyEfieldForSurfaceReflection(Efield, incoming_zenith, antenna_height=1*u
 
 def getVoltageFFTFromEfield(Efield, zenith_antenna, azimuth, det, sim_station, channel_id):
     
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
     antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna)
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
     antenna_pattern = antennapattern.AntennaPatternProvider().load_antenna_pattern(antenna_model)
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
     antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
-    ff = Efield.get_frequencies()                                                  
+    ff = Efield.get_frequencies()                                        
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')          
     Efield_fft = Efield.get_frequency_spectrum()
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
     vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna, azimuth, *antenna_orientation)
+    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
     # These values supposedly have to be calced from fresnel coeffs, but I think they just repeat the work done in the other function
     # For now, we will just assume they are 1

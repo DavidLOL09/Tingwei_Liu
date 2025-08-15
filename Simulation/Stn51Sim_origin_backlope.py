@@ -161,9 +161,7 @@ direct_LPDA_channels = [4, 5, 6]
 # provide input parameters that are to remain constant during processung
 readCoREAS = readCoREASStationGrid.readCoREAS()
 distance = 2 * units.km
-ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (distance)/2, n_cores=n_cores, shape='radial', seed=None, log_level=logging.WARNING)
-ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
 simulationSelector = NuRadioReco.modules.io.coreas.simulationSelector.simulationSelector()
 simulationSelector.begin()
@@ -224,15 +222,12 @@ preAmpVrms_per_channel = {}
 
 # Start simulation
 efield_id=0
-ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 for iE, evt in enumerate(readCoREAS.run(detector=det)):
     evt.set_id(efield_id)
     efield_id+=1
-    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
     for backlope in [True,False]:
         # logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
 
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
         station = evt.get_station(station_id)
         station.set_station_time(datetime.datetime(2018, 10, 1))
@@ -244,46 +239,33 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         sim_shower = evt.get_sim_shower(0)
         zenith = sim_shower[shp.zenith]/units.rad
 
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
         if backlope:
             new_efields = []
             reflected_voltage_fft = []
             efields = station.get_electric_fields()
-            ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
             for iE, efield in enumerate(efields):
                 # modify the Efield for surface reflection
                 # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
                 new_efields.append(modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
                 # Get voltage FFT from reflected Efield
                 reflected_voltage_fft.append(getVoltageFFTFromEfield(new_efields[-1], zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=0))
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
         # Now we convert the original Efields to voltage FFTs
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         efieldToVoltageConverter.run(evt, station, det)
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         if backlope:
         # Add the reflected voltage FFT to the station
-            ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
             for iCh in range(len(reflected_voltage_fft)):
                 channel = station.get_channel(iCh)
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
                 channel_fft = channel.get_frequency_spectrum()
                 # ic(channel_fft.shape)
                 # ic(reflected_voltage_fft[iCh].shape)
                 # ic(channel.get_sampling_rate())
                 # ic(len(reflected_voltage_fft))
                 # channel_fft += reflected_voltage_fft[iCh]
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
                 channel_fft = add_with_zeros(reflected_voltage_fft[iCh],channel_fft)
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
                 channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
-                ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
-        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
 
         channelResampler.run(evt, station, det, 1*units.GHz)
 
@@ -347,12 +329,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         # Now every event is saved regardless of if it triggers or not
         # When checking events in nur, now check if station.has_triggered()
         if backlope:
-            ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
             # writer_backlope.run(evt, det)
         else:
-            ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
             # writer_origin.run(evt,det)
-    ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
     break
         
 
