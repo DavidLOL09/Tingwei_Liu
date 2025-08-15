@@ -253,7 +253,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                 reflected_voltage_fft.append(getVoltageFFTFromEfield(new_efields[-1], zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=0))
 
         # Now we convert the original Efields to voltage FFTs
+        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         efieldToVoltageConverter.run(evt, station, det)
+        ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         if backlope:
         # Add the reflected voltage FFT to the station
             for iCh in range(len(reflected_voltage_fft)):
