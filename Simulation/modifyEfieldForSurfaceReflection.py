@@ -2,6 +2,9 @@ from NuRadioReco.utilities import units
 from NuRadioReco.utilities.geometryUtilities import get_fresnel_r_p, get_fresnel_r_s
 import numpy as np
 from NuRadioReco.detector import antennapattern
+from icecream import ic
+import time
+import inspect
 
 from scipy import constants as scipy_constants
 c = scipy_constants.c * units.m / units.s
