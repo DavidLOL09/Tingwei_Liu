@@ -5,6 +5,7 @@ from NuRadioReco.detector import antennapattern
 from icecream import ic
 import time
 import inspect
+import os
 
 from scipy import constants as scipy_constants
 c = scipy_constants.c * units.m / units.s
