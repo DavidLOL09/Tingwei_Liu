@@ -246,7 +246,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         if backlope:
             for iC in direct_LPDA_channels:
                 efield = efields[iC]
-                ic(len(efield))
                 # modify the Efield for surface reflection
                 # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
                 new_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
