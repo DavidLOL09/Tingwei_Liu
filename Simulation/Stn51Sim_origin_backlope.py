@@ -7,7 +7,6 @@ import time
 import readCoREASStationGrid
 import NuRadioReco.modules.io.coreas.simulationSelector
 # import NuRadioReco.modules.efieldToVoltageConverter
-import efieldToVoltageConverter 
 import NuRadioReco.modules.channelGenericNoiseAdder
 import NuRadioReco.modules.channelBandPassFilter
 import NuRadioReco.modules.electricFieldBandPassFilter
@@ -22,6 +21,7 @@ import NuRadioReco.modules.channelLengthAdjuster
 import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 from NuRadioReco.detector import antennapattern
 import modifyEfieldForSurfaceReflection
+import efieldToVoltageConverter 
 import inspect
 import astropy
 import argparse
