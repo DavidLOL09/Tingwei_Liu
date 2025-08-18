@@ -36,6 +36,7 @@ class efieldToVoltageConverter():
         self.__post_pulse_time = None
         self.__antenna_provider = None
         logger.setLevel(log_level)
+        print('E2V converter\n')
         self.begin()
 
 
