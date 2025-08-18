@@ -33,7 +33,6 @@ from scipy import constants
 from NuRadioReco.detector import detector
 from NuRadioReco.detector import generic_detector
 
-from modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
 from NuRadioReco.framework.parameters import showerParameters as shp
 
 import logging
