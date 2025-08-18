@@ -6,7 +6,8 @@ from icecream import ic
 import time
 import readCoREASStationGrid
 import NuRadioReco.modules.io.coreas.simulationSelector
-import NuRadioReco.modules.efieldToVoltageConverter
+# import NuRadioReco.modules.efieldToVoltageConverter
+import efieldToVoltageConverter 
 import NuRadioReco.modules.channelGenericNoiseAdder
 import NuRadioReco.modules.channelBandPassFilter
 import NuRadioReco.modules.electricFieldBandPassFilter
@@ -167,7 +168,8 @@ readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (dista
 simulationSelector = NuRadioReco.modules.io.coreas.simulationSelector.simulationSelector()
 simulationSelector.begin()
 
-efieldToVoltageConverter = NuRadioReco.modules.efieldToVoltageConverter.efieldToVoltageConverter()
+# efieldToVoltageConverter = NuRadioReco.modules.efieldToVoltageConverter.efieldToVoltageConverter()
+efieldToVoltageConverter=efieldToVoltageConverter.efieldToVoltageConverter()
 efieldToVoltageConverter.begin(debug=False)
 
 hardwareResponseIncorporator = NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator.hardwareResponseIncorporator()

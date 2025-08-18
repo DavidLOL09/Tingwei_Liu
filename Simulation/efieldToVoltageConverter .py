@@ -36,7 +36,6 @@ class efieldToVoltageConverter():
         self.__post_pulse_time = None
         self.__antenna_provider = None
         logger.setLevel(log_level)
-        print('local E2V Converter')
         self.begin()
 
 
@@ -110,6 +109,7 @@ class efieldToVoltageConverter():
 
     @register_run()
     def run(self, evt, station, det, channel_ids=None):
+        print('local E2V Converter\n')
         t = time.time()
 
         # access simulated efield and high level parameters
