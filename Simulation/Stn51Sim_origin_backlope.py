@@ -18,7 +18,6 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
-import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 from NuRadioReco.detector import antennapattern
 import modifyEfieldForSurfaceReflection
 import inspect
