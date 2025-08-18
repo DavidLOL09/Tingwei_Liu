@@ -228,7 +228,7 @@ efield_id=0
 for iE, evt in enumerate(readCoREAS.run(detector=det)):
     evt.set_id(efield_id)
     efield_id+=1
-    for backlope in [True,False]:
+    for backlope in [False,True]:
         # logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
 
         station = evt.get_station(station_id)
@@ -257,7 +257,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         # Now we convert the original Efields to voltage FFTs
         efieldToVoltageConverter.run(evt, station, det)
-
+        for iC in direct_LPDA_channels:
+            chn=station.get_channel(iC)
+        ic('channel after efieldToVoltageConverter')
         if backlope:
             # Add the reflected voltage FFT to the upward facing channels
             for i, iCh in enumerate(direct_LPDA_channels):
