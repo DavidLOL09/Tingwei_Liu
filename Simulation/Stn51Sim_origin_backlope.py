@@ -266,7 +266,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                 channel_fft = channel.get_frequency_spectrum()
                 if reflected_voltage_fft==[]:
                     raise ValueError('backlope didn\'t triggered')
-                ic(len(channel_fft,reflected_voltage_fft[i]))
+                ic(len(channel_fft),len(reflected_voltage_fft[i]))
                 channel_fft += reflected_voltage_fft[i]
                 channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
 
