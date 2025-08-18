@@ -2,7 +2,7 @@ import numpy as np
 import functools
 import logging
 from scipy import constants as scipy_constants
-
+from icecream import ic
 from NuRadioReco.utilities import units
 from NuRadioReco.utilities.geometryUtilities import get_fresnel_r_p, get_fresnel_r_s
 from NuRadioReco.detector import antennapattern
@@ -109,6 +109,7 @@ class EfieldProcessor:
         t_theta = 1
         t_phi = 1
         vel_array = np.array([vel['theta'] * t_theta, vel['phi'] * t_phi])
+        ic(len(Efield_fft[1]))
         voltage_fft = np.sum(vel_array * np.array([Efield_fft[1], Efield_fft[2]]), axis=0)
         voltage_fft[np.where(ff < 5 * units.MHz)] = 0
         return voltage_fft
