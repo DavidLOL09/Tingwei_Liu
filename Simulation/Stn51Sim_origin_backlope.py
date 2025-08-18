@@ -232,6 +232,11 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         # logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
 
         station = evt.get_station(station_id)
+        sim_station = station.get_sim_station()
+        for electric_field in sim_station.get_electric_fields_for_channels([4]):
+            efield_fft=electric_field.get_frequency_spectrum()
+            ic(f'for e2V converter:{len(efield_fft)}')
+
         station.set_station_time(datetime.datetime(2018, 10, 1))
         det.update(station.get_station_time())
 

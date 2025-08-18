@@ -38,7 +38,7 @@ class EfieldProcessor:
         original_traces = Efield.get_trace()
         num_samples = Efield.get_number_of_samples()
         sampling_rate = Efield.get_sampling_rate()
-        ic(f'original Efield fft spectrum:{len(Efield.get_frequency_spectrum()[1])}')
+
         
         # Calculate reflection coefficients and time delay
         fresnel_r_p = get_fresnel_r_p(incoming_zenith, n_index)
@@ -107,10 +107,10 @@ class EfieldProcessor:
             vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna, azimuth, *antenna_orientation)
 
         Efield_fft = Efield.get_frequency_spectrum()
+        ic(f'For modifyEfieldForSrufaceRelfection:{len(Efield_fft[1])}')
         t_theta = 1
         t_phi = 1
         vel_array = np.array([vel['theta'] * t_theta, vel['phi'] * t_phi])
-        ic(f'Final Efield fft spectrum:{len(Efield_fft[1])}')
         voltage_fft = np.sum(vel_array * np.array([Efield_fft[1], Efield_fft[2]]), axis=0)
         voltage_fft[np.where(ff < 5 * units.MHz)] = 0
         return voltage_fft
