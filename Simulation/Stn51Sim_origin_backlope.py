@@ -19,6 +19,8 @@ import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
 import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
+from NuRadioReco.detector import antennapattern
+import modifyEfieldForSurfaceReflection
 import inspect
 import astropy
 import argparse
@@ -189,6 +191,8 @@ channelResampler.begin()
 triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
 triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
+eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
+
 
 writer_origin = NuRadioReco.modules.io.eventWriter.eventWriter()
 writer_origin.begin(os.path.join(output_origin,output_filename))
@@ -237,35 +241,32 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         sim_shower = evt.get_sim_shower(0)
         zenith = sim_shower[shp.zenith]/units.rad
-
-
+        new_efields = []
+        reflected_voltage_fft = []
         if backlope:
-            new_efields = []
-            reflected_voltage_fft = []
-            efields = station.get_electric_fields()
-            for iE, efield in enumerate(efields):
+
+            for iC in direct_LPDA_channels:
+                efield = station.get_channel(iC).get_electric_field()
                 # modify the Efield for surface reflection
                 # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
-                new_efields.append(modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
+                new_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
 
                 # Get voltage FFT from reflected Efield
-                reflected_voltage_fft.append(getVoltageFFTFromEfield(new_efields[-1], zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=0))
+                reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(new_efields[-1], zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
+
 
         # Now we convert the original Efields to voltage FFTs
-        # ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
         efieldToVoltageConverter.run(evt, station, det)
-        # ic(f'line {inspect.currentframe().f_lineno} in {os.path.basename(__file__)}:{time.perf_counter()}')
+
         if backlope:
-        # Add the reflected voltage FFT to the station
-            for iCh in range(len(reflected_voltage_fft)):
+            # Add the reflected voltage FFT to the upward facing channels
+            for i, iCh in enumerate(direct_LPDA_channels):
                 channel = station.get_channel(iCh)
                 channel_fft = channel.get_frequency_spectrum()
-                # ic(channel_fft.shape)
-                # ic(reflected_voltage_fft[iCh].shape)
-                # ic(channel.get_sampling_rate())
-                # ic(len(reflected_voltage_fft))
-                # channel_fft += reflected_voltage_fft[iCh]
-                channel_fft = add_with_zeros(reflected_voltage_fft[iCh],channel_fft)
+                if reflected_voltage_fft==[]:
+                    raise ValueError('backlope didn\'t triggered')
+                ic(len(channel_fft,reflected_voltage_fft[i]))
+                channel_fft += reflected_voltage_fft[i]
                 channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
 
         channelResampler.run(evt, station, det, 1*units.GHz)
