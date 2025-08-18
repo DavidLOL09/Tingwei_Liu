@@ -13,6 +13,7 @@ import NuRadioReco.modules.electricFieldBandPassFilter
 import NuRadioReco.modules.eventTypeIdentifier
 import NuRadioReco.modules.channelStopFilter
 import NuRadioReco.modules.channelResampler
+import NuRadioReco.modules.channelReadoutWindowCutter
 import NuRadioReco.modules.trigger.highLowThreshold
 import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
@@ -191,8 +192,6 @@ channelResampler.begin()
 
 channelReadoutWindowCutter=NuRadioReco.modules.channelReadoutWindowCutter()
 channelReadoutWindowCutter.begin()
-# triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
-# triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
 
