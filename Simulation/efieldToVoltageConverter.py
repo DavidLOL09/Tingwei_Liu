@@ -286,6 +286,7 @@ class efieldToVoltageConverter():
                 # signal arrival direction (due to refraction into the ice) and account for
                 # missing power due to the Fresnel factors.
                 if not efield_is_at_antenna:
+                    ic(NuRadioReco.utilities.geometryUtilities.__file__)
                     zenith_antenna, t_theta, t_phi = geo_utl.fresnel_factors_and_signal_zenith(
                         det, sim_station, channel_id, zenith)
                 else:
