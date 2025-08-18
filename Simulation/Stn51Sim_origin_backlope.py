@@ -190,7 +190,7 @@ channelStopFilter = NuRadioReco.modules.channelStopFilter.channelStopFilter()
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 channelResampler.begin()
 
-channelReadoutWindowCutter=NuRadioReco.modules.channelReadoutWindowCutter()
+channelReadoutWindowCutter=NuRadioReco.modules.channelReadoutWindowCutter.channelReadoutWindowCutter()
 channelReadoutWindowCutter.begin()
 
 eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
