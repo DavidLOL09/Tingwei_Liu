@@ -189,8 +189,10 @@ channelStopFilter = NuRadioReco.modules.channelStopFilter.channelStopFilter()
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 channelResampler.begin()
 
-triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
-triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
+channelReadoutWindowCutter=NuRadioReco.modules.channelReadoutWindowCutter()
+channelReadoutWindowCutter.begin()
+# triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
+# triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
 
@@ -331,7 +333,8 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                                     trigger_name=f'direct_LPDA_3of3_5sigma')
 
 
-                triggerTimeAdjuster.run(evt, station, det)
+                # triggerTimeAdjuster.run(evt, station, det)
+                channelReadoutWindowCutter.run(evt,station,det)
                 # channelResampler.run(evt, station, det, 1*units.GHz)
                 channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
                 
