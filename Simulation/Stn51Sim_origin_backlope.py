@@ -21,7 +21,6 @@ import NuRadioReco.modules.channelLengthAdjuster
 import NuRadioReco.modules.triggerTimeAdjuster as tTimeAdjuster
 from NuRadioReco.detector import antennapattern
 import modifyEfieldForSurfaceReflection
-import efieldToVoltageConverter 
 import inspect
 import astropy
 import argparse
@@ -168,7 +167,9 @@ readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (dista
 simulationSelector = NuRadioReco.modules.io.coreas.simulationSelector.simulationSelector()
 simulationSelector.begin()
 
+import NuRadioReco.modules.efieldToVoltageConverter
 efieldToVoltageConverter = NuRadioReco.modules.efieldToVoltageConverter.efieldToVoltageConverter()
+# import efieldToVoltageConverter 
 # efieldToVoltageConverter=efieldToVoltageConverter.efieldToVoltageConverter()
 efieldToVoltageConverter.begin(debug=False)
 
