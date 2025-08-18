@@ -203,6 +203,9 @@ class efieldToVoltageConverter():
                 dist_channel_efield = np.linalg.norm(det.get_relative_position(sim_station_id, channel_id) - electric_field.get_position())
                 efield_is_at_antenna = dist_channel_efield / units.mm < 0.01
 
+                origin_efield_fft=electric_field.get_frequency_spectrum()
+                ic((origin_efield_fft[1]))
+
                 # calculate the start bin
                 if not np.isnan(electric_field.get_trace_start_time()):
                     cab_delay = det.get_cable_delay(sim_station_id, channel_id)
@@ -245,6 +248,7 @@ class efieldToVoltageConverter():
                     new_trace[:, start_bin:stop_bin] = tr
 
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
+                ic(len(new_trace),time_resolution)
                 trace_object.set_trace(new_trace, 1. / time_resolution)
 
                 if self.__debug:
@@ -255,6 +259,7 @@ class efieldToVoltageConverter():
 
                 ff = trace_object.get_frequencies()
                 efield_fft = trace_object.get_frequency_spectrum()
+                ic(len(efield_fft[1]))
 
                 zenith = electric_field[efp.zenith]
                 azimuth = electric_field[efp.azimuth]
@@ -286,7 +291,6 @@ class efieldToVoltageConverter():
                 # signal arrival direction (due to refraction into the ice) and account for
                 # missing power due to the Fresnel factors.
                 if not efield_is_at_antenna:
-                    ic(NuRadioReco.utilities.geometryUtilities.__file__)
                     zenith_antenna, t_theta, t_phi = geo_utl.fresnel_factors_and_signal_zenith(
                         det, sim_station, channel_id, zenith)
                 else:
