@@ -215,7 +215,7 @@ class efieldToVoltageConverter():
                     new_trace[:, start_bin:stop_bin] = tr
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
                 trace_object.set_trace(new_trace, 1. / time_resolution)
-                ic(len(new_trace),1. / time_resolution,electric_field.get_sampling_rate())
+                ic(np.size(new_trace),1. / time_resolution,electric_field.get_sampling_rate())
                 if(self.__debug):
                     axes[0].plot(trace_object.get_times(), new_trace[1], label="eTheta {}".format(electric_field[efp.ray_path_type]), c='C0')
                     axes[0].plot(trace_object.get_times(), new_trace[2], label="ePhi {}".format(electric_field[efp.ray_path_type]), c='C0', linestyle=':')
