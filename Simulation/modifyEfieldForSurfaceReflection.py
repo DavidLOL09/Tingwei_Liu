@@ -86,7 +86,7 @@ class EfieldProcessor:
         # problem over there
         Efield.set_trace(final_traces, sampling_rate)
         ic(f'modify frequency len:{len(Efield.get_frequency_spectrum()[1])}')
-        ic(np.size(final_traces,sampling_rate))
+        ic(np.size(final_traces),sampling_rate)
         return Efield
 
     def getVoltageFFTFromEfield(self, Efield, zenith_antenna, azimuth, det, sim_station, channel_id):
