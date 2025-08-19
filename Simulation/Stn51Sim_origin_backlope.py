@@ -169,8 +169,8 @@ simulationSelector.begin()
 
 # import NuRadioReco.modules.efieldToVoltageConverter
 # efieldToVoltageConverter = NuRadioReco.modules.efieldToVoltageConverter.efieldToVoltageConverter()
-import efieldToVoltageConverter 
-efieldToVoltageConverter=efieldToVoltageConverter.efieldToVoltageConverter()
+import efieldToVoltageConverter_old 
+efieldToVoltageConverter=efieldToVoltageConverter_old.efieldToVoltageConverter()
 efieldToVoltageConverter.begin(debug=False)
 
 hardwareResponseIncorporator = NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator.hardwareResponseIncorporator()
