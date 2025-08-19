@@ -164,9 +164,6 @@ class efieldToVoltageConverter():
                 # so we need to create one long trace that can hold all the different channel times
                 # to achieve a good time resolution, we upsample the trace first.
                 new_efield = NuRadioReco.framework.base_trace.BaseTrace()  # create new data structure with new efield length
-                ic('e2v older')
-                ic(len(electric_field.get_frequency_spectrum()[1]))
-                ic('e2v before time shift\n')
                 new_efield.set_trace(copy.copy(electric_field.get_trace()), electric_field.get_sampling_rate())
                 new_trace = np.zeros((3, trace_length_samples))
                 # calculate the start bin
@@ -188,16 +185,12 @@ class efieldToVoltageConverter():
                         start_time = electric_field.get_trace_start_time() + cab_delay - times_min.min() + travel_time_shift
                         start_bin = int(round(start_time / time_resolution))
                         time_remainder = start_time - start_bin * time_resolution
-                        ic(f'Time_remainder:{time_remainder} and time resolution:{time_resolution}\n')
                     else:
                         start_time = electric_field.get_trace_start_time() + cab_delay - times_min.min()
                         start_bin = int(round(start_time / time_resolution))
                         time_remainder = start_time - start_bin * time_resolution
                     self.logger.debug('channel {}, start time {:.1f} = bin {:d}, ray solution {}'.format(channel_id, electric_field.get_trace_start_time() + cab_delay, start_bin, electric_field[efp.ray_path_type]))
                     new_efield.apply_time_shift(time_remainder)
-                    ic('e2v older')
-                    ic(len(new_efield.get_frequency_spectrum()[1]))
-                    ic('after the time shift\n')
                     tr = new_efield.get_trace()
                     stop_bin = start_bin + new_efield.get_number_of_samples()
 
@@ -215,7 +208,7 @@ class efieldToVoltageConverter():
                     new_trace[:, start_bin:stop_bin] = tr
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
                 trace_object.set_trace(new_trace, 1. / time_resolution)
-                ic(np.size(new_trace),1. / time_resolution,electric_field.get_sampling_rate())
+                ic(np.shape(new_trace),1. / time_resolution,electric_field.get_sampling_rate())
                 if(self.__debug):
                     axes[0].plot(trace_object.get_times(), new_trace[1], label="eTheta {}".format(electric_field[efp.ray_path_type]), c='C0')
                     axes[0].plot(trace_object.get_times(), new_trace[2], label="ePhi {}".format(electric_field[efp.ray_path_type]), c='C0', linestyle=':')
@@ -223,9 +216,6 @@ class efieldToVoltageConverter():
                     axes[0].plot(electric_field.get_times(), electric_field.get_trace()[2], c='C1', linestyle=':', alpha=.5)
                 ff = trace_object.get_frequencies()
                 efield_fft = trace_object.get_frequency_spectrum()
-                ic('e2v older')
-                ic(len(efield_fft[1]))
-                ic('e2v efield fft before voltage\n')
                 zenith = electric_field[efp.zenith]
                 azimuth = electric_field[efp.azimuth]
 
