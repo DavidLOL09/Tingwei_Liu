@@ -166,7 +166,7 @@ class efieldToVoltageConverter():
                 new_efield = NuRadioReco.framework.base_trace.BaseTrace()  # create new data structure with new efield length
                 ic('e2v older')
                 ic(len(electric_field.get_frequency_spectrum()[1]))
-                ic('e2v before time shift')
+                ic('e2v before time shift\n')
                 new_efield.set_trace(copy.copy(electric_field.get_trace()), electric_field.get_sampling_rate())
                 new_trace = np.zeros((3, trace_length_samples))
                 # calculate the start bin
@@ -196,7 +196,7 @@ class efieldToVoltageConverter():
                     new_efield.apply_time_shift(time_remainder)
                     ic('e2v older')
                     ic(len(new_efield.get_frequency_spectrum()[1]))
-                    ic('after the time shift')
+                    ic('after the time shift\n')
                     tr = new_efield.get_trace()
                     stop_bin = start_bin + new_efield.get_number_of_samples()
 
@@ -223,7 +223,7 @@ class efieldToVoltageConverter():
                 efield_fft = trace_object.get_frequency_spectrum()
                 ic('e2v older')
                 ic(len(efield_fft[1]))
-                ic('e2v efield fft before voltage')
+                ic('e2v efield fft before voltage\n')
                 zenith = electric_field[efp.zenith]
                 azimuth = electric_field[efp.azimuth]
 
