@@ -107,6 +107,8 @@ class efieldToVoltageConverter():
         times_max = []
         for iCh in det.get_channel_ids(sim_station_id):
             for electric_field in sim_station.get_electric_fields_for_channels([iCh]):
+                ic(electric_field.get_sampling_rate())
+                ic('\n')
                 time_resolution = 1. / electric_field.get_sampling_rate()
                 cab_delay = det.get_cable_delay(sim_station_id, iCh)
                 t0 = electric_field.get_trace_start_time() + cab_delay
