@@ -38,7 +38,7 @@ class EfieldProcessor:
         original_traces = Efield.get_trace()
         num_samples = Efield.get_number_of_samples()
         sampling_rate = Efield.get_sampling_rate()
-
+        ic(f'modify sampling rate:{sampling_rate}')
         
         # Calculate reflection coefficients and time delay
         fresnel_r_p = get_fresnel_r_p(incoming_zenith, n_index)
@@ -83,7 +83,9 @@ class EfieldProcessor:
             original_traces[2] + ef_trace_s_reflected
         ])
 
+        # problem over there
         Efield.set_trace(final_traces, sampling_rate)
+        ic(f'modify frequency len:{len(Efield.get_frequecy_spectrum()[1])}')
         return Efield
 
     def getVoltageFFTFromEfield(self, Efield, zenith_antenna, azimuth, det, sim_station, channel_id):
@@ -113,4 +115,5 @@ class EfieldProcessor:
         vel_array = np.array([vel['theta'] * t_theta, vel['phi'] * t_phi])
         voltage_fft = np.sum(vel_array * np.array([Efield_fft[1], Efield_fft[2]]), axis=0)
         voltage_fft[np.where(ff < 5 * units.MHz)] = 0
+        ic(f'modify voltage fft size:{len(voltage_fft)}')
         return voltage_fft
