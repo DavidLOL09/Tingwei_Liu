@@ -166,6 +166,7 @@ class efieldToVoltageConverter():
                 new_efield = NuRadioReco.framework.base_trace.BaseTrace()  # create new data structure with new efield length
                 new_efield.set_trace(copy.copy(electric_field.get_trace()), electric_field.get_sampling_rate())
                 new_trace = np.zeros((3, trace_length_samples))
+                ic(trace_length_samples)
                 # calculate the start bin
                 if(not np.isnan(electric_field.get_trace_start_time())):
                     cab_delay = det.get_cable_delay(sim_station_id, channel_id)
