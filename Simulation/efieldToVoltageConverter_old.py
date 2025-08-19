@@ -188,6 +188,7 @@ class efieldToVoltageConverter():
                         start_time = electric_field.get_trace_start_time() + cab_delay - times_min.min() + travel_time_shift
                         start_bin = int(round(start_time / time_resolution))
                         time_remainder = start_time - start_bin * time_resolution
+                        ic(f'Time_remainder:{time_remainder} and time resolution:{time_resolution}\n')
                     else:
                         start_time = electric_field.get_trace_start_time() + cab_delay - times_min.min()
                         start_bin = int(round(start_time / time_resolution))
@@ -213,9 +214,6 @@ class efieldToVoltageConverter():
                         start_bin = 0
                     new_trace[:, start_bin:stop_bin] = tr
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
-                ic('shape of new_trace')
-                ic(np.shape(new_trace))
-                ic('shape of new_trace\n')
                 trace_object.set_trace(new_trace, 1. / time_resolution)
                 if(self.__debug):
                     axes[0].plot(trace_object.get_times(), new_trace[1], label="eTheta {}".format(electric_field[efp.ray_path_type]), c='C0')
