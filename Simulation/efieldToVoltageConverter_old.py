@@ -213,6 +213,9 @@ class efieldToVoltageConverter():
                         start_bin = 0
                     new_trace[:, start_bin:stop_bin] = tr
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
+                ic('shape of new_trace')
+                ic(np.shape(new_trace))
+                ic('shape of new_trace\n')
                 trace_object.set_trace(new_trace, 1. / time_resolution)
                 if(self.__debug):
                     axes[0].plot(trace_object.get_times(), new_trace[1], label="eTheta {}".format(electric_field[efp.ray_path_type]), c='C0')
@@ -228,8 +231,9 @@ class efieldToVoltageConverter():
                 azimuth = electric_field[efp.azimuth]
 
                 # get antenna pattern for current channel
+                ic('trace_utilities.get_efield_antenna_factor')
                 VEL = trace_utilities.get_efield_antenna_factor(sim_station, ff, [channel_id], det, zenith, azimuth, self.antenna_provider)
-
+                ic('trace_utilities.get_efield_antenna_factor\n')
                 if VEL is None:  # this can happen if there is not signal path to the antenna
                     voltage_fft = np.zeros_like(efield_fft[1])  # set voltage trace to zeros
                 else:
