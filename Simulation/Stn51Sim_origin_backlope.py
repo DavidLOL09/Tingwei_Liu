@@ -236,10 +236,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         station = evt.get_station(station_id)
         sim_station = station.get_sim_station()
-        for electric_field in sim_station.get_electric_fields_for_channels([4]):
-            efield_fft=electric_field.get_frequency_spectrum()
-            ic(f'for e2V converter:{len(efield_fft[1])}')
-
         station.set_station_time(datetime.datetime(2018, 10, 1))
         det.update(station.get_station_time())
 
@@ -266,7 +262,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         efieldToVoltageConverter.run(evt, station, det)
         for iC in direct_LPDA_channels:
             chn=station.get_channel(iC)
-        ic('channel after efieldToVoltageConverter')
+        # ic('channel after efieldToVoltageConverter')
         if backlope:
             # Add the reflected voltage FFT to the upward facing channels
             for i, iCh in enumerate(direct_LPDA_channels):
@@ -283,7 +279,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         if preAmpVrms_per_channel == {}:
             # Get noise levels for simulation
             preAmpVrms_per_channel, postAmpVrms_per_channel = calculateNoisePerChannel(det, station=station, amp=sim_amp)
-            ic(preAmpVrms_per_channel, postAmpVrms_per_channel)
+            # ic(preAmpVrms_per_channel, postAmpVrms_per_channel)
             if sim_amp:
                 threshold_high_3_5 = {key: value * 3.5 for key, value in postAmpVrms_per_channel.items()}
                 threshold_low_3_5 = {key: value * -3.5 for key, value in postAmpVrms_per_channel.items()}
@@ -295,7 +291,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                 threshold_high_5 = {key: value * 5 for key, value in preAmpVrms_per_channel.items()}
                 threshold_low_5 = {key: value * -5 for key, value in preAmpVrms_per_channel.items()}
 
-            ic(preAmpVrms_per_channel, postAmpVrms_per_channel, threshold_high_3_5, threshold_high_5)
+            # ic(preAmpVrms_per_channel, postAmpVrms_per_channel, threshold_high_3_5, threshold_high_5)
             # quit()
 
         if simulationSelector.run(evt, station.get_sim_station(), det):
@@ -345,6 +341,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         else:
             pass
             writer_origin.run(evt,det)
+    break
         
 
 
