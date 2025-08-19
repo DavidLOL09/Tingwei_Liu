@@ -221,7 +221,9 @@ class efieldToVoltageConverter():
                     axes[0].plot(electric_field.get_times(), electric_field.get_trace()[2], c='C1', linestyle=':', alpha=.5)
                 ff = trace_object.get_frequencies()
                 efield_fft = trace_object.get_frequency_spectrum()
-
+                ic('e2v older')
+                ic(len(efield_fft[1]))
+                ic('e2v efield fft before voltage')
                 zenith = electric_field[efp.zenith]
                 azimuth = electric_field[efp.azimuth]
 
