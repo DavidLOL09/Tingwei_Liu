@@ -80,6 +80,7 @@ class EfieldProcessor:
             original_traces[0],  # Longitudinal component remains unchanged
             original_traces[1] + ef_trace_p_reflected,
             original_traces[2] + ef_trace_s_reflected
+            # problem here
         ])
 
         # problem over there

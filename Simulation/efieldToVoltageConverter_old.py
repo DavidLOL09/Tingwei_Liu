@@ -218,6 +218,7 @@ class efieldToVoltageConverter():
                 ff = trace_object.get_frequencies()
                 efield_fft = trace_object.get_frequency_spectrum()
                 zenith = electric_field[efp.zenith]
+                # over there
                 azimuth = electric_field[efp.azimuth]
 
                 # get antenna pattern for current channel

@@ -264,6 +264,8 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         efieldToVoltageConverter.run(evt, station, det)
         for iC in direct_LPDA_channels:
             chn=station.get_channel(iC)
+            trace = chn.get_trace()
+            ic(len(trace))
         # ic('channel after efieldToVoltageConverter')
         if backlope:
             # Add the reflected voltage FFT to the upward facing channels
@@ -333,7 +335,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
                 # triggerTimeAdjuster.run(evt, station, det)
                 channelReadoutWindowCutter.run(evt,station,det)
-                # channelResampler.run(evt, station, det, 1*units.GHz)
+                channelResampler.run(evt, station, det, 1*units.GHz)
                 channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
                 
         # Save every event for proper rate calculation
