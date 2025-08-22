@@ -1,3 +1,4 @@
+
 from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
 import readCoREASStationGrid
@@ -14,7 +15,7 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
-import NuRadioReco.modules.triggerTimeAdjuster
+# import NuRadioReco.modules.triggerTimeAdjuster
 import astropy
 import argparse
 import NuRadioReco.modules.io.eventWriter
@@ -27,7 +28,7 @@ from scipy import constants
 from NuRadioReco.detector import detector
 from NuRadioReco.detector import generic_detector
 
-from SimpleFootprintSimulation.modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
+from modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
 from NuRadioReco.framework.parameters import showerParameters as shp
 
 import logging
@@ -117,7 +118,8 @@ def pullFilesForSimulation(sim_type, min_energy, max_energy, num_icetop=10, icet
 
 # Read in settings for simulation
 parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
-parser.add_argument('output_filename', type=str, help='Output filename for simulation')
+parser.add_argument('--output_path', type=str, help='Output filename for simulation with backlope')
+parser.add_argument('--output_filename',type=str, help='Output filename for simulation with backlope')
 parser.add_argument('n_cores', type=int, help='Number of cores to use for simulation')
 parser.add_argument('--min_energy', type=float, default=16.0, help='Minimum energy for simulation')
 parser.add_argument('--max_energy', type=float, default=18.5, help='Maximum energy for simulation')
@@ -125,8 +127,8 @@ parser.add_argument('--sin2', type=float, default=-1, help='Sin^2(zenith) value 
 parser.add_argument('--num_icetop', type=int, default=10, help='Number of IceTop footprints to simulate per bin')
 parser.add_argument('--sim_amp', default=True, help='Include amplifier in simulation')
 parser.add_argument('--add_noise', default=False, help='Include noise in simulation')
-
 args = parser.parse_args()
+output_path = args.output_path
 output_filename = args.output_filename
 n_cores = args.n_cores
 min_energy = args.min_energy
@@ -182,10 +184,12 @@ triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuste
 triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 
-eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
-eventWriter.begin(output_filename)
+writer = NuRadioReco.modules.io.eventWriter.eventWriter()
+writer.begin(os.path.join(output_path,output_filename))
+
 
 preAmpVrms_per_channel = {}
+
 
 
 # custom processor
@@ -193,9 +197,13 @@ eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
 
 
 # Start simulation
+event_id=0
 for iE, evt in enumerate(readCoREAS.run(detector=det)):
     logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
-
+    evt.set_id(event_id)
+    event_id+=1
+    front_lope={}
+    back_lope={}
     # for station in evt.get_stations():
 
     station = evt.get_station(station_id)
@@ -225,7 +233,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
-    if False:
+    if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
             channel = station.get_channel(iCh)
             original_efield = channel.get_electric_field()
@@ -233,26 +241,28 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
             sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
 
+            channel=station.get_channel(iC)
+            channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
             # Save the original Efield and voltage FFT
-            np.save(f'SimpleFootprintSimulation/output/original_efield_{iCh}.npy', original_efield.get_trace())
-            np.save(f'SimpleFootprintSimulation/output/original_voltage_fft_{iCh}.npy', original_voltage_fft)
+            # np.save(f'SimpleFootprintSimulation/output/original_efield_{iCh}.npy', original_efield.get_trace())
+            # np.save(f'SimpleFootprintSimulation/output/original_voltage_fft_{iCh}.npy', original_voltage_fft)
 
             # Save the reflected Efield and voltage FFT
-            np.save(f'SimpleFootprintSimulation/output/reflected_efield_{iCh}.npy', reflected_efields[iC].get_trace())
-            np.save(f'SimpleFootprintSimulation/output/reflected_voltage_fft_{iCh}.npy', reflected_voltage_fft[iC])
+            # np.save(f'SimpleFootprintSimulation/output/reflected_efield_{iCh}.npy', reflected_efields[iC].get_trace())
+            # np.save(f'SimpleFootprintSimulation/output/reflected_voltage_fft_{iCh}.npy', reflected_voltage_fft[iC])
 
             # Save the sum of the original and reflected Efield and voltage FFT
-            np.save(f'SimpleFootprintSimulation/output/sum_efield_{iCh}.npy', sum_efield_and_reflected)
-            np.save(f'SimpleFootprintSimulation/output/sum_voltage_fft_{iCh}.npy', sum_voltage_fft)
+            # np.save(f'SimpleFootprintSimulation/output/sum_efield_{iCh}.npy', sum_efield_and_reflected)
+            # np.save(f'SimpleFootprintSimulation/output/sum_voltage_fft_{iCh}.npy', sum_voltage_fft)
 
 
     # Add the reflected voltage FFT to the upward facing channels
-    for i, iCh in enumerate(direct_LPDA_channels):
-        channel = station.get_channel(iCh)
+    # for i, iCh in enumerate(direct_LPDA_channels):
+    #     channel = station.get_channel(iCh)
 
-        channel_fft = channel.get_frequency_spectrum()
-        channel_fft += reflected_voltage_fft[i]
-        channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
+    #     channel_fft = channel.get_frequency_spectrum()
+    #     channel_fft += reflected_voltage_fft[i]
+    #     channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
 
     channelResampler.run(evt, station, det, 1*units.GHz)
 
@@ -312,19 +322,14 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             # triggerTimeAdjuster.run(evt, station, det)
             channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
+        if station.has_triggered():
+            writer.run(evt,det)
             
     # Save every event for proper rate calculation
     # Now every event is saved regardless of if it triggers or not
     # When checking events in nur, now check if station.has_triggered()
-    eventWriter.run(evt, det)
+    # eventWriter.run(evt, det)
 
 
-nevents = eventWriter.end()
+nevents = writer.end()
 print("Finished processing, {} events".format(nevents))
-        
-
-
-nevents_origin = writer_origin.end()
-nevents_backlope=writer_backlope.end()
-print("Finished processing, {} origin events".format(nevents_origin))
-print('Finished processing, {} backlope events'.format(nevents_backlope))
