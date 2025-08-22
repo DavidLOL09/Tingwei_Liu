@@ -216,11 +216,11 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     sim_shower = evt.get_sim_shower(0)
     zenith = sim_shower[shp.zenith]/units.rad
-
+    efields=station.get_electric_fields()
     reflected_efields = []      # This will be the reflected Efields, we can save and print if we want to look at them
     reflected_voltage_fft = []  # This will hold the reflected voltage FFTs, which will be added to the direct channels
     for iC in direct_LPDA_channels:
-        efield = station.get_channel(iC).get_electric_field()       # These are the original Efields if we wish to look at these
+        efield = efields[iC]       # These are the original Efields if we wish to look at these
         # modify the Efield for surface reflection
         # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
         reflected_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
@@ -237,13 +237,17 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
             channel = station.get_channel(iCh)
-            original_efield = channel.get_electric_field()
+            # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
-            sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
+            # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
             sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
 
             channel=station.get_channel(iC)
             channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
+
+            if iC == 4:
+                channel=station.get_channel(3)
+                channel.set_frequency_spectrum(sum_voltage_fft,channel.get_sampling_rate)
             # Save the original Efield and voltage FFT
             # np.save(f'SimpleFootprintSimulation/output/original_efield_{iCh}.npy', original_efield.get_trace())
             # np.save(f'SimpleFootprintSimulation/output/original_voltage_fft_{iCh}.npy', original_voltage_fft)
