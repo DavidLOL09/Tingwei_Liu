@@ -3,7 +3,7 @@ from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
 import readCoREASStationGrid
 import NuRadioReco.modules.io.coreas.simulationSelector
-import NuRadioReco.modules.efieldToVoltageConverter
+import efieldToVoltageConverter_old
 import NuRadioReco.modules.channelGenericNoiseAdder
 import NuRadioReco.modules.channelBandPassFilter
 import NuRadioReco.modules.electricFieldBandPassFilter
@@ -161,7 +161,7 @@ readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (dista
 simulationSelector = NuRadioReco.modules.io.coreas.simulationSelector.simulationSelector()
 simulationSelector.begin()
 
-efieldToVoltageConverter = NuRadioReco.modules.efieldToVoltageConverter.efieldToVoltageConverter()
+efieldToVoltageConverter = efieldToVoltageConverter_old.efieldToVoltageConverter()
 efieldToVoltageConverter.begin(debug=False)
 
 hardwareResponseIncorporator = NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator.hardwareResponseIncorporator()
@@ -226,7 +226,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         reflected_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
 
         # Get voltage FFT from reflected Efield
-        reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
+        reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], original_zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
 
 
     # Now we convert the original Efields to voltage FFTs
