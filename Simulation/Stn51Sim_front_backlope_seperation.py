@@ -181,8 +181,8 @@ channelStopFilter = NuRadioReco.modules.channelStopFilter.channelStopFilter()
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 channelResampler.begin()
 
-triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
-triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
+# triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
+# triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
@@ -324,6 +324,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
         if station.has_triggered():
+            ic('has trigger!')
             writer.run(evt,det)
             
     # Save every event for proper rate calculation
