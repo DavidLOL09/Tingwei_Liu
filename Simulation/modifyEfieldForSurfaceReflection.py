@@ -106,12 +106,11 @@ class EfieldProcessor:
         antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna_after_reflection)
         antenna_pattern = self.__antenna_provider.load_antenna_pattern(antenna_model)
         antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
-        ic(f'caching getVFFT 02:{self.__caching}')
+        ic(type(antenna_pattern))
         if self.__caching:
             vel = self._get_cached_antenna_response(antenna_pattern, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
         else:
             vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
-        ic(f'caching getVFFT 03:{self.__caching}')
         Efield_fft = Efield.get_frequency_spectrum()
         t_theta = 1
         t_phi = 1
