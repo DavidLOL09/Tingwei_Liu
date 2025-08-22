@@ -190,6 +190,19 @@ writer.begin(os.path.join(output_path,output_filename))
 
 preAmpVrms_per_channel = {}
 
+def add_with_diff_length(arr1:np.array,arr2:np.array):
+    result=None
+    add=None
+    if len(arr1)>=len(arr2):
+        result=arr1
+        add=arr2
+    else:
+        result=arr2
+        add=arr1
+    i=0
+    while i<len(add):
+        result[i]+=add[i]
+    return result
 
 
 # custom processor
@@ -233,20 +246,24 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
+    channelResampler.run(evt, station, det, 1*units.GHz)
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
             channel = station.get_channel(iCh)
             # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
             # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
-            sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
+            sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])
+            # original_voltage_fft + reflected_voltage_fft[iC]
+            
+            # channel.set_frequency_spectrum(original_voltage_fft,channel.get_sampling_rate())
+
+
 
             channel=station.get_channel(iC)
             channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
 
-            if iC == 4:
-                channel=station.get_channel(3)
-                channel.set_frequency_spectrum(sum_voltage_fft,channel.get_sampling_rate)
+
             # Save the original Efield and voltage FFT
             # np.save(f'SimpleFootprintSimulation/output/original_efield_{iCh}.npy', original_efield.get_trace())
             # np.save(f'SimpleFootprintSimulation/output/original_voltage_fft_{iCh}.npy', original_voltage_fft)
@@ -268,7 +285,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     #     channel_fft += reflected_voltage_fft[i]
     #     channel.set_frequency_spectrum(channel_fft, channel.get_sampling_rate())
 
-    channelResampler.run(evt, station, det, 1*units.GHz)
+    
 
 
     if preAmpVrms_per_channel == {}:
@@ -324,7 +341,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
             # triggerTimeAdjuster.run(evt, station, det)
-            channelResampler.run(evt, station, det, 1*units.GHz)
+            # channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
         if station.has_triggered():
             ic('has trigger!')
