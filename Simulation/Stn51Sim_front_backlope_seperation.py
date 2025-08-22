@@ -28,7 +28,6 @@ from scipy import constants
 from NuRadioReco.detector import detector
 from NuRadioReco.detector import generic_detector
 import modifyEfieldForSurfaceReflection
-eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
 # from modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
 from NuRadioReco.framework.parameters import showerParameters as shp
 

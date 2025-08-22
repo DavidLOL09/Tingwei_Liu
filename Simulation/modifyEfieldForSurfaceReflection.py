@@ -2,11 +2,12 @@ import numpy as np
 import functools
 import logging
 from scipy import constants as scipy_constants
-from icecream import ic
-from NuRadioReco.utilities import trace_utilities
+
 from NuRadioReco.utilities import units
 from NuRadioReco.utilities.geometryUtilities import get_fresnel_r_p, get_fresnel_r_s
 from NuRadioReco.detector import antennapattern
+
+from icecream import ic
 
 # Set up a logger for warnings
 logging.basicConfig(level=logging.INFO)
@@ -90,11 +91,10 @@ class EfieldProcessor:
 
     def getVoltageFFTFromEfield(self, Efield, original_zenith_antenna, azimuth, det, sim_station, channel_id):
         # origninal zenith antenna needs to be in radians, and the angle from above
-        zenith_antenna_after_reflection = np.pi - original_zenith_antenna
+        zenith_antenna_after_reflection = np.pi - original_zenith_antenna/units.rad
 
-
+        ic(f'caching getVFFT 01:{self.__caching}')
         ff = Efield.get_frequencies()
-        efield_fft=Efield.get_frequency_spectrum()
         if self.__caching:
             if self.__freqs is None:
                 self.__freqs = ff
@@ -106,23 +106,12 @@ class EfieldProcessor:
         antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna_after_reflection)
         antenna_pattern = self.__antenna_provider.load_antenna_pattern(antenna_model)
         antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
-
-        # if self.__caching:
-        #     vel = self._get_cached_antenna_response(antenna_pattern, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
-        # else:
-        #     vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
-                        # get antenna pattern for current channel
-        
-        ic('trace_utilities.get_efield_antenna_factor')
-        VEL = trace_utilities.get_efield_antenna_factor(sim_station, ff, [channel_id], det, zenith_antenna_after_reflection, azimuth, self.__antenna_provider)
-        ic('trace_utilities.get_efield_antenna_factor\n')
-        if VEL is None:  # this can happen if there is not signal path to the antenna
-            voltage_fft = np.zeros_like(efield_fft[1])  # set voltage trace to zeros
+        ic(f'caching getVFFT 02:{self.__caching}')
+        if self.__caching:
+            vel = self._get_cached_antenna_response(antenna_pattern, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
         else:
-            # Apply antenna response to electric field
-            VEL = VEL[0]  # we only requested the VEL for one channel, so selecting it
-            # voltage_fft = np.sum(VEL * np.array([efield_fft[1], efield_fft[2]]), axis=0)
-        vel=VEL
+            vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
+        ic(f'caching getVFFT 03:{self.__caching}')
         Efield_fft = Efield.get_frequency_spectrum()
         t_theta = 1
         t_phi = 1
