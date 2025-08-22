@@ -104,6 +104,7 @@ class EfieldProcessor:
                 logger.warning("Frequencies have changed. Clearing antenna response cache.")
 
         antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna_after_reflection)
+        ic(antenna_model)
         antenna_pattern = self.__antenna_provider.load_antenna_pattern(antenna_model)
         antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
         ic(type(antenna_pattern))
