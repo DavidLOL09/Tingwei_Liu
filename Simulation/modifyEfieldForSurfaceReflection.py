@@ -106,9 +106,10 @@ class EfieldProcessor:
         antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna_after_reflection)
         # antenna_model='analytic_createLPDA_100MHz_z1cm_InAir_RG'
         # ic(antenna_model)
+        ic(antenna_model)
         antenna_pattern = self.__antenna_provider.load_antenna_pattern(antenna_model)
-        antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
         ic(type(antenna_pattern))
+        antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
         if self.__caching:
             vel = self._get_cached_antenna_response(antenna_pattern, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
         else:
