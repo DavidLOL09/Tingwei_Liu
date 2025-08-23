@@ -253,8 +253,8 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
             # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
-            # sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])
-            sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
+            sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])
+            # sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
             # original_voltage_fft + reflected_voltage_fft[iC]
             
             # channel.set_frequency_spectrum(original_voltage_fft,channel.get_sampling_rate())
@@ -304,7 +304,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             threshold_high_5 = {key: value * 5 for key, value in preAmpVrms_per_channel.items()}
             threshold_low_5 = {key: value * -5 for key, value in preAmpVrms_per_channel.items()}
 
-        ic(preAmpVrms_per_channel, postAmpVrms_per_channel, threshold_high_3_5, threshold_high_5)
+        # ic(preAmpVrms_per_channel, postAmpVrms_per_channel, threshold_high_3_5, threshold_high_5)
         # quit()
 
     if simulationSelector.run(evt, station.get_sim_station(), det):
