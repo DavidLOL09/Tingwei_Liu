@@ -190,19 +190,27 @@ writer.begin(os.path.join(output_path,output_filename))
 
 preAmpVrms_per_channel = {}
 
-def add_with_diff_length(arr1:np.array,arr2:np.array):
-    result=None
-    add=None
-    if len(arr1)>=len(arr2):
-        result=arr1
-        add=arr2
+def add_with_zeros(a, b, align="left"):
+    a = np.asarray(a)
+    b = np.asarray(b)
+    N = max(a.size, b.size)
+    out = np.zeros(N, dtype=np.result_type(a, b))
+
+    if align == "left":        # start at index 0
+        out[:a.size] += a
+        out[:b.size] += b
+    elif align == "right":     # align ends
+        out[-a.size:] += a
+        out[-b.size:] += b
+    elif align == "center":    # center align (rounds shorter-left)
+        def place(x):
+            pad = N - x.size
+            left = pad // 2
+            out[left:left + x.size] += x
+        place(a); place(b)
     else:
-        result=arr2
-        add=arr1
-    i=0
-    while i<len(add):
-        result[i]+=add[i]
-    return result
+        raise ValueError("align must be 'left', 'right', or 'center'")
+    return out
 
 
 # custom processor
@@ -243,22 +251,22 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     # Now we convert the original Efields to voltage FFTs
     efieldToVoltageConverter.run(evt, station, det)
-    ic('efieldToVoltageConverter')
+    # ic('efieldToVoltageConverter')
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
     channelResampler.run(evt, station, det, 1*units.GHz)
-    ic('channelResampler')
+    # ic('channelResampler')
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
-            ic(f'for {iC}, {iCh} in enumerate(direct_LPDA_channels)')
+            # ic(f'for {iC}, {iCh} in enumerate(direct_LPDA_channels)')
             channel = station.get_channel(iCh)
-            ic('channel = station.get_channel(iCh)')
+            # ic('channel = station.get_channel(iCh)')
             # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
-            ic('original_voltage_fft = channel.get_frequency_spectrum()')
+            # ic('original_voltage_fft = channel.get_frequency_spectrum()')
             # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
-            sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])
-            ic('sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])')
+            sum_voltage_fft = add_with_zeros(original_voltage_fft,reflected_voltage_fft[iC])
+            # ic('sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])')
             # sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
             # original_voltage_fft + reflected_voltage_fft[iC]
             
@@ -267,9 +275,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
             channel=station.get_channel(iC)
-            ic(f'channel=station.get_channel({iC})')
+            # ic(f'channel=station.get_channel({iC})')
             channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
-            ic('channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())')
+            # ic('channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())')
 
 
             # Save the original Efield and voltage FFT
