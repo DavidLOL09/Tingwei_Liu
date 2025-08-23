@@ -104,7 +104,7 @@ class EfieldProcessor:
                 logger.warning("Frequencies have changed. Clearing antenna response cache.")
 
         antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna_after_reflection)
-        antenna_model='createLPDA_100MHz_InfFirn'
+        antenna_model='createLPDA_100MHz_InfAir'
         # ic(antenna_model)
         ic(antenna_model)
         antenna_pattern = self.__antenna_provider.load_antenna_pattern(antenna_model)
