@@ -250,11 +250,15 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     ic('channelResampler')
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
+            ic(f'for {iC}, {iCh} in enumerate(direct_LPDA_channels)')
             channel = station.get_channel(iCh)
+            ic('channel = station.get_channel(iCh)')
             # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
+            ic('original_voltage_fft = channel.get_frequency_spectrum()')
             # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
             sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])
+            ic('sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])')
             # sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
             # original_voltage_fft + reflected_voltage_fft[iC]
             
@@ -263,7 +267,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
             channel=station.get_channel(iC)
+            ic(f'channel=station.get_channel({iC})')
             channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
+            ic('channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())')
 
 
             # Save the original Efield and voltage FFT
