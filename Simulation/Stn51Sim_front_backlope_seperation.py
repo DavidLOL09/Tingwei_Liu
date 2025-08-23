@@ -243,10 +243,11 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     # Now we convert the original Efields to voltage FFTs
     efieldToVoltageConverter.run(evt, station, det)
-
+    ic('efieldToVoltageConverter')
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
     channelResampler.run(evt, station, det, 1*units.GHz)
+    ic('channelResampler')
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
             channel = station.get_channel(iCh)
@@ -288,7 +289,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     
 
-
+    ic('trace applied')
     if preAmpVrms_per_channel == {}:
         # Get noise levels for simulation
         preAmpVrms_per_channel, postAmpVrms_per_channel = calculateNoisePerChannel(det, station=station, amp=sim_amp)
@@ -306,6 +307,8 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         # ic(preAmpVrms_per_channel, postAmpVrms_per_channel, threshold_high_3_5, threshold_high_5)
         # quit()
+
+    ic('get Noise')
 
     if simulationSelector.run(evt, station.get_sim_station(), det):
 
@@ -349,6 +352,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             # triggerTimeAdjuster.run(evt, station, det)
             # channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
+    ic('triggered')
     if station.has_triggered():
         # ic('has trigger!')
         writer.run(evt,det)
