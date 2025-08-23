@@ -140,7 +140,6 @@ add_noise = args.add_noise
 
 # Get files for simulation
 input_files = pullFilesForSimulation('IceTop', min_energy, max_energy, num_icetop=num_icetop, icetop_sin=sin2)
-ic(f'files for running {input_files}')
 
 # Setup detector
 # det = detector.Detector(json_filename=f'configurations/det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
@@ -189,7 +188,6 @@ writer.begin(os.path.join(output_path,output_filename))
 
 
 preAmpVrms_per_channel = {}
-
 def add_with_zeros(a, b, align="left"):
     a = np.asarray(a)
     b = np.asarray(b)
@@ -251,22 +249,16 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     # Now we convert the original Efields to voltage FFTs
     efieldToVoltageConverter.run(evt, station, det)
-    # ic('efieldToVoltageConverter')
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
     channelResampler.run(evt, station, det, 1*units.GHz)
-    # ic('channelResampler')
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
-            # ic(f'for {iC}, {iCh} in enumerate(direct_LPDA_channels)')
             channel = station.get_channel(iCh)
-            # ic('channel = station.get_channel(iCh)')
             # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
-            # ic('original_voltage_fft = channel.get_frequency_spectrum()')
             # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
             sum_voltage_fft = add_with_zeros(original_voltage_fft,reflected_voltage_fft[iC])
-            # ic('sum_voltage_fft = add_with_diff_length(original_voltage_fft,reflected_voltage_fft[iC])')
             # sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
             # original_voltage_fft + reflected_voltage_fft[iC]
             
@@ -275,9 +267,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
             channel=station.get_channel(iC)
-            # ic(f'channel=station.get_channel({iC})')
             channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
-            # ic('channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())')
 
 
             # Save the original Efield and voltage FFT
@@ -303,7 +293,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     
 
-    ic('trace applied')
     if preAmpVrms_per_channel == {}:
         # Get noise levels for simulation
         preAmpVrms_per_channel, postAmpVrms_per_channel = calculateNoisePerChannel(det, station=station, amp=sim_amp)
@@ -321,8 +310,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         # ic(preAmpVrms_per_channel, postAmpVrms_per_channel, threshold_high_3_5, threshold_high_5)
         # quit()
-
-    ic('get Noise')
 
     if simulationSelector.run(evt, station.get_sim_station(), det):
 
@@ -356,20 +343,10 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                                 triggered_channels=direct_LPDA_channels,
                                 number_concidences=3,
                                 trigger_name=f'direct_LPDA_3of3_5sigma')
-            
-            ic(station.get_trigger())
-            ic(station.has_triggered())
-            if station.has_triggered():
-                exit()
-
-
             # triggerTimeAdjuster.run(evt, station, det)
             # channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
-    ic('triggered')
-    if station.has_triggered():
-        # ic('has trigger!')
-        writer.run(evt,det)
+    writer.run(evt,det)
             
     # Save every event for proper rate calculation
     # Now every event is saved regardless of if it triggers or not

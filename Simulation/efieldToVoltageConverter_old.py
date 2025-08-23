@@ -165,8 +165,10 @@ class efieldToVoltageConverter():
                 # to achieve a good time resolution, we upsample the trace first.
                 new_efield = NuRadioReco.framework.base_trace.BaseTrace()  # create new data structure with new efield length
                 new_efield.set_trace(copy.copy(electric_field.get_trace()), electric_field.get_sampling_rate())
+                efield_fft_temp=electric_field.get_frequency_spectrum()
+                # ic(len(efield_fft_temp[1]))
                 new_trace = np.zeros((3, trace_length_samples))
-                ic(trace_length_samples)
+                # ic(trace_length_samples)
                 # calculate the start bin
                 if(not np.isnan(electric_field.get_trace_start_time())):
                     cab_delay = det.get_cable_delay(sim_station_id, channel_id)
@@ -209,7 +211,7 @@ class efieldToVoltageConverter():
                     new_trace[:, start_bin:stop_bin] = tr
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
                 trace_object.set_trace(new_trace, 1. / time_resolution)
-                ic(np.shape(new_trace),1. / time_resolution,electric_field.get_sampling_rate())
+                # ic(np.shape(new_trace),1. / time_resolution,electric_field.get_sampling_rate())
                 if(self.__debug):
                     axes[0].plot(trace_object.get_times(), new_trace[1], label="eTheta {}".format(electric_field[efp.ray_path_type]), c='C0')
                     axes[0].plot(trace_object.get_times(), new_trace[2], label="ePhi {}".format(electric_field[efp.ray_path_type]), c='C0', linestyle=':')
@@ -217,14 +219,15 @@ class efieldToVoltageConverter():
                     axes[0].plot(electric_field.get_times(), electric_field.get_trace()[2], c='C1', linestyle=':', alpha=.5)
                 ff = trace_object.get_frequencies()
                 efield_fft = trace_object.get_frequency_spectrum()
+                # ic(len(efield_fft[1]))
                 zenith = electric_field[efp.zenith]
                 # over there
                 azimuth = electric_field[efp.azimuth]
 
                 # get antenna pattern for current channel
-                ic('trace_utilities.get_efield_antenna_factor')
+                # ic('trace_utilities.get_efield_antenna_factor')
                 VEL = trace_utilities.get_efield_antenna_factor(sim_station, ff, [channel_id], det, zenith, azimuth, self.antenna_provider)
-                ic('trace_utilities.get_efield_antenna_factor\n')
+                # ic('trace_utilities.get_efield_antenna_factor\n')
                 if VEL is None:  # this can happen if there is not signal path to the antenna
                     voltage_fft = np.zeros_like(efield_fft[1])  # set voltage trace to zeros
                 else:

@@ -13,7 +13,7 @@ num_icetop  =   10      #10 Temp    #30   Sim
 amp = True
 add_noise = False
 # output_folder = '/pub/tingwel4/output/CR_BL_Simulation_demo/'
-output_origin = '/pub/tingwel4/output/CR_BL_Sim_Temp/front_back'
+output_origin = '/pub/tingwel4/output/CR_BL_Sim_Temp/front_back_sep'
 # output_backlope='/pub/tingwel4/output/CR_BL_Sim_Temp/backlope'
 output_filename = 'Stn51_IceTop'
 
