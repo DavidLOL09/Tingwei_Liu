@@ -93,7 +93,7 @@ class EfieldProcessor:
         # origninal zenith antenna needs to be in radians, and the angle from above
         zenith_antenna_after_reflection = np.pi - original_zenith_antenna/units.rad
 
-        ic(f'caching getVFFT 01:{self.__caching}')
+        # ic(f'caching getVFFT 01:{self.__caching}')
         ff = Efield.get_frequencies()
         if self.__caching:
             if self.__freqs is None:
@@ -105,9 +105,7 @@ class EfieldProcessor:
 
         antenna_model = det.get_antenna_model(sim_station.get_id(), channel_id, zenith_antenna_after_reflection)
         # ic(antenna_model)
-        ic(antenna_model)
         antenna_pattern = self.__antenna_provider.load_antenna_pattern(antenna_model)
-        ic(type(antenna_pattern))
         antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
         if self.__caching:
             vel = self._get_cached_antenna_response(antenna_pattern, zenith_antenna_after_reflection, azimuth, *antenna_orientation)

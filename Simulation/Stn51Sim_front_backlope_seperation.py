@@ -292,7 +292,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     if preAmpVrms_per_channel == {}:
         # Get noise levels for simulation
         preAmpVrms_per_channel, postAmpVrms_per_channel = calculateNoisePerChannel(det, station=station, amp=sim_amp)
-        ic(preAmpVrms_per_channel, postAmpVrms_per_channel)
+        # ic(preAmpVrms_per_channel, postAmpVrms_per_channel)
         if sim_amp:
             threshold_high_3_5 = {key: value * 3.5 for key, value in postAmpVrms_per_channel.items()}
             threshold_low_3_5 = {key: value * -3.5 for key, value in postAmpVrms_per_channel.items()}
@@ -339,14 +339,19 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                                 triggered_channels=direct_LPDA_channels,
                                 number_concidences=3,
                                 trigger_name=f'direct_LPDA_3of3_5sigma')
+            
+            ic(station.get_trigger())
+            ic(station.has_triggered())
+            if station.has_triggered():
+                exit()
 
 
             # triggerTimeAdjuster.run(evt, station, det)
             # channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
-        if station.has_triggered():
-            ic('has trigger!')
-            writer.run(evt,det)
+    if station.has_triggered():
+        # ic('has trigger!')
+        writer.run(evt,det)
             
     # Save every event for proper rate calculation
     # Now every event is saved regardless of if it triggers or not
