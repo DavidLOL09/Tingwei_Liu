@@ -20,7 +20,7 @@ det.update(datetime.datetime(2019, 1, 1))
 files = []
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut_no_Incorp/sim_bef_cut'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/front_back_sep/'
 candidate_path=os.path.join(candi,'Waveform')
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_output/extract'
 output=candidate_path
@@ -91,6 +91,8 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
     for i in range(8):
         chn=stn.get_channel(i)
         trace=chn.get_trace()/units.mV
+        ic(len(trace))
+        ic(chn.get_sampling_rate())
         trace_list.append(np.max(np.abs(trace)))
     trace_max=np.max(np.array(trace_list))
 
@@ -100,7 +102,7 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         axes = fig.subplots(nrows=2, ncols=2, sharex=True, sharey=True)
     elif n_chns == 8:
         fig = plt.figure(figsize=(10, 8))
-        axes = fig.subplots(nrows=4, ncols=2, sharex=True, sharey=True)
+        axes = fig.subplots(nrows=4, ncols=2, sharex=False, sharey=True)
 
     for i in range(n_chns):
         chn = stn.get_channel(i)

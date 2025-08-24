@@ -217,6 +217,7 @@ eFieldProcessor = modifyEfieldForSurfaceReflection.EfieldProcessor()
 
 # Start simulation
 event_id=0
+
 for iE, evt in enumerate(readCoREAS.run(detector=det)):
     logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
     evt.set_id(event_id)
@@ -237,6 +238,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     efields=station.get_electric_fields()
     reflected_efields = []      # This will be the reflected Efields, we can save and print if we want to look at them
     reflected_voltage_fft = []  # This will hold the reflected voltage FFTs, which will be added to the direct channels
+    sampling_rate=[]            # Original sampling rate
     for iC in direct_LPDA_channels:
         efield = efields[iC]       # These are the original Efields if we wish to look at these
         # modify the Efield for surface reflection
@@ -245,13 +247,13 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         # Get voltage FFT from reflected Efield
         reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], original_zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
-
+        chn = station.get_channel(iC)
+        sampling_rate.append(chn.get_sampling_rate())
 
     # Now we convert the original Efields to voltage FFTs
     efieldToVoltageConverter.run(evt, station, det)
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
-    channelResampler.run(evt, station, det, 1*units.GHz)
     if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
             channel = station.get_channel(iCh)
@@ -267,7 +269,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
             channel=station.get_channel(iC)
-            channel.set_frequency_spectrum(reflected_voltage_fft[iC],channel.get_sampling_rate())
+            channel.set_frequency_spectrum(reflected_voltage_fft[iC],sampling_rate[iC])
 
 
             # Save the original Efield and voltage FFT
@@ -344,9 +346,12 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                                 number_concidences=3,
                                 trigger_name=f'direct_LPDA_3of3_5sigma')
             # triggerTimeAdjuster.run(evt, station, det)
-            # channelResampler.run(evt, station, det, 1*units.GHz)
+            channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
-    writer.run(evt,det)
+    
+    stn=evt.get_station(51)
+    if stn.has_triggered():
+        writer.run(evt,det)
             
     # Save every event for proper rate calculation
     # Now every event is saved regardless of if it triggers or not
