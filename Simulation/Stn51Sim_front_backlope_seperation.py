@@ -247,8 +247,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
         # Get voltage FFT from reflected Efield
         reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], original_zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
-        chn = station.get_channel(iC)
-        sampling_rate.append(chn.get_sampling_rate())
+        sampling_rate.append(efield.get_sampling_rate())
 
     # Now we convert the original Efields to voltage FFTs
     efieldToVoltageConverter.run(evt, station, det)
