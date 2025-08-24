@@ -184,7 +184,7 @@ channelResampler.begin()
 
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
-writer.begin(os.path.join(output_path,output_filename))
+writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
 
 
 preAmpVrms_per_channel = {}
