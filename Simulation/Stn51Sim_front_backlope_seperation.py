@@ -239,6 +239,39 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     reflected_efields = []      # This will be the reflected Efields, we can save and print if we want to look at them
     reflected_voltage_fft = []  # This will hold the reflected voltage FFTs, which will be added to the direct channels
     sampling_rate=[]            # Original sampling rate
+
+    wave_1=[]
+    wave_2=[]
+    wave_0=[]
+    for efield in efields:
+        trace=efield.get_trace()
+        wave_0.append(trace[0])
+        wave_1.append(trace[1])
+        wave_2.append(trace[2])
+    for iw in range(len(wave_0)-1):
+        first=wave_0[iw]
+        second=wave_0[iw+1]
+        if not np.array_equal(first,second):
+            raise ValueError(f'wave_0 Not equal!!!!!')
+
+    for iw in range(len(wave_1)-1):
+        first=wave_1[iw]
+        second=wave_1[iw+1]
+        if not np.array_equal(first,second):
+            raise ValueError(f'wave_1 Not equal!!!!!')
+        
+    for iw in range(len(wave_2)-1):
+        first=wave_2[iw]
+        second=wave_2[iw+1]
+        if not np.array_equal(first,second):
+            raise ValueError(f'wave_2 Not equal!!!!!')
+        
+    ic('All equal !!!! Nice!!!')
+
+    exit()
+    
+
+
     for iC in direct_LPDA_channels:
         efield = efields[iC]       # These are the original Efields if we wish to look at these
         # modify the Efield for surface reflection
@@ -259,8 +292,8 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             # original_efield = channel.get_electric_field()
             original_voltage_fft = channel.get_frequency_spectrum()
             # sum_efield_and_reflected = original_efield.get_trace() + reflected_efields[iC].get_trace()
-            sum_voltage_fft = add_with_zeros(original_voltage_fft,reflected_voltage_fft[iC])
-            # sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
+            # sum_voltage_fft = add_with_zeros(original_voltage_fft,reflected_voltage_fft[iC])
+            sum_voltage_fft = original_voltage_fft + reflected_voltage_fft[iC]
             # original_voltage_fft + reflected_voltage_fft[iC]
             
             # channel.set_frequency_spectrum(original_voltage_fft,channel.get_sampling_rate())

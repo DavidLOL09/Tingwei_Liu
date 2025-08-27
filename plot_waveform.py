@@ -91,8 +91,6 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
     for i in range(8):
         chn=stn.get_channel(i)
         trace=chn.get_trace()/units.mV
-        ic(len(trace))
-        ic(chn.get_sampling_rate())
         trace_list.append(np.max(np.abs(trace)))
     trace_max=np.max(np.array(trace_list))
 
@@ -160,7 +158,9 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         ax.plot(time, amplitude, color=color, lw=1)
         if i in [4,5,6]:
             # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{100*X:.2g}')
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
+            ax.set_title(f'frontlope of ch{i} A:{np.max(np.abs(amplitude)):.2f}')
+        if i in [0,1,2]:
+            ax.set_title(f'backlope of ch{i+4} A:{np.max(np.abs(amplitude)):.2f}')
         else:
             ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
         ax.grid()
