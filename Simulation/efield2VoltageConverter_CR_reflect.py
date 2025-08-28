@@ -8,6 +8,7 @@ import NuRadioReco.framework.channel
 import NuRadioReco.framework.base_trace
 from NuRadioReco.framework.parameters import electricFieldParameters as efp
 from NuRadioReco.framework.parameters import stationParameters as stnp
+from NuRadioReco.utilities import trace_utilities
 
 from NuRadioReco.modules.base.module import register_run
 from NuRadioReco.detector import antennapattern
@@ -282,13 +283,28 @@ class efieldToVoltageConverter():
                 # If the electric field is not at the antenna, we may need to change the
                 # signal arrival direction (due to refraction into the ice) and account for
                 # missing power due to the Fresnel factors.
-                if not efield_is_at_antenna:
-                    zenith_antenna, t_theta, t_phi = geo_utl.fresnel_factors_and_signal_zenith(
-                        det, sim_station, channel_id, zenith)
+
+                n_ice = ice.get_refractive_index(-0.01, det.get_site(station.get_id()))
+                zenith_antenna = zenith
+                t_theta = 1.
+                t_phi = 1.
+                # first check case if signal comes from above
+                if zenith <= 0.5 * np.pi and station.is_cosmic_ray():
+                    # is antenna below surface?
+                    position = det.get_relative_position(station.get_id(), channel_id)
+                    if position[2] <= 0:
+                        zenith_antenna = geo_utl.get_fresnel_angle(zenith, n_ice, 1)
+                        t_theta = geo_utl.get_fresnel_t_p(zenith, n_ice, 1)
+                        t_phi = geo_utl.get_fresnel_t_s(zenith, n_ice, 1)
+                        logger.info("channel {:d}: electric field is refracted into the firn. theta {:.0f} -> {:.0f}. Transmission coefficient p (eTheta) {:.2f} s (ePhi) {:.2f}".format(iCh, zenith / units.deg, zenith_antenna / units.deg, t_theta, t_phi))
                 else:
-                    zenith_antenna = zenith
-                    t_theta = 1
-                    t_phi = 1
+                    # now the signal is coming from below, do we have an antenna above the surface?
+                    position = det.get_relative_position(station.get_id(), channel_id)
+                    if(position[2] > 0):
+                        zenith_antenna = geo_utl.get_fresnel_angle(zenith, 1., n_ice)
+                if(zenith_antenna is None):
+                    logger.warning("fresnel reflection at air-firn boundary leads to unphysical results, no reconstruction possible")
+                    return None
 
                 # Get the antenna pattern and orientation for the current channel
                 antenna_pattern, antenna_orientation = self.get_antenna_pattern_and_orientation(
