@@ -186,6 +186,8 @@ channelResampler.begin()
 
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
+ic(os.path.join(output_path,f'{output_filename}.nur'))
+exit()
 writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
 
 
