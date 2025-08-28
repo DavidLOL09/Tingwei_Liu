@@ -16,7 +16,7 @@ import NuRadioReco.modules.trigger.simpleThreshold
 import NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator
 import NuRadioReco.modules.channelAddCableDelay
 import NuRadioReco.modules.channelLengthAdjuster
-# import NuRadioReco.modules.triggerTimeAdjuster
+import NuRadioReco.modules.triggerTimeAdjuster
 import astropy
 import argparse
 import NuRadioReco.modules.io.eventWriter
@@ -181,8 +181,8 @@ channelStopFilter = NuRadioReco.modules.channelStopFilter.channelStopFilter()
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 channelResampler.begin()
 
-# triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
-# triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
+triggerTimeAdjuster = NuRadioReco.modules.triggerTimeAdjuster.triggerTimeAdjuster()
+triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
@@ -281,11 +281,15 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
             channel=station.get_channel(iC)
-            channel.set_frequency_spectrum(reflected_voltage_fft[iC],sampling_rate[iC])
+            channel.set_frequency_spectrum(sum_voltage_fft,sampling_rate[iC])
 
             if iCh==4:
                 channel=station.get_channel(3)
-                channel.set_frequency_spectrum(sum_voltage_fft,sampling_rate[iC])
+                channel.set_frequency_spectrum(reflected_voltage_fft[iC],sampling_rate[iC])
+            if iCh==5:
+                channel=station.get_channel(7)
+                channel.set_frequency_spectrum(reflected_voltage_fft[iC],sampling_rate[iC])
+
 
 
             # Save the original Efield and voltage FFT
@@ -361,9 +365,10 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
                                 triggered_channels=direct_LPDA_channels,
                                 number_concidences=3,
                                 trigger_name=f'direct_LPDA_3of3_5sigma')
-            # triggerTimeAdjuster.run(evt, station, det)
+            
             channelResampler.run(evt, station, det, 1*units.GHz)
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
+            triggerTimeAdjuster.run(evt, station, det)
     
     stn=evt.get_station(51)
     if stn.has_triggered():
