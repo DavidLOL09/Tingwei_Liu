@@ -32,7 +32,7 @@ max_energy = 17.6
 
 e_range = np.arange(min_energy, max_energy, 0.1)
 sin2Val = np.arange(0, 1.01, 0.1)
-sin2Val = np.arange([0.5,0.6,0.1])
+sin2Val = np.arange(0.5,0.6,0.1)
 
 
 # try:
