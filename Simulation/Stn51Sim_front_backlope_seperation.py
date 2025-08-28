@@ -3,7 +3,7 @@ from NuRadioReco.utilities import units
 # import NuRadioReco.modules.io.coreas.readCoREAS
 import readCoREASStationGrid
 import NuRadioReco.modules.io.coreas.simulationSelector
-import efieldToVoltageConverter_old
+import efield2VoltageConverter_CR_reflect
 import NuRadioReco.modules.channelGenericNoiseAdder
 import NuRadioReco.modules.channelBandPassFilter
 import NuRadioReco.modules.electricFieldBandPassFilter
@@ -159,7 +159,7 @@ readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (dista
 simulationSelector = NuRadioReco.modules.io.coreas.simulationSelector.simulationSelector()
 simulationSelector.begin()
 
-efieldToVoltageConverter = efieldToVoltageConverter_old.efieldToVoltageConverter()
+efieldToVoltageConverter = efield2VoltageConverter_CR_reflect.efieldToVoltageConverter()
 efieldToVoltageConverter.begin(debug=False)
 
 hardwareResponseIncorporator = NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator.hardwareResponseIncorporator()
@@ -188,27 +188,7 @@ writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
 
 
 preAmpVrms_per_channel = {}
-def add_with_zeros(a, b, align="left"):
-    a = np.asarray(a)
-    b = np.asarray(b)
-    N = max(a.size, b.size)
-    out = np.zeros(N, dtype=np.result_type(a, b))
 
-    if align == "left":        # start at index 0
-        out[:a.size] += a
-        out[:b.size] += b
-    elif align == "right":     # align ends
-        out[-a.size:] += a
-        out[-b.size:] += b
-    elif align == "center":    # center align (rounds shorter-left)
-        def place(x):
-            pad = N - x.size
-            left = pad // 2
-            out[left:left + x.size] += x
-        place(a); place(b)
-    else:
-        raise ValueError("align must be 'left', 'right', or 'center'")
-    return out
 
 
 # custom processor
@@ -240,35 +220,33 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     reflected_voltage_fft = []  # This will hold the reflected voltage FFTs, which will be added to the direct channels
     sampling_rate=[]            # Original sampling rate
 
-    wave_1=[]
-    wave_2=[]
-    wave_0=[]
-    for efield in efields:
-        trace=efield.get_trace()
-        wave_0.append(trace[0])
-        wave_1.append(trace[1])
-        wave_2.append(trace[2])
-    for iw in range(len(wave_0)-1):
-        first=wave_0[iw]
-        second=wave_0[iw+1]
-        if not np.array_equal(first,second):
-            raise ValueError(f'wave_0 Not equal!!!!!')
+    # wave_1=[]
+    # wave_2=[]
+    # wave_0=[]
+    # for efield in efields:
+    #     trace=efield.get_trace()
+    #     wave_0.append(trace[0])
+    #     wave_1.append(trace[1])
+    #     wave_2.append(trace[2])
+    # for iw in range(len(wave_0)-1):
+    #     first=wave_0[iw]
+    #     second=wave_0[iw+1]
+    #     if not np.array_equal(first,second):
+    #         raise ValueError(f'wave_0 Not equal!!!!!')
 
-    for iw in range(len(wave_1)-1):
-        first=wave_1[iw]
-        second=wave_1[iw+1]
-        if not np.array_equal(first,second):
-            raise ValueError(f'wave_1 Not equal!!!!!')
-        
-    for iw in range(len(wave_2)-1):
-        first=wave_2[iw]
-        second=wave_2[iw+1]
-        if not np.array_equal(first,second):
-            raise ValueError(f'wave_2 Not equal!!!!!')
-        
-    ic('All equal !!!! Nice!!!')
+    # for iw in range(len(wave_1)-1):
+    #     first=wave_1[iw]
+    #     second=wave_1[iw+1]
+    #     if not np.array_equal(first,second):
+    #         raise ValueError(f'wave_1 Not equal!!!!!')
 
-    exit()
+    # for iw in range(len(wave_2)-1):
+    #     first=wave_2[iw]
+    #     second=wave_2[iw+1]
+    #     if not np.array_equal(first,second):
+    #         raise ValueError(f'wave_2 Not equal!!!!!')
+        
+
     
 
 

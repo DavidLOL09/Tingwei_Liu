@@ -4,7 +4,6 @@ import logging
 import copy
 import functools
 
-from icecream import ic
 import NuRadioReco.framework.channel
 import NuRadioReco.framework.base_trace
 from NuRadioReco.framework.parameters import electricFieldParameters as efp
@@ -37,7 +36,6 @@ class efieldToVoltageConverter():
         self.__post_pulse_time = None
         self.__antenna_provider = None
         logger.setLevel(log_level)
-        ic('E2V converter\n')
         self.begin()
 
 
@@ -111,7 +109,6 @@ class efieldToVoltageConverter():
 
     @register_run()
     def run(self, evt, station, det, channel_ids=None):
-        print('local E2V Converter\n')
         t = time.time()
 
         # access simulated efield and high level parameters
@@ -203,9 +200,6 @@ class efieldToVoltageConverter():
                 dist_channel_efield = np.linalg.norm(det.get_relative_position(sim_station_id, channel_id) - electric_field.get_position())
                 efield_is_at_antenna = dist_channel_efield / units.mm < 0.01
 
-                origin_efield_fft=electric_field.get_frequency_spectrum()
-                ic((origin_efield_fft[1]))
-
                 # calculate the start bin
                 if not np.isnan(electric_field.get_trace_start_time()):
                     cab_delay = det.get_cable_delay(sim_station_id, channel_id)
@@ -248,7 +242,6 @@ class efieldToVoltageConverter():
                     new_trace[:, start_bin:stop_bin] = tr
 
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
-                ic(len(new_trace),time_resolution)
                 trace_object.set_trace(new_trace, 1. / time_resolution)
 
                 if self.__debug:
@@ -259,7 +252,6 @@ class efieldToVoltageConverter():
 
                 ff = trace_object.get_frequencies()
                 efield_fft = trace_object.get_frequency_spectrum()
-                ic(len(efield_fft[1]))
 
                 zenith = electric_field[efp.zenith]
                 azimuth = electric_field[efp.azimuth]
