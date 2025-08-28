@@ -4,6 +4,7 @@ from NuRadioReco.utilities import units
 import readCoREASStationGrid
 import NuRadioReco.modules.io.coreas.simulationSelector
 import efield2VoltageConverter_CR_reflect
+import efieldToVoltageConverter_old
 import NuRadioReco.modules.channelGenericNoiseAdder
 import NuRadioReco.modules.channelBandPassFilter
 import NuRadioReco.modules.electricFieldBandPassFilter
@@ -160,6 +161,7 @@ simulationSelector = NuRadioReco.modules.io.coreas.simulationSelector.simulation
 simulationSelector.begin()
 
 efieldToVoltageConverter = efield2VoltageConverter_CR_reflect.efieldToVoltageConverter()
+efieldToVoltageConverter = efieldToVoltageConverter_old.efieldToVoltageConverter()
 efieldToVoltageConverter.begin(debug=False)
 
 hardwareResponseIncorporator = NuRadioReco.modules.ARIANNA.hardwareResponseIncorporator.hardwareResponseIncorporator()
