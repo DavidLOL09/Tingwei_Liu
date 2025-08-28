@@ -187,7 +187,6 @@ channelResampler.begin()
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
 ic(os.path.join(output_path,f'{output_filename}.nur'))
-exit()
 writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
 
 
@@ -205,7 +204,6 @@ event_id=0
 for iE, evt in enumerate(readCoREAS.run(detector=det)):
     logger.info("processing event {:d} with id {:d}".format(iE, evt.get_id()))
     evt.set_id(event_id)
-    event_id+=1
     front_lope={}
     back_lope={}
     # for station in evt.get_stations():
@@ -253,8 +251,6 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
     
     efields_for_reflect=efieldToVoltageConverter.run(evt, station, det,reflect=True)
-    ic(type(efields_for_reflect))
-    ic(len(efields_for_reflect))
 
     for iC in direct_LPDA_channels:
         efield = efields_for_reflect[iC]       # These are the original Efields if we wish to look at these
@@ -367,6 +363,8 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     
     stn=evt.get_station(51)
     if stn.has_triggered():
+        ic(evt.get_id(),event_id)
+        event_id+=1
         writer.run(evt,det)
             
     # Save every event for proper rate calculation
