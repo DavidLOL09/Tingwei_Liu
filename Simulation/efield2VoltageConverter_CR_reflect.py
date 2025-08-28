@@ -296,7 +296,7 @@ class efieldToVoltageConverter():
                         zenith_antenna = geo_utl.get_fresnel_angle(zenith, n_ice, 1)
                         t_theta = geo_utl.get_fresnel_t_p(zenith, n_ice, 1)
                         t_phi = geo_utl.get_fresnel_t_s(zenith, n_ice, 1)
-                        logger.info("channel {:d}: electric field is refracted into the firn. theta {:.0f} -> {:.0f}. Transmission coefficient p (eTheta) {:.2f} s (ePhi) {:.2f}".format(iCh, zenith / units.deg, zenith_antenna / units.deg, t_theta, t_phi))
+                        logger.info("channel {:d}: electric field is refracted into the firn. theta {:.0f} -> {:.0f}. Transmission coefficient p (eTheta) {:.2f} s (ePhi) {:.2f}".format(channel_id, zenith / units.deg, zenith_antenna / units.deg, t_theta, t_phi))
                 else:
                     # now the signal is coming from below, do we have an antenna above the surface?
                     position = det.get_relative_position(station.get_id(), channel_id)
