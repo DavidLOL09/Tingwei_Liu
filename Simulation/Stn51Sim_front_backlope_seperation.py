@@ -283,6 +283,10 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             channel=station.get_channel(iC)
             channel.set_frequency_spectrum(reflected_voltage_fft[iC],sampling_rate[iC])
 
+            if iCh==4:
+                channel=station.get_channel(3)
+                channel.set_frequency_spectrum(sum_voltage_fft,sampling_rate[iC])
+
 
             # Save the original Efield and voltage FFT
             # np.save(f'SimpleFootprintSimulation/output/original_efield_{iCh}.npy', original_efield.get_trace())
