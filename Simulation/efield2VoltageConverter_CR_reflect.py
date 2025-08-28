@@ -109,7 +109,10 @@ class efieldToVoltageConverter():
 
 
     @register_run()
-    def run(self, evt, station, det, channel_ids=None):
+    def run(self, evt, station, det, channel_ids=None,reflect=False):
+        if reflect:
+            processed_efields={}
+
         t = time.time()
 
         # access simulated efield and high level parameters
@@ -244,6 +247,8 @@ class efieldToVoltageConverter():
 
                 trace_object = NuRadioReco.framework.base_trace.BaseTrace()
                 trace_object.set_trace(new_trace, 1. / time_resolution)
+                processed_efields[channel_id]=trace_object
+
 
                 if self.__debug:
                     axes[0].plot(trace_object.get_times(), new_trace[1], label="eTheta {}".format(electric_field[efp.ray_path_type]), c='C0')
@@ -359,6 +364,8 @@ class efieldToVoltageConverter():
             station.add_channel(channel)
 
         self.__t += time.time() - t
+        if reflect:
+            return processed_efields
 
     def end(self):
         from datetime import timedelta

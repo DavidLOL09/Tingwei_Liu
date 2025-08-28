@@ -250,10 +250,12 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         
 
     
-
+    efields_for_reflect=efieldToVoltageConverter.run(evt, station, det,reflect=True)
+    ic(type(efields_for_reflect))
+    ic(len(efields_for_reflect))
 
     for iC in direct_LPDA_channels:
-        efield = efields[iC]       # These are the original Efields if we wish to look at these
+        efield = efields_for_reflect[iC]       # These are the original Efields if we wish to look at these
         # modify the Efield for surface reflection
         # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
         reflected_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
@@ -263,7 +265,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         sampling_rate.append(efield.get_sampling_rate())
 
     # Now we convert the original Efields to voltage FFTs
-    efieldToVoltageConverter.run(evt, station, det)
+
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
     if True:
