@@ -225,9 +225,9 @@ class efieldToVoltageConverter():
                 azimuth = electric_field[efp.azimuth]
 
                 # get antenna pattern for current channel
-                # ic('trace_utilities.get_efield_antenna_factor')
+                ic('trace_utilities.get_efield_antenna_factor')
                 VEL = trace_utilities.get_efield_antenna_factor(sim_station, ff, [channel_id], det, zenith, azimuth, self.antenna_provider)
-                # ic('trace_utilities.get_efield_antenna_factor\n')
+                ic('trace_utilities.get_efield_antenna_factor\n')
                 if VEL is None:  # this can happen if there is not signal path to the antenna
                     voltage_fft = np.zeros_like(efield_fft[1])  # set voltage trace to zeros
                 else:
