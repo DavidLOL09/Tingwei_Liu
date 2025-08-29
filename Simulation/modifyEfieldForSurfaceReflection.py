@@ -2,6 +2,7 @@ import numpy as np
 import functools
 import logging
 from scipy import constants as scipy_constants
+from NuRadioReco.framework.parameters import channelParameters as chp
 
 from NuRadioReco.utilities import units
 from NuRadioReco.utilities.geometryUtilities import get_fresnel_r_p, get_fresnel_r_s
@@ -29,7 +30,7 @@ class EfieldProcessor:
     def _get_cached_antenna_response(self, ant_pattern, zen, azi, *ant_orient):
         return ant_pattern.get_antenna_response_vectorized(self.__freqs, zen, azi, *ant_orient)
 
-    def modifyEfieldForSurfaceReflection(self, Efield, incoming_zenith, antenna_height=1*units.m, n_index=1.35):
+    def modifyEfieldForSurfaceReflection(self, Efield, incoming_zenith, channel, antenna_height=1*units.m, n_index=1.35,):
         """
         Modifies an Efield object to account for surface reflection.
 
@@ -48,6 +49,7 @@ class EfieldProcessor:
         fresnel_r_s = get_fresnel_r_s(incoming_zenith, n_index)
         distance_traveled = 2 * antenna_height / np.cos(incoming_zenith)
         time_delay = distance_traveled / c
+        channel[chp.reflect_delay]=time_delay
         time_shift_samples = int(time_delay * sampling_rate)
 
         # Calculate the un-shifted reflected traces

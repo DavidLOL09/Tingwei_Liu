@@ -256,7 +256,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         efield = efields_for_reflect[iC]       # These are the original Efields if we wish to look at these
         # modify the Efield for surface reflection
         # Doing this for backlobe antennas to. Needs to be removed in the future if backlobe signals wish to be looked at
-        reflected_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith, antenna_height=1*units.m, n_index=1.35))
+        stn=evt.get_station(51)
+        chn=stn.get_channel(iC)
+        reflected_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith,channel=chn,antenna_height=1*units.m, n_index=1.35))
 
         # Get voltage FFT from reflected Efield
         reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], original_zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
