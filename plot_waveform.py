@@ -100,7 +100,7 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         axes = fig.subplots(nrows=2, ncols=2, sharex=True, sharey=True)
     elif n_chns == 8:
         fig = plt.figure(figsize=(10, 8))
-        axes = fig.subplots(nrows=4, ncols=2, sharex=False, sharey=True)
+        axes = fig.subplots(nrows=4, ncols=2, sharex=True, sharey=True)
 
     for i in range(n_chns):
         chn = stn.get_channel(i)
@@ -128,6 +128,8 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
             # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            time_delay=channel[chp.reflect_delay]/units.ns
+            # ax.set_title(f'ref_Dlay:{time_delay:.3f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 5:
             ax = axes[2, 1]
@@ -135,6 +137,9 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
             # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            time_delay=channel[chp.reflect_delay]/units.ns
+            # ax.set_title(f'ref_Dlay:{time_delay:.3f}')
+            ax.set_ylabel('Amplitude (mV)')
         elif i == 6:
             ax = axes[3, 0]
             color = 'red'
@@ -143,6 +148,9 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             ax.set_xlabel('Time (ns)')
             channel = stn.get_channel(i)
             # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            time_delay=channel[chp.reflect_delay]/units.ns
+            # ax.set_title(f'ref_Dlay:{time_delay:.3f}')
+            ax.set_ylabel('Amplitude (mV)')
         elif i == 7:
             ax = axes[3, 1]
             color = '0.5'
@@ -158,12 +166,18 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         ax.plot(time, amplitude, color=color, lw=1)
         if i in [4,5,6]:
             # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{100*X:.2g}')
-            ax.set_title(f'frontlope of ch{i} A:{np.max(np.abs(amplitude)):.2f}')
-        if i in [0,1,2]:
+            ax.set_title(f'frontlope of ch{i} A:{np.max(np.abs(amplitude)):.2f} T_Dlay:{time_delay:.3f}ns')
+        elif i in [0,1,2]:
             ax.set_title(f'backlope of ch{i+4} A:{np.max(np.abs(amplitude)):.2f}')
         else:
             ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
         ax.grid()
+    stn=evt.get_station(51)
+    sim_stn = stn.get_sim_station()
+    sim_zen = sim_stn[stnp.zenith]/units.deg
+    sim_azi = sim_stn[stnp.azimuth]/units.deg
+    suptitle=f'[{sim_zen:.2f},{sim_azi:.2f}]'
+
 
 
     Xcorr=[]     
