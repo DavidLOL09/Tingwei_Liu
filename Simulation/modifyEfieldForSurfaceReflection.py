@@ -47,7 +47,7 @@ class EfieldProcessor:
         # Calculate reflection coefficients and time delay
         fresnel_r_p = get_fresnel_r_p(incoming_zenith, n_index)
         fresnel_r_s = get_fresnel_r_s(incoming_zenith, n_index)
-        distance_traveled = 2 * antenna_height / np.cos(incoming_zenith)
+        distance_traveled = 2 * antenna_height * np.sin(incoming_zenith)
         time_delay = distance_traveled / c
         channel[chp.reflect_delay]=time_delay
         time_shift_samples = int(time_delay * sampling_rate)
