@@ -153,7 +153,8 @@ def plot_waveform_with_phase(Temp_wave,trace_wave,phase,X=None,title=None):
         ax.set_title(fr'{title}$\chi$={X}')
     plt.show()
 
-def plot_waveform_compare_pase(Temp_wave,trace_wave,phase,X_max=None,X_now=None,title=None):
+
+def plot_waveform_compare_phase(Temp_wave,trace_wave,phase,X_max=None,X_now=None,title=None):
     arr_pre = Temp_wave[:phase]
     arr_pos = Temp_wave[phase:]
     arr1    = np.concatenate((arr_pos,arr_pre))

@@ -14,7 +14,6 @@ det = generic_detector.GenericDetector(json_filename=f'/Users/david/PycharmProje
 import os
 import ToolsPac
 import math
-ic(NuRadioRecoio.__file__)
 Vrms=(9.71+9.66+8.94)/3
 det.update(datetime.datetime(2019, 1, 1))
 files = []
