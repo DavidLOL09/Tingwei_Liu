@@ -22,7 +22,7 @@ output_filename = 'Stn51_IceTop'
 try:
     os.makedirs(output_origin)
 except(FileExistsError):
-    send2trash.send2trash(output_origin)
+    shutil.rmtree(output_origin)
     os.makedirs(output_origin)
 
 min_energy = 16.0
