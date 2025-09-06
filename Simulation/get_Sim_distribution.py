@@ -1,6 +1,5 @@
 import sys
 import os
-sys.modules.pop('NuRadioMC', None)
 sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 import pandas as pd
 import Stn51RateCalc as S51RC
@@ -71,5 +70,5 @@ dic = {
     'Trig_azimuth':A,
     'Trig_weight':W
 }
-remove_files(input_files)
+# remove_files(input_files)
 

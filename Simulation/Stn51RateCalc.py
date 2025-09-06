@@ -4,6 +4,7 @@ import astrotools.auger as auger
 from icecream import ic
 import sys
 # sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
+sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 import NuRadioReco
 ic(f'line11{NuRadioReco.__file__}')
 from NuRadioReco.modules.io import NuRadioRecoio

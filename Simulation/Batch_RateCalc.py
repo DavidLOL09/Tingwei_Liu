@@ -50,7 +50,7 @@ for iE,e in enumerate(e_range):
         # ic('here')
         cmd = f'python {run_py_file}.py --working_dir {working_folder} --working_file {working_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores --low_e {e} --high_e {e+0.1} --sin2V {sin2} --num_icetop {num_icetop}'
         A00_SlurmUtil.makeAndRunJob(cmd, f'Stn51_{e:.1f}_{sin2:.1f}sin2', runDirectory=batch_path, partition='standard')
-        # quit()
+        exit()
 
 # working_dir = args.working_dir
 # working_file = args.working_file
