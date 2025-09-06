@@ -121,7 +121,7 @@ def pullFilesForSimulation(sim_type, min_energy, max_energy, num_icetop=10, icet
 parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
 parser.add_argument('--output_path', type=str, help='Output filename for simulation with backlope')
 parser.add_argument('--output_filename',type=str, help='Output filename for simulation with backlope')
-parser.add_argument('n_cores', type=int, help='Number of cores to use for simulation')
+parser.add_argument('--n_cores', type=int, help='Number of cores to use for simulation')
 parser.add_argument('--min_energy', type=float, default=16.0, help='Minimum energy for simulation')
 parser.add_argument('--max_energy', type=float, default=18.5, help='Maximum energy for simulation')
 parser.add_argument('--sin2', type=float, default=-1, help='Sin^2(zenith) value for simulation, range from 0.0-1.0')
