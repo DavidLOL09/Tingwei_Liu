@@ -43,8 +43,8 @@ try:
 except(FileExistsError):
     shutil.rmtree(batch_path)
     os.makedirs(batch_path)
-for iE,e in enumerate(e_range[:-1]):
-    for iS,sin2 in enumerate(sin2Val[:-1]):
+for iE,e in enumerate(e_range):
+    for iS,sin2 in enumerate(sin2Val):
         # e = 18.4
         # sin2 = 0.0
         # ic('here')
