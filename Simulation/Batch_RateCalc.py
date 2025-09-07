@@ -8,19 +8,24 @@ from icecream import ic
 
 
 
-n_cores     =   1000    #10 Temp    #1000 Sim
+n_cores     =   200    #10 Temp    #1000 Sim
 num_icetop  =   30      #10 Temp    #30   Sim  
 
-working_folder = '/pub/tingwel4/output/CR_BL_Simulation/'
+working_folder = '/pub/tingwel4/output/CR_BL_Simulation_test/'
 working_filename = 'Stn51_IceTop'
 batch_path='/pub/tingwel4/Tingwei_Liu/Simulation/evtRateCalc'
 run_py_file='get_Sim_distribution'
+output = '/pub/tingwel4/output/CR_BL_Simulation_weighted'
 
 
 # Make directory if it doesn't exist
 # Path(output_folder).mkdir(parents=True, exist_ok=True)
 
-
+try:
+    os.mkdir(output)
+except(FileExistsError):
+    shutil.rmtree(output)
+    os.makedirs(output)
 min_energy = 16.0
 max_energy = 18.6
 # max_energy = 16.5
@@ -48,7 +53,7 @@ for iE,e in enumerate(e_range):
         # e = 18.4
         # sin2 = 0.0
         # ic('here')
-        cmd = f'python {run_py_file}.py --working_dir {working_folder} --working_file {working_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores --low_e {e} --high_e {e+0.1} --sin2V {sin2} --num_icetop {num_icetop}'
+        cmd = f'python {run_py_file}.py --working_dir {working_folder} --working_file {working_filename}_{e:.1f}-{e+0.1:.1f}eV_{sin2:.1f}sin2_{n_cores}cores --low_e {e} --high_e {e+0.1} --sin2V {sin2} --num_icetop {num_icetop} --output_path {output}'
         A00_SlurmUtil.makeAndRunJob(cmd, f'Stn51_{e:.1f}_{sin2:.1f}sin2', runDirectory=batch_path, partition='standard')
 
 # working_dir = args.working_dir
