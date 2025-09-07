@@ -62,7 +62,6 @@ directory=working_dir
 input_files=get_input(start,'.nur',directory)
 output=output_path
 # trig_energy, trig_zenith, trig_azimuth, trig_weight = get_PPE(sim_folder, trigger_names[0], e_range, sin2Val, rate_per_bin, n_trig_per_bin)
-ic(output)
 # os.makedirs(output,exist_ok=True)
 # E,Z,A,W,I=get_PPE(input_files,thresh23_3,output,working_file,high_e,low_e,sin2)
 E,Z,A,W,I=get_PPE(directory,thresh23_3,output,working_file,high_e,low_e,sin2)

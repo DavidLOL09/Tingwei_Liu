@@ -11,7 +11,7 @@ from icecream import ic
 n_cores     =   200    #10 Temp    #1000 Sim
 num_icetop  =   30      #10 Temp    #30   Sim  
 
-working_folder = '/pub/tingwel4/output/CR_BL_Simulation_test/'
+working_folder = '/pub/tingwel4/output/CR_BL_Simulation/'
 working_filename = 'Stn51_IceTop'
 batch_path='/pub/tingwel4/Tingwei_Liu/Simulation/evtRateCalc'
 run_py_file='get_Sim_distribution'
