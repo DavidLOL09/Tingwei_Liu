@@ -24,6 +24,7 @@ thresh23_3      ='direct_LPDA_2of3_3.5sigma'
 parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
 parser.add_argument('--working_dir',type=str, help='working directory of simulation')
 parser.add_argument('--working_file', type=str, help='working filename for simulation')
+parser.add_argument('--output_path', type=float, help='output path')
 parser.add_argument('--low_e', type=float, default=16.0, help='Minimum energy for simulation')
 parser.add_argument('--high_e', type=float, default=18.5, help='Maximum energy for simulation')
 parser.add_argument('--sin2V', type=float, default=-1, help='Sin^2(zenith) value for simulation, range from 0.0-1.0')
@@ -31,6 +32,7 @@ parser.add_argument('--num_icetop', type=int, default=10, help='Number of IceTop
 
 
 args = parser.parse_args()
+output_path=args.output_path
 working_dir = args.working_dir
 working_file = args.working_file
 low_e = args.low_e
@@ -56,9 +58,9 @@ def remove_files(files):
     
 
 start=working_file
-directory='/pub/tingwel4/output/CR_BL_Simulation'
+directory=working_dir
 input_files=get_input(start,'.nur',directory)
-output='/pub/tingwel4/output/CR_BL_Simulation_weighted'
+output=output_path
 # trig_energy, trig_zenith, trig_azimuth, trig_weight = get_PPE(sim_folder, trigger_names[0], e_range, sin2Val, rate_per_bin, n_trig_per_bin)
 os.makedirs(output,exist_ok=True)
 # E,Z,A,W,I=get_PPE(input_files,thresh23_3,output,working_file,high_e,low_e,sin2)
