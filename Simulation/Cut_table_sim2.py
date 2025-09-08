@@ -1,6 +1,7 @@
 # Trig-X-SNR-Zen-Ratio
 from typing_extensions import Self
 import sys
+sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 from NuRadioReco.detector import detector 
 from NuRadioReco.utilities import units
 from NuRadioReco.modules.ARIANNA import hardwareResponseIncorporator as ChardwareResponseIncorporator
