@@ -70,6 +70,7 @@ sin2 = args.sin2V
 
 def get_input(start_with,stop_with,directory):
     input_files=[]
+    ic(start_with)
     for i in os.listdir(directory):
         # abspath=os.path.abspath(i)
         if i.startswith(start_with) and i.endswith(stop_with):
@@ -81,6 +82,7 @@ directory=working_dir
 input_files=get_input(start,'.nur',directory)
 for file in input_files:
     ic(file)
+# Stn51_IceTop_16.2-16.3eV_0.2sin2_200cores.nur 
 ic('finished')
 exit()
 
