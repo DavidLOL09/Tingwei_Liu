@@ -80,11 +80,7 @@ def get_input(start_with,stop_with,directory):
 start=working_file
 directory=working_dir
 input_files=get_input(start,'.nur',directory)
-for file in input_files:
-    ic(file)
-# Stn51_IceTop_16.2-16.3eV_0.2sin2_200cores.nur 
-ic('finished')
-exit()
+
 
 def Analyze_zen(input):
     # Zen,<=85deg
@@ -222,16 +218,11 @@ def get_low_amp_ratio(criti_amp,evt,chn_num):
     return spectrum,freqs,ratio
 
 def Analyze_Freqs(input_path):
-    readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
-    filename='Freqs'
+    readARIANNAData = NuRadioRecoio.NuRadioRecoio(input_path)
+    filename=working_file
     output = os.path.join(output_path,filename)
     pass_weight = []
     no_pass_w   = []
-    try:
-        os.makedirs(output)
-    except(FileExistsError):
-        send2trash.send2trash(output)
-        os.makedirs(output)
     eventWriter.begin(os.path.join(output,f'{filename}.nur'))
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
@@ -253,8 +244,6 @@ def Analyze_Freqs(input_path):
         eventWriter.run(evt)
         pass_weight.append(evt.get_parameter(evtp.event_rate))
     ic('Freqs Complete')
-    ic(np.sum(pass_weight))
-    ic(np.sum(no_pass_w))
     return output
 
 def Analyze_SNR(input_path):
@@ -312,8 +301,7 @@ def get_total_weights(input_path):
 # ic(get_total_weights(input_path))
 # Freqs=Analyze_Freqs(input_path)
 # Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
-raw_simulation='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Simulation_weighted/'
-Analyze_Freqs(raw_simulation)
+Analyze_Freqs(input_files)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)
 
