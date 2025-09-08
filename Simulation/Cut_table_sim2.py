@@ -81,6 +81,7 @@ directory=working_dir
 input_files=get_input(start,'.nur',directory)
 for file in input_files:
     ic(file)
+ic('finished')
 exit()
 
 def Analyze_zen(input):
