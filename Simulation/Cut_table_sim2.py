@@ -35,7 +35,6 @@ import NuRadioReco.modules.channelResampler
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 import argparse
 import astropy
-json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
 det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
@@ -216,6 +215,8 @@ def get_low_amp_ratio(criti_amp,evt,chn_num):
     return spectrum,freqs,ratio
 
 def Analyze_Freqs(input_path):
+    ic('input_path')
+    ic(input_path)
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(input_path)
     filename=working_file
     pass_weight = []
