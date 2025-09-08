@@ -218,6 +218,7 @@ def Analyze_Freqs(input_path):
     ic('input_path')
     ic(input_path)
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(input_path)
+    ic(readARIANNAData.get_n_events())
     filename=working_file
     pass_weight = []
     no_pass_w   = []
