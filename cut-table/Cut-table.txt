@@ -315,5 +315,6 @@ R256E1351	90 	Worst
 R243E30		30.2 	Worst
 
 
-5.242， 0.400
-44.1028，0.6
+ic| 'Freqs Complete'
+ic| np.sum(pass_weight): np.float64(1334.763214640708)
+ic| np.sum(no_pass_w): np.float64(78.2971973913431)

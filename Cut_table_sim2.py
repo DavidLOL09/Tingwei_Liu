@@ -33,12 +33,13 @@ hardwareResponseIncorporator = ChardwareResponseIncorporator.hardwareResponseInc
 hardwareResponseIncorporator.begin(debug=False)
 import NuRadioReco.modules.channelResampler
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
+import argparse
 
 json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
 det=detector.Detector(json_filename=json_file_origin)
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_with_weights'
-output_path  ='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig'
+output_path  ='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template'
 Vrms=(9.71+9.66+8.94)/3
 def get_input(input):
     input_dir=[]
@@ -46,7 +47,40 @@ def get_input(input):
         if i.endswith('.nur'):
             input_dir.append(os.path.join(input,i))
     return input_dir
-input_dir=get_input(input_path)
+# input_dir=get_input(input_path)
+
+
+parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
+parser.add_argument('--working_dir',type=str, help='working directory of simulation')
+parser.add_argument('--working_file', type=str, help='working filename for simulation')
+parser.add_argument('--output_path', type=str, help='output path')
+parser.add_argument('--low_e', type=float, default=16.0, help='Minimum energy for simulation')
+parser.add_argument('--high_e', type=float, default=18.5, help='Maximum energy for simulation')
+parser.add_argument('--sin2V', type=float, default=-1, help='Sin^2(zenith) value for simulation, range from 0.0-1.0')
+
+
+args = parser.parse_args()
+output_path=args.output_path
+working_dir = args.working_dir
+working_file = args.working_file
+low_e = args.low_e
+high_e = args.high_e
+sin2 = args.sin2V
+
+def get_input(start_with,stop_with,directory):
+    input_files=[]
+    for i in os.listdir(directory):
+        # abspath=os.path.abspath(i)
+        if i.startswith(start_with) and i.endswith(stop_with):
+            input_files.append(os.path.join(directory,i))
+    return input_files
+
+start=working_file
+directory=working_dir
+input_files=get_input(start,'.nur',directory)
+for file in input_files:
+    ic(file)
+exit()
 
 def Analyze_zen(input):
     # Zen,<=85deg
@@ -187,6 +221,8 @@ def Analyze_Freqs(input_path):
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
     filename='Freqs'
     output = os.path.join(output_path,filename)
+    pass_weight = []
+    no_pass_w   = []
     try:
         os.makedirs(output)
     except(FileExistsError):
@@ -208,9 +244,13 @@ def Analyze_Freqs(input_path):
                 trace=np.max(np.abs(chn.get_trace()/units.MeV))
                 largest=[trace,ratio]
         if largest[1]>=0.115:
+            no_pass_w.append(evt.get_parameter(evtp.event_rate))
             continue
         eventWriter.run(evt)
+        pass_weight.append(evt.get_parameter(evtp.event_rate))
     ic('Freqs Complete')
+    ic(np.sum(pass_weight))
+    ic(np.sum(no_pass_w))
     return output
 
 def Analyze_SNR(input_path):
@@ -267,7 +307,9 @@ def get_total_weights(input_path):
 # Incop_check(input_path)
 # ic(get_total_weights(input_path))
 # Freqs=Analyze_Freqs(input_path)
-Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
+# Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
+raw_simulation='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Simulation_weighted/'
+Analyze_Freqs(raw_simulation)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)
 
@@ -295,9 +337,9 @@ def remove_some_evts(input_path,remove_iden):
         if f'R{evt.get_run_number()}E{evt.get_id()}' in remove_iden:
             continue
         eventWriter.run(evt)
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
-remove_iden=['R247E17','R247E1762','R263E739','R263E749']
-remove_some_evts(input_path,remove_iden)
+# input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
+# remove_iden=['R247E17','R247E1762','R263E739','R263E749']
+# remove_some_evts(input_path,remove_iden)
 
 
 # ic(get_total_weights(Freqs_X_SNR_Zen_Ratio))
