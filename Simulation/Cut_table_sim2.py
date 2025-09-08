@@ -39,8 +39,6 @@ json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/dat
 det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_with_weights'
-output_path  ='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template'
 Vrms=(9.71+9.66+8.94)/3
 def get_input(input):
     input_dir=[]
@@ -220,10 +218,9 @@ def get_low_amp_ratio(criti_amp,evt,chn_num):
 def Analyze_Freqs(input_path):
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(input_path)
     filename=working_file
-    output = os.path.join(output_path,filename)
     pass_weight = []
     no_pass_w   = []
-    eventWriter.begin(os.path.join(output,f'{filename}.nur'))
+    eventWriter.begin(os.path.join(output_path,f'{filename}.nur'))
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
         run = evt.get_run_number()
@@ -244,7 +241,7 @@ def Analyze_Freqs(input_path):
         eventWriter.run(evt)
         pass_weight.append(evt.get_parameter(evtp.event_rate))
     ic('Freqs Complete')
-    return output
+    return output_path
 
 def Analyze_SNR(input_path):
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
