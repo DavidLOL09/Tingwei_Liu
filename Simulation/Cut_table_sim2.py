@@ -34,9 +34,10 @@ hardwareResponseIncorporator.begin(debug=False)
 import NuRadioReco.modules.channelResampler
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 import argparse
-
+import astropy
 json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
-det=detector.Detector(json_filename=json_file_origin)
+det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
+det.update(astropy.time.Time('2018-1-1'))
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_with_weights'
 output_path  ='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template'
