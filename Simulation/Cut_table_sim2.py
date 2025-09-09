@@ -42,7 +42,7 @@ channels_to_use=[4,5,6]
 template_path='/pub/tingwel4/Tingwei_Liu/Simulation/template_with_backlope'
 import custimizedTemplateCorrelation
 custimizedTemplateCorrelation = custimizedTemplateCorrelation.custimizedTemplateCorrelation()
-# custimizedTemplaeCorrelation.begin(template_path)
+custimizedTemplateCorrelation.begin(template_path)
 det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
@@ -301,8 +301,9 @@ def get_total_weights(input_path):
 # ic(get_total_weights(input_path))
 # Freqs=Analyze_Freqs(input_path)
 # Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
-Analyze_Freqs(input_files)
-# Analyze_3Xcorr(input_files)
+
+# Analyze_Freqs(input_files)
+Analyze_3Xcorr(input_files)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)
 
@@ -314,6 +315,8 @@ Analyze_Freqs(input_files)
 
 # ic(get_total_weights(Freqs_X_SNR_Zen))
 # Freqs_X_SNR_Zen_Ratio=Analyze_Ratio(Freqs_X_SNR_Zen)
+
+# numpy 1.21.0
 
 
 def remove_some_evts(input_path,remove_iden):
