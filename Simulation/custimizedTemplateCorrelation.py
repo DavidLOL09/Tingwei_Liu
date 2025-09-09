@@ -4,6 +4,7 @@ from NuRadioReco.modules.base.module import register_run
 import numpy as np
 import fractions
 from icecream import ic
+ic(NuRadioRecoio.__file__)
 from decimal import Decimal
 from NuRadioReco.utilities import units
 from scipy import signal
