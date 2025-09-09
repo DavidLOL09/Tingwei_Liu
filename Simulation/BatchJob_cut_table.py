@@ -9,11 +9,11 @@ from icecream import ic
 
 
 
-working_folder = '/pub/tingwel4/output/CR_BL_Simulation_weighted/'
+working_folder = '/pub/tingwel4/output/Freqs/'
 working_filename = 'Stn51_IceTop'
-batch_path='/pub/tingwel4/Tingwei_Liu/Simulation/run_Analyze'
+batch_path='/pub/tingwel4/Tingwei_Liu/Simulation/run_Analyze_X'
 run_py_file='Cut_table_sim2'
-output = '/pub/tingwel4/output/Freqs'
+output = '/pub/tingwel4/output/Freqs_X'
 
 
 # Make directory if it doesn't exist

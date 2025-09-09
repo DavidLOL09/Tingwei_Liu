@@ -10,6 +10,8 @@ from NuRadioReco.framework.parameters import stationParameters as stnp
 from NuRadioReco.modules.io import NuRadioRecoio
 from icecream import ic
 import numpy as np
+import ToolsPac
+import custimizedTemplateCorrelation
 from NuRadioReco.framework.parameters import eventParameters as evtp
 import datetime
 import NuRadioReco.modules.io.eventWriter
@@ -36,6 +38,11 @@ import NuRadioReco.modules.channelResampler
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 import argparse
 import astropy
+channels_to_use=[4,5,6]
+template_path='/pub/tingwel4/Tingwei_Liu/Simulation/template_with_backlope'
+import custimizedTemplateCorrelation
+custimizedTemplateCorrelation = custimizedTemplateCorrelation.custimizedTemplateCorrelation()
+custimizedTemplateCorrelation.begin(template_path)
 det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
@@ -104,39 +111,32 @@ def Analyze_zen(input):
     return zen_path
 
 def Analyze_3Xcorr(input_path):
-    readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
-    filename='X'
-    sig = os.path.join(output_path,filename)
-    try:
-        os.makedirs(sig)
-    except(FileExistsError):
-        send2trash.send2trash(sig)
-        os.makedirs(sig)
-    eventWriter.begin(os.path.join(sig,f'{filename}.nur'))
-    for evt in readARIANNAData.get_events():
-        stn = evt.get_station(51)
-        save0=True
-        time= stn.get_station_time().datetime
-        det.update(time)
+    weight_bef=[]
+    weight_aft=[]
+    candi_reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
+    filename=working_file
+    candi_writer=ToolsPac.set_writer(output_path,filename)
+    for evt in candi_reader.get_events():
+        stn=evt.get_station(51)
+        weight_bef.append(evt.get_parameter(evtp.event_rate))
         channelStopFilter.run(evt,stn,det,append=0,prepend=0)
-        channelBandPassFilter.run(evt, stn, det, passband=[80 * units.MHz, 500 * units.MHz], filter_type='butter', order = 10)
-        hardwareResponseIncorporator.run(evt, stn, det, sim_to_data=False)
-        channelTemplateCorrelation.run(evt,stn,det,cosmic_ray=True,n_templates=1, channels_to_use=[4,5,6])
-        Xcorr=[]
-        for i in [4,5,6]:
-            channel = stn.get_channel(i)
-            Xmax=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            if Xmax<0.4:
-                save0=False
-                break
-            Xcorr.append(Xmax)
-        if save0 == False:
+        custimizedTemplateCorrelation.run(evt,channels_to_use)
+        x_chn=[]
+        for i in channels_to_use:
+            chn=stn.get_channel(i)
+            x_chn.append(chn[chp.cr_xcorrelations]['cr_ref_xcorr'])
+        if min(x_chn)<0:
+            ic('xcorr negative')
+            exit()
+        if max(x_chn)<0.4:
             continue
-        if max(Xcorr)>=0.4:
-            hardwareResponseIncorporator.run(evt, stn, det, sim_to_data=True)
-            eventWriter.run(evt)
-    ic('X Completed')
-    return sig
+        if min(x_chn)<0.3:
+            continue
+        weight_aft.append(evt.get_parameter(evtp.event_rate))
+        candi_writer.run(evt)
+    ic(sum(weight_bef))
+    ic(sum(weight_aft))
+    return 
 
 def log_cut_line_UDR(x):
     # UD:
@@ -301,7 +301,8 @@ def get_total_weights(input_path):
 # ic(get_total_weights(input_path))
 # Freqs=Analyze_Freqs(input_path)
 # Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
-Analyze_Freqs(input_files)
+# Analyze_Freqs(input_files)
+Analyze_3Xcorr(input_files)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)
 
