@@ -301,8 +301,8 @@ def get_total_weights(input_path):
 # ic(get_total_weights(input_path))
 # Freqs=Analyze_Freqs(input_path)
 # Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
-# Analyze_Freqs(input_files)
-Analyze_3Xcorr(input_files)
+Analyze_Freqs(input_files)
+# Analyze_3Xcorr(input_files)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)
 
