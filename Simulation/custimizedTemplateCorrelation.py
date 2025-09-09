@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
+# sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 from NuRadioReco.modules.base.module import register_run
 import numpy as np
 import fractions
