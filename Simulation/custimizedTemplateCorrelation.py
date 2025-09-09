@@ -3,6 +3,7 @@ import sys
 from NuRadioReco.modules.base.module import register_run
 import numpy as np
 import fractions
+from icecream import ic
 from decimal import Decimal
 from NuRadioReco.utilities import units
 from scipy import signal
@@ -26,6 +27,7 @@ class custimizedTemplateCorrelation:
         self.__template_trace=[]
 
     def begin(self, template_directory,debug=False):
+        ic(ToolsPac.get_input(template_directory))
         reader=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(template_directory))
         for evt in reader.get_events():
             stn=evt.get_station(51)
