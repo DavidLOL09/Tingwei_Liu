@@ -42,7 +42,7 @@ channels_to_use=[4,5,6]
 template_path='/pub/tingwel4/Tingwei_Liu/Simulation/template_with_backlope'
 import custimizedTemplateCorrelation
 custimizedTemplateCorrelation = custimizedTemplateCorrelation.custimizedTemplateCorrelation()
-custimizedTemplateCorrelation.begin(template_path)
+# custimizedTemplaeCorrelation.begin(template_path)
 det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
