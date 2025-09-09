@@ -1,4 +1,5 @@
 import sys
+sys.path.insert(0,'/pub/tingwel4/Tingwei_Liu/NuRadioMC')
 from NuRadioReco.modules.base.module import register_run
 import numpy as np
 import fractions
@@ -34,7 +35,7 @@ class custimizedTemplateCorrelation:
             chn=stn.get_channel(0)
             self.__template_trace.append(chn.get_trace())
         self.__debug = debug
-
+# /pub/tingwel4/Tingwei_Liu/Simulation/template_with_backlope/Stn51_IceTop_17.8-17.9eV_0.9sin2_015evt_0ch.nur
     def get_corr(self,arr1:np.array,arr2:np.array):
         return np.abs(np.dot(arr1,arr2)/np.sqrt(np.dot(arr1,arr1)*np.dot(arr2,arr2)))
     def calculate_xcorr(self,arr2:np.array,arr1:np.array):
