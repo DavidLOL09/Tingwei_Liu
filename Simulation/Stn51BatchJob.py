@@ -8,8 +8,8 @@ import time
 from icecream import ic
 import inspect
 
-n_cores     =   200    #10 Temp    #1000 Sim
-num_icetop  =   30      #10 Temp    #30   Sim  
+n_cores     =   100    #10 Temp    #1000 Sim
+num_icetop  =   20      #10 Temp    #30   Sim  
 amp = True
 add_noise = True
 # output_folder = '/pub/tingwel4/output/CR_BL_Simulation_demo/'
