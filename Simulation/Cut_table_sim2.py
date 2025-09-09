@@ -39,7 +39,7 @@ channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 import argparse
 import astropy
 channels_to_use=[4,5,6]
-template_path='/pub/tingwel4/Tingwei_Liu/Simulation/template_with_backlope'
+template_path='/pub/tingwel4/output/Freqs'
 import custimizedTemplateCorrelation
 custimizedTemplateCorrelation = custimizedTemplateCorrelation.custimizedTemplateCorrelation()
 custimizedTemplateCorrelation.begin(template_path)
