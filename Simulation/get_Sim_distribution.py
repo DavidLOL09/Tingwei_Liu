@@ -72,5 +72,6 @@ dic = {
     'Trig_azimuth':A,
     'Trig_weight':W
 }
+ic(input_files)
 remove_files(input_files)
 
