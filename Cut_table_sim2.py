@@ -34,6 +34,7 @@ hardwareResponseIncorporator.begin(debug=False)
 import NuRadioReco.modules.channelResampler
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 import argparse
+import ToolsPac
 
 json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
 det=detector.Detector(json_filename=json_file_origin)
@@ -49,24 +50,6 @@ def get_input(input):
     return input_dir
 # input_dir=get_input(input_path)
 
-
-parser = argparse.ArgumentParser(description='Run Cosmic Ray simulation for Station 51')
-parser.add_argument('--working_dir',type=str, help='working directory of simulation')
-parser.add_argument('--working_file', type=str, help='working filename for simulation')
-parser.add_argument('--output_path', type=str, help='output path')
-parser.add_argument('--low_e', type=float, default=16.0, help='Minimum energy for simulation')
-parser.add_argument('--high_e', type=float, default=18.5, help='Maximum energy for simulation')
-parser.add_argument('--sin2V', type=float, default=-1, help='Sin^2(zenith) value for simulation, range from 0.0-1.0')
-
-
-args = parser.parse_args()
-output_path=args.output_path
-working_dir = args.working_dir
-working_file = args.working_file
-low_e = args.low_e
-high_e = args.high_e
-sin2 = args.sin2V
-
 def get_input(start_with,stop_with,directory):
     input_files=[]
     for i in os.listdir(directory):
@@ -75,12 +58,6 @@ def get_input(start_with,stop_with,directory):
             input_files.append(os.path.join(directory,i))
     return input_files
 
-start=working_file
-directory=working_dir
-input_files=get_input(start,'.nur',directory)
-for file in input_files:
-    ic(file)
-exit()
 
 def Analyze_zen(input):
     # Zen,<=85deg
@@ -218,7 +195,8 @@ def get_low_amp_ratio(criti_amp,evt,chn_num):
     return spectrum,freqs,ratio
 
 def Analyze_Freqs(input_path):
-    readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
+    ic(ToolsPac.get_input(input_path))
+    readARIANNAData = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
     filename='Freqs'
     output = os.path.join(output_path,filename)
     pass_weight = []
