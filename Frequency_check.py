@@ -145,8 +145,8 @@ candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL
 input_list=get_input(candi)
 # input_list.extend(get_input(non_goso))
 readARIANNAData=NuRadioRecoio.NuRadioRecoio(input_list)
-ic(readARIANNAData.get_n_events())
-exit()
+# ic(readARIANNAData.get_n_events())
+# exit()
 fig,ax = plt.subplots(figsize=(10,8),constrained_layout=True)
 max_amp     = []
 max_ratio   = []

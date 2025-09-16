@@ -55,8 +55,8 @@ def test_logeqs(k,b,arr1):
     ic(exp)
     return exp==arr1[1]
 
-arr1=[7,0.35] 
-arr2=[10,0.46]
+arr1=[38.5077,0.9] 
+arr2=[20.118,0.8259]
 k,b=get_klog(arr1,arr2)
 ic(k,b)
 ic(test_logeqs(k,b,arr1))

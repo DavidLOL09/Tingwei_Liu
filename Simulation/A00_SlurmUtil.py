@@ -28,7 +28,7 @@ def makeAndRunJob(commandToRun, jobName='job', partition='free', runDirectory='r
     header += "#SBATCH --mem-per-cpu=6G		            ##18GB memory per job\n"
     header += "#SBATCH --output={}\n".format(os.path.join(runDirectory, 'logs', f'{jobName}.out'))
     header += "#SBATCH --error={}\n".format(os.path.join(runDirectory, 'logs', f'{jobName}.err'))
-    if '18.5' in cmd:
+    if '18.5eV_0.0sin2' in cmd:
         header += "#SBATCH --mail-type=fail,end,begin\n"
         # header += "#SBATCH --mail-type=end\n"
     header += "#SBATCH --mail-user=tingwel4@uci.edu\n"

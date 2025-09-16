@@ -5,6 +5,8 @@ from NuRadioReco.utilities import units
 import matplotlib.pyplot as plt
 from NuRadioReco.framework.parameters import eventParameters as evtp
 Vrms=(9.71+9.66+8.94)/3
+import datetime
+from icecream import ic
 
 input_dir='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_X_output/X_Ratio_Zen_TrigR8_cut'
 def get_input(input):
@@ -22,8 +24,8 @@ def get_trace_real(input_dir):
     max_trace=[]
     for evt in readARIANNAData.get_events():
         stn=evt.get_station(51)
-        if not evt[evtp.Pass_cut_line]['R243E512']:
-            continue
+        # if not evt[evtp.Pass_cut_line]['R243E512']:
+        #     continue
         trace_up=[]
         for channel in stn.iter_channels(use_channels=[4,5,6]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
@@ -38,18 +40,19 @@ def get_trace_sim(input_dir):
     weights=[]
     for evt in readARIANNAData.get_events():
         stn=evt.get_station(51)
-        if not evt[evtp.Pass_cut_line]['R243E512']:
-            continue
+        # if not evt[evtp.Pass_cut_line]['R243E512']:
+        #     continue
         trace_up=[]
         weights.append(evt.get_parameter(evtp.event_rate))
         for channel in stn.iter_channels(use_channels=[4,5,6]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
         max_trace.append(max(trace_up))
-    return max_trace,weights
+    return max_trace,np.array(weights)*(datetime.timedelta(days=31, seconds=8844)/datetime.timedelta(days=365))
 def E_scatter(trace,bins,ax,name=None,weights=None):
     bins=np.array(bins)/Vrms
     trace=np.array(trace)/Vrms
-    if weights==None:
+    ic(weights)
+    if weights is None:
         ax.set_title(name)
         ax.hist(trace,bins,alpha=0.8,color='r',label=len(trace))
         ax.set_xscale('log')
@@ -83,7 +86,7 @@ def trace_hist(     path1,name1,
                 high=max(i)
         except:
             pass
-    bins=np.logspace(np.log10(low),np.log10(high), 100)
+    bins=np.logspace(np.log10(low),np.log10(high), 20)
     E_scatter(trace1,bins,Axes[0][0],name1)
     E_scatter(trace2,bins,Axes[0][1],name2)
     E_scatter(trace3,bins,Axes[1][0],name3)
@@ -115,10 +118,14 @@ sim_Zen='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_3Xcor
 sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_cut'
 SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_cut'
 
+simulated='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/Trig_Freqs_X_335_SNR'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_X_335_SNR_Ratio_Freqs'
+
+
 # trace_hist(Xcorr,'X',Ratio,'X_Ratio',Ratio,'X_Ratio_Zen','Nothing','Nothing',
 #                sim_Xcorr,sim_Ratio,sim_Zen,'Nothing')
-trace_hist('Nothing','X','Nothing','X_Ratio','Nothing','X_Ratio_Zen',SNR,'Candi8',
-               'Nothing','Nothing','Nothing',sim)
+trace_hist('Nothing','X','Nothing','X_Ratio','Nothing','X_Ratio_Zen',candi,'Candi8',
+               'Nothing','Nothing','Nothing',simulated)
 
 
 

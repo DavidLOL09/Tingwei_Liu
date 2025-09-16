@@ -126,18 +126,16 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             color = 'green'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            time_delay=channel[chp.reflect_delay]/units.ns
-            # ax.set_title(f'ref_Dlay:{time_delay:.3f}')
+            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 5:
             ax = axes[2, 1]
             color = 'blue'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            time_delay=channel[chp.reflect_delay]/units.ns
-            # ax.set_title(f'ref_Dlay:{time_delay:.3f}')
+            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 6:
             ax = axes[3, 0]
@@ -146,9 +144,8 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             ax.set_ylabel('Amplitude (mV)')
             ax.set_xlabel('Time (ns)')
             channel = stn.get_channel(i)
-            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            time_delay=channel[chp.reflect_delay]/units.ns
-            # ax.set_title(f'ref_Dlay:{time_delay:.3f}')
+            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 7:
             ax = axes[3, 1]
@@ -163,21 +160,16 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         # ax.plot(time,-np.full(256,5*Vrms),c='0.5')
         # ax.set_title(f'channel{i}_max_amp:{max:.4f}')
         ax.plot(time, amplitude, color=color, lw=1)
-        if i in [4,5,6]:
-            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{100*X:.2g}')
-            ax.set_title(f'frontlope of ch{i} A:{np.max(np.abs(amplitude)):.2f} T_Dlay:{time_delay:.3f}ns')
-        elif i in [0,1,2]:
-            ax.set_title(f'backlope of ch{i+4} A:{np.max(np.abs(amplitude)):.2f}')
-        else:
+        # if i in [4,5,6]:
+        #     # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{100*X:.2g}')
+        #     ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{}')
+        if i in [0,1,2,3,7]:
             ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
+        # if i==:
+        #     ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
         ax.grid()
     stn=evt.get_station(51)
-    sim_stn = stn.get_sim_station()
-    sim_zen = sim_stn[stnp.zenith]/units.deg
-    sim_azi = sim_stn[stnp.azimuth]/units.deg
-    suptitle=f'[{sim_zen:.2f},{sim_azi:.2f}]'
-
-
+    SNR=trace_max/Vrms
 
     Xcorr=[]     
     for i in [4,5,6]:
@@ -187,6 +179,7 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
     id=evt.get_id()
     run=evt.get_run_number()
     evt_time=stn.get_station_time().datetime
+    suptitle=f'R{run}E{id} SNR:{SNR:.2f}'
     # zen=stn.get_parameter(stnp.zenith)/units.deg
     # azi=stn.get_parameter(stnp.azimuth)/units.deg
     # sim_stn = stn.get_sim_station()
@@ -194,7 +187,6 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
     # sim_azi = sim_stn[stnp.azimuth]/units.deg
     # zen=np.rad2deg(zen)
     # azi=np.rad2deg(azi)
-    SNR=trace_max/Vrms
     # sim_zen=np.rad2deg(sim_zen)
     # sim_azi=np.rad2deg(sim_azi)
     # fig.suptitle(f'U/D:{trace_up/trace_down:.1f} recon[{zen:.1f},{azi:.1f}] sim[{sim_zen:.1f},{sim_azi:.1f}]X:{np.max(Xcorr):.2f}')

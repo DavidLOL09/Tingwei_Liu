@@ -172,7 +172,8 @@ def Plot_Ratio_Amp(input_path,det_input):
     plt.tight_layout()
     plt.show()
     # plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/UD_Ratio.png')
-det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
+det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR'
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/Trig_Freqs_X_SNR'
 # k=(2.7-1)/(np.log10(210)-np.log10(77))
 # ic(k)
 # ic(log_cut_line(77))

@@ -24,7 +24,7 @@ def get_input(input):
 def plot_with_weights(azimuth_list,zenith_list,weights,ax):
     weights = np.array(weights)
     weights_mask = weights >= 0
-    sin2Val = np.linspace(0,(np.sin(np.deg2rad(85)))**2 , 11)   #Bin edges evenly spaces in sin^2(angle) in radians
+    sin2Val = np.linspace(0,(np.sin(np.deg2rad(90)))**2 , 11)   #Bin edges evenly spaces in sin^2(angle) in radians
     # else:
     #     sin2Val = np.linspace(0,1,11)
     rbins = np.rad2deg(np.arcsin(np.sqrt(sin2Val)))
@@ -72,21 +72,21 @@ def direction_plot_detect(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modul
         zen = stn.get_parameter(stnp.zenith)/units.deg
         azi = stn.get_parameter(stnp.azimuth)/units.rad
         pass_Ratio.append(zen)
-        if zen>89:
-            continue
-        if zen<=5:
-            for chn_id in [4,5,6]:
-                chn=stn.get_channel(chn_id)
-                Xmax=chn[chp.cr_xcorrelations]['cr_ref_xcorr_time']
-                # if Xmax!=0:
-                #     chn[chp.cr_xcorrelations]['cr_ref_xcorr_time']
-                ic(Xmax)
-            ic(ToolsPac.get_id_info(evt))
-            time=stn.get_station_time().datetime
-            det.update(time)
-            templateDirectionFitter.run(evt,stn,det,channels_to_use=[4,5,6], cosmic_ray=True)
-            ic(zen)
-            exit()
+        # if zen>89:
+        #     continue
+        # if zen<=5:
+        #     for chn_id in [4,5,6]:
+        #         chn=stn.get_channel(chn_id)
+        #         Xmax=chn[chp.cr_xcorrelations]['cr_ref_xcorr_time']
+        #         # if Xmax!=0:
+        #         #     chn[chp.cr_xcorrelations]['cr_ref_xcorr_time']
+        #         ic(Xmax)
+        #     # ic(ToolsPac.get_id_info(evt))
+        #     time=stn.get_station_time().datetime
+        #     det.update(time)
+        #     templateDirectionFitter.run(evt,stn,det,channels_to_use=[4,5,6], cosmic_ray=True)
+        #     ic(zen)
+        #     exit()
         Iden.append(f'R{evt.get_run_number()}E{evt.get_id()}')
         direct.append([zen,azi])
     # ax.set_title('Direct')
@@ -156,12 +156,12 @@ def direct_Scattering(path1,name1,
     plt.show()
 
 # sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut'
-sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_Ratio_3X'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_Ratio_3X'
+sim='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze3/sim/Trig_Freqs_335_X_Ratio_withZen'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze3/det/Trig_Freqs_335_X_Ratio_withZen'
 # candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/direct_New_Temp/Trig'
 # raw_goso='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw'
 # raw_ngoso='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw_non_goso'
-raw='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'
+# raw='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'
 # direct_Scattering(Xcorr,'X',sig,'X_335sig',Ratio,'X_335sig_Ratio',Zen,'X_335sig_Ratio_Zen',
 #                X_sim,sig_sim,Ratio_sim,Zen_sim)
 # direct_Scattering(candiR12,'candiR12',candiR10,'candiR10',candiR8,'candiR8',candiR6,'candiR6',

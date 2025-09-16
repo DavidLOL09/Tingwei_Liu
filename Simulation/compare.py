@@ -13,15 +13,15 @@ import numpy as np
 import ToolsPac
 from NuRadioReco.framework.parameters import eventParameters as evtp
 import os
-input_path_bef='/pub/tingwel4/output/CR_BL_Simulation_weighted'
-input_path_aft='/pub/tingwel4/output/Freqs'
+input_path_bef='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/Freqs'
+input_path_aft='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/Trig_Freqs_X'
 def weight_compare(bef,aft):
     bef=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(bef))
-    # aft=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(aft))
+    aft=NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(aft))
     weights_bef=[]
     weights_aft=[]
     ic(bef.get_n_events())
-    exit()
+    ic(aft.get_n_events())
     for evt in bef.get_events():
         weights_bef.append(evt.get_parameter(evtp.event_rate))
     for evt in aft.get_events():
