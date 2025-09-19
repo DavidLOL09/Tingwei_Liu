@@ -8,7 +8,7 @@ from icecream import ic
 
 
 
-n_cores     =   100    #10 Temp    #1000 Sim
+n_cores     =   200    #10 Temp    #1000 Sim
 num_icetop  =   15     #10 Temp    #30   Sim  
 
 working_folder = '/pub/tingwel4/output/CR_BL_Simulation/'
