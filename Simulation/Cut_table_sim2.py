@@ -133,9 +133,9 @@ def Analyze_3Xcorr(input_path):
             continue
         weight_aft.append(evt.get_parameter(evtp.event_rate))
         candi_writer.run(evt)
-    ic(sum(weight_bef))
-    ic(sum(weight_aft))
-    return 
+    # ic(sum(weight_bef))
+    # ic(sum(weight_aft))
+    # return 
 
 def log_cut_line_UDR(x):
     # UD:
