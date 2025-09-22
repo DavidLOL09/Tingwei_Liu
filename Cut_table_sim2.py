@@ -4,7 +4,6 @@ import sys
 from NuRadioReco.detector import detector 
 from NuRadioReco.utilities import units
 from NuRadioReco.modules.ARIANNA import hardwareResponseIncorporator as ChardwareResponseIncorporator
-import NuRadioReco.modules.templateDirectionFitter
 from NuRadioReco.framework.parameters import stationParameters as stnp
 from NuRadioReco.modules.io import NuRadioRecoio
 from icecream import ic
@@ -19,6 +18,7 @@ from icecream import ic
 import os
 import datetime
 from NuRadioReco.framework.parameters import channelParameters as chp
+import NuRadioReco.modules.templateDirectionFitter
 templateDirectionFitter = NuRadioReco.modules.templateDirectionFitter.templateDirectionFitter()
 templateDirectionFitter.begin()
 import NuRadioReco.utilities.fft as fft
@@ -81,10 +81,28 @@ def Analyze_zen(input):
         eventWriter.run(evt)
     ic('Zen Complete')
     return zen_path
+import ToolsPac
+def Analyze_threshold(input_path,output_path):
+    reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
+    writer = ToolsPac.set_writer(output_path,'335sig')
+    for evt in reader.get_events():
+        write_bool=[]
+        stn=evt.get_station(51)
+        for ch in [4,5,6]:
+            chn = stn.get_channel(ch)
+            trace = np.max(np.abs(chn.get_trace()/units.mV))
+            write_bool.append(trace>5*Vrms)
+        if False in write_bool:
+            continue
+        writer.run(evt)
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Simulation_weighted'
+output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/'
+Analyze_threshold(input_path,output_path)
+exit()
 
 def Analyze_3Xcorr(input_path):
-    readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
-    filename='X'
+    readARIANNAData = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
+    filename='Freqs_X'
     sig = os.path.join(output_path,filename)
     try:
         os.makedirs(sig)
