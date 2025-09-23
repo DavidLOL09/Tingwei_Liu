@@ -126,16 +126,18 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             color = 'green'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 5:
             ax = axes[2, 1]
             color = 'blue'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 6:
             ax = axes[3, 0]
@@ -144,8 +146,9 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             ax.set_ylabel('Amplitude (mV)')
             ax.set_xlabel('Time (ns)')
             channel = stn.get_channel(i)
-            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 7:
             ax = axes[3, 1]
