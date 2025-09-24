@@ -139,7 +139,6 @@ num_icetop = args.num_icetop
 sim_amp = args.sim_amp
 add_noise = args.add_noise
 
-ic(add_noise)
 
 # Get files for simulation
 input_files = pullFilesForSimulation('IceTop', min_energy, max_energy, num_icetop=num_icetop, icetop_sin=sin2)
@@ -335,6 +334,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         # efieldToVoltageConverter.run(evt, station, det)
 
         if add_noise:
+            ic(add_noise)
             channelGenericNoiseAdder.run(evt, station, det, type='rayleigh', amplitude=preAmpVrms_per_channel)
 
         hardwareResponseIncorporator.run(evt, station, det, sim_to_data=True)
