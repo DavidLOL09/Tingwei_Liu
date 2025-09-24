@@ -1,3 +1,4 @@
-channel=[4,5,6]
-for ic, ich in enumerate(channel):
-    print(ic,ich)
+from icecream import ic
+add_noise=False
+if add_noise:
+    ic(add_noise)

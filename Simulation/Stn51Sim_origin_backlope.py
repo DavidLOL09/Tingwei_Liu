@@ -334,7 +334,9 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         # efieldToVoltageConverter.run(evt, station, det)
 
         if add_noise:
-            ic(add_noise)
+            ic(add_noise,type(add_noise))
+            if add_noise:
+                ic('this is the bug_line')
             channelGenericNoiseAdder.run(evt, station, det, type='rayleigh', amplitude=preAmpVrms_per_channel)
 
         hardwareResponseIncorporator.run(evt, station, det, sim_to_data=True)
