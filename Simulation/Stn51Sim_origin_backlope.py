@@ -137,7 +137,7 @@ max_energy = args.max_energy
 sin2 = args.sin2
 num_icetop = args.num_icetop
 sim_amp = args.sim_amp
-add_noise = args.add_noise
+add_noise = bool(args.add_noise)
 
 
 # Get files for simulation
