@@ -35,9 +35,9 @@ def set_writer(output_path,filename):
     return eventWriter
 def log_cut_line(x):
     # UD:
-    k=3.358751507788999
-    y=k*np.log10(x)-5.067864845613618
-    return y
+    # k=3.358751507788999
+    # y=k*np.log10(x)-5.067864845613618
+    # return y
 
     # Bic:
     k=3.9015114425732005
@@ -172,12 +172,12 @@ def Plot_Ratio_Amp(input_path,det_input):
     plt.tight_layout()
     plt.show()
     # plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/UD_Ratio.png')
-det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR'
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/Trig_Freqs_X_SNR'
+sim_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/Trig_Freqs_335_3X'
+det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/det/Trig_Freqs_335_3X'
 # k=(2.7-1)/(np.log10(210)-np.log10(77))
 # ic(k)
 # ic(log_cut_line(77))
-Plot_Ratio_Amp(input_path,det_input)
+Plot_Ratio_Amp(sim_input,det_input)
 # evtWriter=set_writer(output_path,'X_Zen_UD')
 # get_Ratio_save(input_path,evtWriter)
 

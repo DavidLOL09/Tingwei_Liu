@@ -118,10 +118,13 @@ sim_Zen='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_3Xcor
 sim='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_cut'
 SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/New_temp_Xcorr/Trig/SNR_cut'
 
-simulated='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/Trig_Freqs_X_335_SNR'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_X_335_SNR_Ratio_Freqs'
+simulated='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/Trig_Freqs_335_X_Ratio_SNR'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/det/Trig_Freqs_335_X_Ratio_SNR'
 
-
+det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/det/Trig_Freqs_335_X_Ratio'
+det_output='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/det/'
+sim_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/Trig_Freqs_335_X_Ratio'
+sim_output='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/'
 # trace_hist(Xcorr,'X',Ratio,'X_Ratio',Ratio,'X_Ratio_Zen','Nothing','Nothing',
 #                sim_Xcorr,sim_Ratio,sim_Zen,'Nothing')
 trace_hist('Nothing','X','Nothing','X_Ratio','Nothing','X_Ratio_Zen',candi,'Candi8',
