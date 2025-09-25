@@ -8,12 +8,12 @@ import time
 from icecream import ic
 import inspect
 
-n_cores     =   200    #10 Temp    #1000 Sim
+n_cores     =   10    #10 Temp    #1000 Sim
 num_icetop  =   10      #10 Temp    #30   Sim  
 amp = True
-add_noise = True
+add_noise = False
 # output_folder = '/pub/tingwel4/output/CR_BL_Simulation_demo/'
-output_origin = '/pub/tingwel4/output/CR_BL_Simulation/'
+output_origin = '/pub/tingwel4/output/CR_BL_Template/'
 # output_backlope='/pub/tingwel4/output/CR_BL_Sim_Temp/backlope'
 output_filename = 'Stn51_IceTop'
 
