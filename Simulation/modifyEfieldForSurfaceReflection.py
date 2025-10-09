@@ -116,7 +116,7 @@ class EfieldProcessor:
         Efield_fft = Efield.get_frequency_spectrum()
         t_theta = 1
         t_phi = 1
-        vel_array = np.array([vel['theta'] * t_theta, vel['phi'] * t_phi])*2
+        vel_array = np.array([vel['theta'] * t_theta, vel['phi'] * t_phi])*1
         voltage_fft = np.sum(vel_array * np.array([Efield_fft[1], Efield_fft[2]]), axis=0)
         voltage_fft[np.where(ff < 5 * units.MHz)] = 0
         return voltage_fft
