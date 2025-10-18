@@ -272,7 +272,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
 
 
     # If we want to save the original and reflected traces, we can do so with some version of the following block
-    if False:
+    if True:
         for iC, iCh in enumerate(direct_LPDA_channels):
             channel = station.get_channel(iCh)
             # original_efield = channel.get_electric_field()
