@@ -287,6 +287,20 @@ def Incop_check(input_path):
     trace=np.array(trace)
     ic(np.median(trace))
 
+def Analyze_threshold(input_path):
+    reader = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
+    writer = ToolsPac.set_writer(output_path,'335sig')
+    write_bool=[]
+    for evt in reader.get_events():
+        stn=evt.get_station(51)
+        for ch in [4,5,6]:
+            chn = stn.get_channel(ch)
+            trace = np.max(np.abs(chn.get_trace()/units.mV))
+            write_bool.append(trace>5*Vrms)
+        if False in write_bool:
+            continue
+        writer.run(evt)
+
 
 def get_total_weights(input_path):
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
@@ -297,11 +311,13 @@ def get_total_weights(input_path):
     weights=np.array(weights)
     return np.sum(weights)
 # Incop_check(input_path)
-# ic(get_total_weights(input_path))
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Simulation_weighted/'
+ic(get_total_weights(input_path))
+threshold=Analyze_threshold(input_path)
 # Freqs=Analyze_Freqs(input_path)
 # Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
 
-Analyze_Freqs(input_files)
+# Analyze_Freqs(input_files)
 # Analyze_3Xcorr(input_files)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)

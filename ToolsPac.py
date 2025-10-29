@@ -30,6 +30,7 @@ def set_writer(output,filename,sub_dir=True):
         output_file = output
         if not os.path.isdir(output_file):
             os.mkdir(output_file)
+    ic(output_file)
     eventWriter.begin(os.path.join(output_file,f'{filename}.nur'))
     return eventWriter
 
@@ -72,7 +73,6 @@ def makedirs(directory,exist_ok=False):
         else:
             send2trash.send2trash(directory)
             os.makedirs(directory)
-
 
 def channelTemplateCorrelation_custimized(
         evt:NuRadioReco.framework.event.Event,

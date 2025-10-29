@@ -55,10 +55,13 @@ def test_logeqs(k,b,arr1):
     ic(exp)
     return exp==arr1[1]
 
-arr1=[38.5077,0.9] 
-arr2=[20.118,0.8259]
-k,b=get_klog(arr1,arr2)
-ic(k,b)
-ic(test_logeqs(k,b,arr1))
+# arr1=[14.541,0.766] 
+# arr2=[11.306,0.713]
+# k,b=get_klog(arr1,arr2)
+# ic(k,b)
+# ic(test_logeqs(k,b,arr1))
+
+A=np.array([[1,2],[3,4]])
+ic(A[:,:])
 # self.__cr_templates[station_id][0][zen_ref][az_ref]
 # 'templates_cr_station_{}.pickle'.format(station_id))

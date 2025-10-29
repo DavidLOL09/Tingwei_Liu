@@ -48,9 +48,6 @@ def get_input(start_with,stop_with,directory):
     input_files=[]
     for i in os.listdir(directory):
         # abspath=os.path.abspath(i)
-        ic(i)
-        ic(start_with)
-        ic(directory)
         if i.startswith(start_with) and i.endswith(stop_with):
             input_files.append(os.path.join(directory,i))
     return input_files

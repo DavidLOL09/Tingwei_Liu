@@ -5,6 +5,7 @@ import matplotlib
 import numpy as np
 from icecream import ic
 from NuRadioReco.utilities import units
+import ToolsPac as TP
 from NuRadioReco.modules.io import NuRadioRecoio
 json_file_origin=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json'
 from NuRadioReco.detector import detector
@@ -12,7 +13,7 @@ det=detector.Detector(json_filename=json_file_origin)
 from NuRadioReco.framework.parameters import eventParameters as evtp
 import NuRadioReco.modules.io.eventWriter
 eventWriter = NuRadioReco.modules.io.eventWriter.eventWriter()
-
+bad_evts=['R266E2270', 'R247E1149', 'R243E15', 'R243E103', 'R243E311', 'R243E1192', 'R243E1473']
 import send2trash
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/SNR_cut1'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/simulation_New_Temp/SNR_Ratio_3X'
@@ -81,6 +82,7 @@ def annotate_scatter(ax,x,y,labels):
         )
 
 def Plot_Ratio_Amp(input_path,det_input):
+
     evtReader = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
     fig,ax=plt.subplots(figsize=(8,8))
     Ratio=[]
@@ -107,7 +109,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     Amp_max = np.array(Amp_up)
     Amp_Bic  = np.array(Amp_Bic)
     Amp_down= np.array(Amp_down)
-    Ratio=Amp_max/Amp_Bic
+    Ratio=Amp_max/Amp_down
     Amp_bins=np.linspace(np.min(Amp_max),np.max(Amp_max),101)
     Ratio_bins=np.linspace(np.min(Ratio),np.max(Ratio),101)
     ax.set_xscale('log')
@@ -120,7 +122,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     pm=ax.pcolormesh(S,X,hist.T,norm=matplotlib.colors.LogNorm(),zorder=0)
     ax.figure.colorbar(pm,ax=ax)
     ax.set_xlabel(f'Amp(mV)',fontsize=20)
-    ax.set_ylabel('Ratio(U/Bic)',fontsize=20)
+    ax.set_ylabel('Ratio(U/D)',fontsize=20)
     x=np.linspace(1,10000,1001)
     y=log_cut_line(x)
     ax.plot(x,y,color='orange',linestyle='--',zorder=3)
@@ -150,7 +152,7 @@ def Plot_Ratio_Amp(input_path,det_input):
     Amp_max=np.array(Amp_max)
     Amp_down=np.array(Amp_down)
     Amp_Bic=np.array(Amp_Bic)
-    Ratio = Amp_max/Amp_Bic
+    Ratio = Amp_max/Amp_down
     # Ratio=evt.get_parameter(evtp.UD_Ratio)
     ic(len(Amp_max),len(Ratio))
     ax.tick_params(axis='x', labelsize=20)
@@ -172,12 +174,92 @@ def Plot_Ratio_Amp(input_path,det_input):
     plt.tight_layout()
     plt.show()
     # plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/UD_Ratio.png')
-sim_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/Trig_Freqs_335_3X'
-det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/det/Trig_Freqs_335_3X'
+
+
+def calc_ratio(evt):
+    stn=evt.get_station(51)
+    trace_up = []
+    for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
+        trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
+    trace_up=max(trace_up)
+    trace_down=[]
+    for channel in stn.iter_channels(use_channels=[0,1,2,3]):
+        trace_down.append(np.max(np.abs(channel.get_trace()/units.mV)))
+    trace_down=max(trace_down)
+    channel=stn.get_channel(7)
+    trace_bic=np.max(np.abs(channel.get_trace()/units.mV))
+    return trace_up,trace_down,trace_bic
+
+def plot_ratio(input_path,UD=True):
+    Ratio_X=['R266E2270', 'R247E1149', 'R243E15', 'R243E103', 'R243E311', 'R243E1192']
+    Drive=['R266E1720', 'R256E732', 'R256E1414', 'R256E1694', 'R256E2108', 'R243E2', 
+           'R243E6', 'R243E89', 'R243E294', 'R243E314', 'R243E324', 'R243E330', 'R243E537', 'R243E589']
+    Both=[  'R263E365', 'R263E368', 'R263E739', 'R263E748', 'R263E749', 
+            'R263E756', 'R264E224', 'R266E834', 'R266E1396', 'R249E8', 'R249E11', 
+            'R247E17', 'R247E26', 'R247E904', 'R247E943', 'R247E1732', 'R247E1762', 
+            'R242E10', 'R256E13', 'R256E1669', 'R256E1984', 'R256E2152', 'R243E30', 
+            'R243E57', 'R243E91', 'R243E100', 'R243E126', 'R243E166', 'R243E312', 
+            'R243E512', 'R243E531', 'R243E1033', 'R243E1142', 'R243E1167', 'R243E1183', 
+            'R243E1258', 'R243E1270', 'R243E1399', 'R243E1460', 'R243E1485', 
+            'R243E1792']
+    Ratio_X_E=[]
+    Drive_E=[]
+    Both_E=[]
+    def get_ratio(tu,td,tb,UD):
+        if UD:
+            return tu/td
+        else:
+            return tu/tb
+    common=[]
+    reader=NuRadioRecoio.NuRadioRecoio(TP.get_input(input_path))
+    snr_max=[]
+    for evt in reader.get_events():
+        iden=TP.get_id_info(evt)
+        
+        if iden in Ratio_X:
+            trace_all,trace_down,trace_bic=calc_ratio(evt)
+            Ratio_X_E.append([trace_all/Vrms,get_ratio(trace_all,trace_down,trace_bic,UD)])
+
+        if iden in Drive:
+            trace_all,trace_down,trace_bic=calc_ratio(evt)
+            Drive_E.append([trace_all/Vrms,get_ratio(trace_all,trace_down,trace_bic,UD)])
+
+        if iden in Both:
+            trace_all,trace_down,trace_bic=calc_ratio(evt)
+            Both_E.append([trace_all/Vrms,get_ratio(trace_all,trace_down,trace_bic,UD)])
+        else:
+            trace_all,trace_down,trace_bic=calc_ratio(evt)
+            common.append([trace_all/Vrms,get_ratio(trace_all,trace_down,trace_bic,UD)])
+    Ratio_X_E=np.array(Ratio_X_E)
+    Drive_E=np.array(Drive_E)
+    Both_E=np.array(Both_E)
+    common=np.array(common)
+    snr_max=max([max(Ratio_X_E[:,:1]),max(Drive_E[:,:1]),max(Both_E[:,:1])])
+    max_ratio=max([max(Ratio_X_E[:,1:]),max(Drive_E[:,1:]),max(Both_E[:,1:])])
+    fig,ax=plt.subplots(figsize=(8,8))
+    ax.set_xscale('log')
+    ax.set_xlim(0,1.2*np.max(snr_max))
+    ax.set_ylim(0,max_ratio+3)
+    ax.set_xlabel(f'Amp(mV)',fontsize=20)
+    ax.set_ylabel('Ratio(U/D)',fontsize=20)
+    ax.tick_params(axis='x', labelsize=20)
+    ax.tick_params(axis='y', labelsize=20)
+    ax.scatter(common[:,:1],common[:,1:],s=5,c='grey',label=len(common))
+    ax.scatter(Ratio_X_E[:,:1],Ratio_X_E[:,1:],s=5,c='red',label=len(Ratio_X_E))
+    ax.scatter(Drive_E[:,:1],Drive_E[:,1:],s=5,c='blue',label=len(Drive_E))
+    ax.scatter(Both_E[:,:1],Both_E[:,1:],s=5,c='green',label=len(Both_E))
+    ax.grid()
+    ax.legend()
+    plt.show()
+
+sim_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Trig_Freqs_335_X_Ratio_SNR'
+det_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_Freqs_335_X_Ratio_SNR'
+det_Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2_elder/Trig_335_Freqs_Ratio'
 # k=(2.7-1)/(np.log10(210)-np.log10(77))
 # ic(k)
 # ic(log_cut_line(77))
-Plot_Ratio_Amp(sim_input,det_input)
+# Plot_Ratio_Amp(sim_input,det_input)
+plot_ratio(det_Freqs,False)
 # evtWriter=set_writer(output_path,'X_Zen_UD')
 # get_Ratio_save(input_path,evtWriter)
 

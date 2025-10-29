@@ -128,7 +128,7 @@ def fft_plot_det(ax,input_path):
         amp=max(amp)
         max_amp.append(amp)
         max_ratio.append(max_r)
-    ax.scatter(max_amp,max_ratio)
+    ax.scatter(max_amp,max_ratio,label=f'Candi:{len(max_amp)}')
     ax.set_xlabel(f'SNR',fontsize=40)
     ax.set_ylabel(fr'$\chi$',fontsize=40)
     ax.legend(loc='lower right',fontsize=40)

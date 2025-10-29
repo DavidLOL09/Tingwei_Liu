@@ -30,8 +30,6 @@ import NuRadioReco.modules.channelResampler
 channelResampler = NuRadioReco.modules.channelResampler.channelResampler()
 # channelResampler.begin(debug=False)
 
-import NuRadioReco.modules.channelBandPassFilter
-channelBandPassFilter = NuRadioReco.modules.channelBandPassFilter.channelBandPassFilter()
 
 from NuRadioReco.modules.channelStopFilter import channelStopFilter
 channelStopFilter=channelStopFilter()
