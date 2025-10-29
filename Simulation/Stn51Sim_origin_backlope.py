@@ -373,13 +373,13 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
             channelStopFilter.run(evt, station, det, prepend=0*units.ns, append=0*units.ns)
             triggerTimeAdjuster.run(evt, station, det)
     
-    writer.run(evt,det)
+    # writer.run(evt,det)
 
-    # stn=evt.get_station(51)
-    # if stn.has_triggered():
-    #     ic(evt.get_id(),event_id)
-    #     event_id+=1
-    #     writer.run(evt,det)
+    stn=evt.get_station(51)
+    if stn.has_triggered():
+        ic(evt.get_id(),event_id)
+        event_id+=1
+        writer.run(evt,det)
             
     # Save every event for proper rate calculation
     # Now every event is saved regardless of if it triggers or not
