@@ -39,7 +39,7 @@ from NuRadioReco.detector import generic_detector
 import modifyEfieldForSurfaceReflection
 # from modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
 from NuRadioReco.framework.parameters import showerParameters as shp
-
+ic(NuRadioReco.__path__)
 icetop_sin = -1
 min_energy=16.0
 max_energy=18.5
