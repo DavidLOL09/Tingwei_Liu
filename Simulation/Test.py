@@ -24,17 +24,18 @@ k_lst=[6.7,95000,20000,70]
 b=func(k_lst,a)+error
 
 
-m=[[1,2,3,4],[1,2,3,4]]
-ic(np.shape(m))
-ic(np.sum(m,axis=0))
-import pandas as pd
+
+# m=[[1,2,3,4],[1,2,3,4]]
+# ic(np.shape(m))
+# ic(np.sum(m,axis=0))
+# import pandas as pd
 
 # Example: Creating a DataFrame from a dictionary
-data = {'Name': ['Alice', 'Bob', 'Charlie'],
-        'Age': [25, 30, 35],
-        'City': ['New York', 'Los Angeles', 'Chicago']}
-df = pd.DataFrame(data)
-df.to_excel('/Users/david/PycharmProjects/Demo1/Research/Repository/Simulation/my_data.xlsx', index=False)
+# data = {'Name': ['Alice', 'Bob', 'Charlie'],
+#         'Age': [25, 30, 35],
+#         'City': ['New York', 'Los Angeles', 'Chicago']}
+# df = pd.DataFrame(data)
+# df.to_excel('/Users/david/PycharmProjects/Demo1/Research/Repository/Simulation/my_data.xlsx', index=False)
 # b1=func(k_lst,a)
 # import polynomial_regression
 # poly_reger = polynomial_regression.polynomial_regression()
@@ -50,3 +51,9 @@ df.to_excel('/Users/david/PycharmProjects/Demo1/Research/Repository/Simulation/m
 # ax.plot(a,b1,label='real',zorder=-1,alpha=0.1)
 # ax.legend()
 # plt.show()
+
+t1=np.array([[1,2,3,4,5],
+             [2,3,4,5,6],
+             [3,4,5,6,7],
+             [4,5,6,7,8]])
+ic(t1*(t1>5))
