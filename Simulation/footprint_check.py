@@ -27,6 +27,7 @@ from icecream import ic
 from scipy import constants
 
 from NuRadioReco.detector import detector
+ic(NuRadioReco.__path__)
 det = detector.Detector(json_filename=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 
@@ -39,7 +40,7 @@ from NuRadioReco.detector import generic_detector
 import modifyEfieldForSurfaceReflection
 # from modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
 from NuRadioReco.framework.parameters import showerParameters as shp
-ic(NuRadioReco.__path__)
+
 icetop_sin = -1
 min_energy=16.0
 max_energy=18.5
