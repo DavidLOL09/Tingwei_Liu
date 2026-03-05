@@ -255,6 +255,7 @@ class readCoREAS:
                 self.__current_input_file += 1
                 continue
             corsika = h5py.File(self.__input_files[self.__current_input_file], "r")
+            print(corsika.attrs)
             self.logger.info(
                 "using coreas simulation {} with E={:2g} theta = {:.0f}".format(
                     self.__input_files[self.__current_input_file],
