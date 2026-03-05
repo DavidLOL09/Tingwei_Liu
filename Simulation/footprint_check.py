@@ -26,8 +26,11 @@ import datetime
 from icecream import ic
 from scipy import constants
 
+# /data/homezvol3/tingwel4/.local/lib/python3.8/site-packages/
+
 from NuRadioReco.detector import detector
 ic(NuRadioReco.__path__)
+ic(NuRadioReco.__version__)
 det = detector.Detector(json_filename=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 
