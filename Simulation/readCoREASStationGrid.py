@@ -256,7 +256,8 @@ class readCoREAS:
                 continue
             corsika = h5py.File(self.__input_files[self.__current_input_file], "r")
             attributes = corsika.attrs
-            ic(attributes.n_events)
+            ic(attributes)
+            ic(type(attributes))
             self.logger.info(
                 "using coreas simulation {} with E={:2g} theta = {:.0f}".format(
                     self.__input_files[self.__current_input_file],
