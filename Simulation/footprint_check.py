@@ -44,9 +44,23 @@ import modifyEfieldForSurfaceReflection
 # from modifyEfieldForSurfaceReflection import modifyEfieldForSurfaceReflection, getVoltageFFTFromEfield
 from NuRadioReco.framework.parameters import showerParameters as shp
 
+# class Tester:
+#     def __init__(self):
+#         pass
+#     def repeat1(self,para1,para2):
+#         return para2
+#     def repeat1(self,para1):
+#         return para1
+    
+# Test1=Tester()
+# ic(Test1.repeat1('Test1','Test2'))
+# ic(Test1.repeat1('Test1'))
+
+
+
 icetop_sin = -1
 min_energy=16.0
-max_energy=18.5
+max_energy=16.1
 num_icetop=10
 input_files=[]
 i = min_energy
@@ -58,7 +72,7 @@ while i < max_energy:
         sin2Val = [icetop_sin]
     for sin2 in sin2Val:
         num_in_bin = 0
-        folder = f'/Users/david/PycharmProjects/Demo1/Research/Repository/lgE_{i:.1f}/sin2_{sin2:.1f}/'
+        folder = f'../../../../../dfs8/sbarwick_lab/arianna/SIM/southpole/IceTop/lgE_{i:.1f}/sin2_{sin2:.1f}/'
         for (dirpath, dirnames, filenames) in os.walk(folder):
             for file in filenames:
                 if num_in_bin == num_icetop:
