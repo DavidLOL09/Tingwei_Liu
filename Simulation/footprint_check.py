@@ -90,12 +90,12 @@ readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (dista
 
 ic(NuRadioReco.__path__)
 # exit()
-ic(readCoREAS.get_n_events())
 for ie,evt in enumerate(readCoREAS.run(detector=det)):
     for key,item in vars(evt).items():
         ic(f'{key}:{item}')
         break
     break
+    ic(ie)
 
 # for key,item in vars(readCoREAS).items():
 #     ic(f'{key}:{item}')
