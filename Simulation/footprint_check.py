@@ -59,8 +59,8 @@ from NuRadioReco.framework.parameters import showerParameters as shp
 
 
 icetop_sin = -1
-min_energy=16.0
-max_energy=16.1
+min_energy=17.0
+max_energy=17.1
 num_icetop=10
 input_files=[]
 i = min_energy
