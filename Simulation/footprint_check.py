@@ -31,7 +31,7 @@ from scipy import constants
 from NuRadioReco.detector import detector
 ic(NuRadioReco.__path__)
 ic(NuRadioReco.__version__)
-det = detector.Detector(json_filename=f'/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/Stn51_sim_inAir/station51.json', assume_inf=False, antenna_by_depth=False)
+det = detector.Detector(json_filename=f'/pub/tingwel4/Tingwei_Liu/Simulation/station51_InfAir.json', assume_inf=False, antenna_by_depth=False)
 det.update(astropy.time.Time('2018-1-1'))
 
 import logging
