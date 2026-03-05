@@ -67,7 +67,7 @@ i = min_energy
 while i < max_energy:
     #Currently just iterating through all sin's equally. Can separate sin bins if needed
     if icetop_sin == -1:
-        sin2Val = np.arange(0, 1.01, 0.1)
+        sin2Val = np.arange(0, 0.11, 0.1)
     else:
         sin2Val = [icetop_sin]
     for sin2 in sin2Val:
@@ -82,7 +82,7 @@ while i < max_energy:
                     input_files.append(file)
                     num_in_bin += 1
     i += 0.1
-
+ic(input_files)
 n_cores = 10
 readCoREAS = readCoREASStationGrid.readCoREAS()
 distance = 2 * units.km
@@ -90,7 +90,7 @@ readCoREAS.begin(input_files, -(distance)/2, (distance)/2, -(distance)/2, (dista
 
 ic(NuRadioReco.__path__)
 # exit()
-
+ic(readCoREAS.get_n_events())
 for ie,evt in enumerate(readCoREAS.run(detector=det)):
     for key,item in vars(evt).items():
         ic(f'{key}:{item}')
