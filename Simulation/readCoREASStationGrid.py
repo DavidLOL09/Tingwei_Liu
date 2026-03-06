@@ -246,6 +246,10 @@ class readCoREAS:
 
 
         """
+        def check_item(dict,key1):
+            for key,value in dict.items():
+                ic(f'{key1}:{key}:{value}')
+            return
         while (self.__current_input_file < len(self.__input_files)):
             t = time.time()
             t_per_event = time.time()
@@ -262,8 +266,11 @@ class readCoREAS:
             #     ic(f'corsika:{key}: {value}')
             ic(self.__current_input_file,len(self.__input_files))
             ic('\n')
+            ic('corsika')
             for key,value in corsika.items():
                 ic(f'corsika:{key}: {value}')
+                check_item(corsika[key],key)
+            ic('\n')
             for key,value in corsika['atmosphere'].items():
                 ic(f'atmosphere:{key}: {value}')
             ic(type(corsika['atmosphere']['EnergyDeposit']))
