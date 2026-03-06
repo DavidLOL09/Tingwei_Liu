@@ -263,8 +263,10 @@ class readCoREAS:
             ic(self.__current_input_file,len(self.__input_files))
             for key,value in corsika['atmosphere'].items():
                 ic(f'atmosphere:{key}: {value}')
-            ic(corsika['atmosphere']['EnergyDeposit'])
-            ic(corsika['atmosphere']['NumberOfParticles'])
+            for key,value in corsika['atmosphere']['EnergyDeposit'].items():
+                ic(f'EnergyDeposit:{key}: {value}')
+            for key,value in corsika['atmosphere']['NumberOfParticles'].items():
+                ic(f'NumberOfParticles:{key}: {value}')
             self.logger.info(
                 "using coreas simulation {} with E={:2g} theta = {:.0f}".format(
                     self.__input_files[self.__current_input_file],
