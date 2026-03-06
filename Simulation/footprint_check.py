@@ -60,14 +60,14 @@ from NuRadioReco.framework.parameters import showerParameters as shp
 
 icetop_sin = -1
 min_energy=17.0
-max_energy=18.1
+max_energy=17.1
 num_icetop=10
 input_files=[]
 i = min_energy
 while i < max_energy:
     #Currently just iterating through all sin's equally. Can separate sin bins if needed
     if icetop_sin == -1:
-        sin2Val = np.arange(0, 1.01, 0.1)
+        sin2Val = np.arange(0.8, 1.01, 0.1)
     else:
         sin2Val = [icetop_sin]
     for sin2 in sin2Val:
@@ -95,8 +95,8 @@ for ie,evt in enumerate(readCoREAS.run(detector=det)):
     for key,item in vars(evt).items():
         ic(f'{key}:{item}')
     #     break
-    break
+    # break
 
-
+ic(len(input_files))
 # for key,item in vars(readCoREAS).items():
 #     ic(f'{key}:{item}')
