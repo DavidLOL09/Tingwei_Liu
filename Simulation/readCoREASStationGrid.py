@@ -260,6 +260,7 @@ class readCoREAS:
             #     ic(f"hdf5:{key}: {value}")
             # for key,value in corsika.items():
             #     ic(f'corsika:{key}: {value}')
+            ic(self.__current_input_file,len(self.__input_files))
             for key,value in corsika['atmosphere'].items():
                 ic(f'atmosphere:{key}: {value}')
             self.logger.info(
