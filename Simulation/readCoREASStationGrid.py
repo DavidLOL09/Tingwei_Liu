@@ -264,6 +264,7 @@ class readCoREAS:
             for key,value in corsika['atmosphere'].items():
                 ic(f'atmosphere:{key}: {value}')
             ic(type(corsika['atmosphere']['EnergyDeposit']))
+            ic(corsika['atmosphere']['EnergyDeposit'][0])
 
             self.logger.info(
                 "using coreas simulation {} with E={:2g} theta = {:.0f}".format(
