@@ -337,6 +337,8 @@ class readCoREAS:
             self.__t += time.time() - t
 
             station_ids = detector.get_station_ids()
+            ic(len(cores))
+            ic(np.shape(cores))
             for iCore, core in enumerate(cores):
                 ic(core)
                 t = time.time()
