@@ -261,6 +261,9 @@ class readCoREAS:
             # for key,value in corsika.items():
             #     ic(f'corsika:{key}: {value}')
             ic(self.__current_input_file,len(self.__input_files))
+            ic('\n')
+            for key,value in corsika.items():
+                ic(f'corsika:{key}: {value}')
             for key,value in corsika['atmosphere'].items():
                 ic(f'atmosphere:{key}: {value}')
             ic(type(corsika['atmosphere']['EnergyDeposit']))
