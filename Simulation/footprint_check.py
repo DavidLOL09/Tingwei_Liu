@@ -93,7 +93,7 @@ ic(NuRadioReco.__path__)
 for ie,evt in enumerate(readCoREAS.run(detector=det)):
     ic(ie)
     for key,item in vars(evt).items():
-        ic(f'{key}:{item}')
+        ic(f'evt:{key}:{item}')
     #     break
     # break
 
