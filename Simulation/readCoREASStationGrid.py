@@ -258,6 +258,8 @@ class readCoREAS:
             attributes = corsika.attrs
             for key, value in attributes.items():
                 ic(f"hdf5:{key}: {value}")
+            for key,value in corsika.items():
+                ic(f'corsika:{key}: {value}')
             self.logger.info(
                 "using coreas simulation {} with E={:2g} theta = {:.0f}".format(
                     self.__input_files[self.__current_input_file],
