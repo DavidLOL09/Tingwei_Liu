@@ -10,6 +10,8 @@ from NuRadioReco.detector import antennapattern
 
 from icecream import ic
 
+import pandas as pd
+
 # Set up a logger for warnings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('EfieldProcessor')
@@ -91,7 +93,7 @@ class EfieldProcessor:
         Efield.set_trace(final_traces, sampling_rate)
         return Efield
 
-    def getVoltageFFTFromEfield(self, Efield, original_zenith_antenna, azimuth, det, sim_station, channel_id):
+    def getVoltageFFTFromEfield(self, Efield, original_zenith_antenna, azimuth, det, sim_station, channel_id, event_id=0):
         # origninal zenith antenna needs to be in radians, and the angle from above
         zenith_antenna_after_reflection = np.pi - original_zenith_antenna/units.rad
 
@@ -111,8 +113,13 @@ class EfieldProcessor:
         antenna_orientation = det.get_antenna_orientation(sim_station.get_id(), channel_id)
         if self.__caching:
             vel = self._get_cached_antenna_response(antenna_pattern, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
+            original_vel = self._get_cached_antenna_response(antenna_pattern, original_zenith_antenna/units.rad, azimuth, *antenna_orientation)
         else:
             vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
+            original_vel = antenna_pattern.get_antenna_response_vectorized(ff, original_zenith_antenna/units.rad, azimuth, *antenna_orientation)
+        df_shape = pd.DataFrame(vel).shape
+        ic(df_shape)
+        exit()
         Efield_fft = Efield.get_frequency_spectrum()
         t_theta = 1
         t_phi = 1
