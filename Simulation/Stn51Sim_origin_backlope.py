@@ -191,7 +191,7 @@ triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
-writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
+# writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
 
 
 preAmpVrms_per_channel = {}
