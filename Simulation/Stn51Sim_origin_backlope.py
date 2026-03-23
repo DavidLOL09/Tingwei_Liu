@@ -191,7 +191,7 @@ triggerTimeAdjuster.begin(trigger_name=f'direct_LPDA_2of3_3.5sigma')
 
 
 writer = NuRadioReco.modules.io.eventWriter.eventWriter()
-# writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
+writer.begin(os.path.join(output_path,f'{output_filename}.nur'))
 
 
 preAmpVrms_per_channel = {}
@@ -265,7 +265,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
         reflected_efields.append(eFieldProcessor.modifyEfieldForSurfaceReflection(efield, incoming_zenith=zenith,channel=chn,antenna_height=1*units.m, n_index=1.35))
 
         # Get voltage FFT from reflected Efield
-        reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], original_zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC))
+        reflected_voltage_fft.append(eFieldProcessor.getVoltageFFTFromEfield(reflected_efields[-1], original_zenith_antenna=zenith, azimuth=sim_shower[shp.azimuth]/units.rad, det=det, sim_station=station, channel_id=iC,output_path=f'{event_id}'))
         sampling_rate.append(efield.get_sampling_rate())
 
     # Now we convert the original Efields to voltage FFTs

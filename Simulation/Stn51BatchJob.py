@@ -13,7 +13,7 @@ num_icetop  =   10      #10 Temp    #30   Sim
 amp = True
 add_noise = False
 # output_folder = '/pub/tingwel4/output/CR_BL_Simulation_demo/'
-output_origin = '/pub/tingwel4/output/CR_BL_4_backlope_Template/'
+output_origin = '/pub/tingwel4/output/CR_BL_4_backlope_Template_demo/'
 # output_backlope='/pub/tingwel4/output/CR_BL_Sim_Temp/backlope'
 output_filename = 'Stn51_IceTop'
 
@@ -26,8 +26,8 @@ except(FileExistsError):
     os.makedirs(output_origin)
 
 min_energy = 16.0
-max_energy = 18.6
-# max_energy = 16.2
+# max_energy = 18.
+max_energy = 16.2
 
 e_range = np.arange(min_energy, max_energy, 0.1)
 sin2Val = np.arange(0, 1.01, 0.1)

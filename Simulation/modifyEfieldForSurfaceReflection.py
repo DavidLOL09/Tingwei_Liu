@@ -3,6 +3,7 @@ import functools
 import logging
 from scipy import constants as scipy_constants
 from NuRadioReco.framework.parameters import channelParameters as chp
+import os
 
 from NuRadioReco.utilities import units
 from NuRadioReco.utilities.geometryUtilities import get_fresnel_r_p, get_fresnel_r_s
@@ -93,7 +94,7 @@ class EfieldProcessor:
         Efield.set_trace(final_traces, sampling_rate)
         return Efield
 
-    def getVoltageFFTFromEfield(self, Efield, original_zenith_antenna, azimuth, det, sim_station, channel_id, event_id=0):
+    def getVoltageFFTFromEfield(self, Efield, original_zenith_antenna, azimuth, det, sim_station, channel_id, output_path):
         # origninal zenith antenna needs to be in radians, and the angle from above
         zenith_antenna_after_reflection = np.pi - original_zenith_antenna/units.rad
 
@@ -118,8 +119,11 @@ class EfieldProcessor:
             vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
             original_vel = antenna_pattern.get_antenna_response_vectorized(ff, original_zenith_antenna/units.rad, azimuth, *antenna_orientation)
         df_shape = pd.DataFrame(vel).shape
-        ic(df_shape)
-        exit()
+        output_directory = '/pub/tingwel4/Tingwei_Liu/Simulation/antenna_model_file'
+        with open(os.path.join(output_directory,f'{output_path}.txt'), 'w') as file:
+            file.write("Hello, World!\n")
+            file.write("This is the second line.\n")
+            file.write(df_shape)
         Efield_fft = Efield.get_frequency_spectrum()
         t_theta = 1
         t_phi = 1

@@ -249,7 +249,7 @@ for iE, evt in enumerate(readCoREAS.run(detector=det)):
     #         raise ValueError(f'wave_2 Not equal!!!!!')
         
 
-    
+
     efields_for_reflect=efieldToVoltageConverter.run(evt, station, det,reflect=True)
 
     for iC in direct_LPDA_channels:
