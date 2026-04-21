@@ -103,8 +103,13 @@ class polynomial_regression():
             ic(index)
         return self.get_init_coeff(np.array(demo_x),np.array(demo_y))
 
-    
-
+    def zoom_x(self,x_lst:np.array):
+        min = np.min(x_lst)
+        max = np.max(x_lst)
+        x_zoom = []
+        for i in x_lst:
+            x_zoom.append((i-min)/(max-min))
+        return np.array(x_zoom)
 
     def begin(self, exponent_lst, x_lst, y_lst, regression='multiple linear',demo_size=10, y_weights=None, zoom=False, descent='Adam', learningR = 0.1):
 
@@ -112,8 +117,9 @@ class polynomial_regression():
         self.descent    = descent
         self.exp_level  = exponent_lst
         if zoom:
-            x_lst       = np.linspace(0,1,len(x_lst))
+            x_lst       = self.zoom_x(x_lst)
             self.input_x_list = self.initialize_x(np.array(x_lst),regression)
+            # self.input_x_list = [[x^0,x^1,x^2,x^3],[..],..]
             ic(self.input_x_list)
             self.zoom = zoom
         else:
@@ -122,7 +128,7 @@ class polynomial_regression():
         if y_weights is None:
             self.weights    = np.full_like(y_lst,1)
         else:
-            self.weights        = y_weights
+            self.weights    = y_weights
         self.sample_size    = len(self.input_x_list)
         # self.coefficient    = self.initialize_coeff(demo_size)
         self.coefficient    = [0,0,0,0]
@@ -166,11 +172,12 @@ class polynomial_regression():
 
     
     def run(self):
-        while self.iteration<100000:
+        while self.iteration<10000:
             last_e              = self.error
             self.coefficient    = self.get_next_generation()
             self.train_y_list   = self.get_expect_y()
             self.error          = self.get_error()
+            # ic(self.iteration/1000)
             # ic(self.gradients)
             ic(self.error)
             # error               = self.error
