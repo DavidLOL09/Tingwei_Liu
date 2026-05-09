@@ -117,12 +117,11 @@ def main() -> None:
             "station_id": STATION_ID,
             "events": events,
         }
-        index=events['event_index']
-        pickle_path = PICKLE_DIR + f"{nur_file.stem}_{index}.pkl"
+        pickle_path = PICKLE_DIR + f"{nur_file.stem}.pkl"
         with open(pickle_path, "wb") as fout:
             pickle.dump(pickle_payload, fout)
 
-        plot_path = PLOT_DIR + f"{nur_file.stem}_{index}.png"
+        plot_path = PLOT_DIR + f"{nur_file.stem}.png"
         _plot_events(events, nur_file, plot_path)
 
         print(f"  Saved {pickle_path} and {plot_path}")

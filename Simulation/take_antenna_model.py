@@ -70,9 +70,43 @@ for evt in reader.get_events():
     ff1 = efields[0].get_frequency_spectrum()
     ff = efields[0].get_frequencies()
     spectrum = np.linspace(0,len(ff)-1,len(ff))
+    zen = 50
+    azi = 0
+    zenith = np.deg2rad(zen)
+    azimuth= np.deg2rad(azi+51.35)
+    vel = antenna_pattern.get_antenna_response_vectorized(ff,zenith,azimuth,*antenna_orientation)
+    vel_bl = antenna_pattern.get_antenna_response_vectorized(ff,(np.pi-zenith),azimuth,*antenna_orientation)
+    eff_h = {}
+    eff_h_b = {}
+    eff_h['theta']=np.abs(vel['theta'])
+    eff_h['phi']=np.abs(vel['phi'])
+    eff_h_b['theta']=np.abs(vel_bl['theta'])
+    eff_h_b['phi']=np.abs(vel_bl['phi'])
+
+
+    fig,axes = plt.subplots(2,1,sharex = True, figsize = (10,5))
+    fig.suptitle(f'azi:{azi}deg zen:{zen}deg')
+    ax = axes[0]
+    ax.plot(spectrum,eff_h['theta'],label = f'frontlobe theta')
+    ax.plot(spectrum,eff_h_b['theta'],label = f'backlobe theta')
+    ax.set_ylabel('effective height')
+    ax.set_xlabel('frequency(mHz)')
+    ax.legend()
+
+    ax = axes[1]
+    ax.plot(spectrum,eff_h['phi'],label = f'frontlobe phi')
+    ax.plot(spectrum,eff_h_b['phi'],label = f'backlobe phi')
+    ax.set_ylabel('effective height')
+    ax.set_xlabel('frequency(mHz)')
+    ax.set_xlim(0,800)
+    ax.legend()
+    plt.show()
+    exit()
+
+
     for zen in [0,10,20,30,45,60,70,80,90]:
         zenith = np.deg2rad(zen)
-        azimuth = np.deg2rad(90)
+        azimuth = np.deg2rad(0)
         gain_theta = []
         gain_phi   = []
         azi_bin = np.linspace(0,360,361)
