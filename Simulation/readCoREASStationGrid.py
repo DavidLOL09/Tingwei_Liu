@@ -344,7 +344,7 @@ class readCoREAS:
                 diameter = self.__area[1] - self.__area[0]
                 random_num = self.__random_generator.random(size=self.__n_cores)
                 r = diameter / 2 * np.sqrt(random_num)
-                ic(r,diameter,self.__area[1], self.__area[0])
+                ic(r,random_num,diameter,self.__area[1], self.__area[0])
                 theta = self.__random_generator.random(size=self.__n_cores) * 2 * np.pi
                 x_center = (self.__area[0] + self.__area[1])/2
                 y_center = (self.__area[2] + self.__area[3])/2
