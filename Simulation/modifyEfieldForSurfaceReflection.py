@@ -118,12 +118,12 @@ class EfieldProcessor:
         else:
             vel = antenna_pattern.get_antenna_response_vectorized(ff, zenith_antenna_after_reflection, azimuth, *antenna_orientation)
             original_vel = antenna_pattern.get_antenna_response_vectorized(ff, original_zenith_antenna/units.rad, azimuth, *antenna_orientation)
-        df_shape = pd.DataFrame(vel).shape
-        output_directory = '/pub/tingwel4/Tingwei_Liu/Simulation/antenna_model_file'
-        with open(os.path.join(output_directory,f'{output_path}.txt'), 'w') as file:
-            file.write("Hello, World!\n")
-            file.write("This is the second line.\n")
-            file.write(df_shape)
+        # df_shape = pd.DataFrame(vel).shape
+        # output_directory = '/pub/tingwel4/Tingwei_Liu/Simulation/antenna_model_file'
+        # with open(os.path.join(output_directory,f'{output_path}.txt'), 'w') as file:
+        #     file.write("Hello, World!\n")
+        #     file.write("This is the second line.\n")
+        #     file.write(df_shape)
         Efield_fft = Efield.get_frequency_spectrum()
         t_theta = 1
         t_phi = 1
