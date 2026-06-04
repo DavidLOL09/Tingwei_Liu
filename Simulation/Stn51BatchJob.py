@@ -11,10 +11,10 @@ import inspect
 n_cores     =   10    #10 Temp    #1000 Sim
 num_icetop  =   10      #10 Temp    #30   Sim  
 amp = True
-add_noise = False
+add_noise = True
 # output_folder = '/pub/tingwel4/output/CR_BL_Simulation_demo/'
-output_origin = '/pub/tingwel4/output/CR_BL_4_backlope_Template_demo/'
-# output_backlope='/pub/tingwel4/output/CR_BL_Sim_Temp/backlope'
+# output_origin = '/pub/tingwel4/output/CR_BL_4_backlope_Template'
+output_origin='/pub/tingwel4/output/CR_BL_Sim_Temp/backlope_zen_test'
 output_filename = 'Stn51_IceTop'
 
 # Make directory if it doesn't exist

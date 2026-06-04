@@ -101,6 +101,7 @@ class custimizedTemplateCorrelation:
             xcorrelation={}
             xcorrelation['cr_ref_xcorr']=x_pac['chi_max']
             xcorrelation['cr_ref_xcorr_time']=x_pac['chi_phase']*dt
+            xcorrelation['cr_ref_xcorr_all']=x_pac['xcorrelation']
             chn[chp.cr_xcorrelations]=xcorrelation
 
     def get_gaussian_fit(self,phase_lst,chi_lst,mu,iteration = 5000):
@@ -139,7 +140,7 @@ class custimizedTemplateCorrelation:
             fig.suptitle(ToolsPac.get_id_info(evt))
         for chn in [4,5,6]:  
             channel = stn.get_channel(chn)
-            chi = channel[chp.cr_xcorrelations]['cr_ref_xcorr_all']
+            chi = channel[chp.cr_xcorrelations]
             # chi = gaussian_filter1d(chi, sigma=0.5)
             bin = range(0,len(chi))
             chi_max_index = np.argmax(chi)
