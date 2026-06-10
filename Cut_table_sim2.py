@@ -59,11 +59,10 @@ def get_input(start_with,stop_with,directory):
     return input_files
 
 
-def Analyze_zen(input):
+def direct_reconstruct(input,output,filename):
     # Zen,<=85deg
-    readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input))
-    filename='X_SNR_Zen'
-    zen_path = os.path.join(output_path,filename)
+    readARIANNAData = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input))
+    zen_path = os.path.join(output,filename)
     try:
         os.makedirs(zen_path)
     except(FileExistsError):
@@ -75,9 +74,6 @@ def Analyze_zen(input):
         time= stn.get_station_time().datetime
         det.update(time)
         templateDirectionFitter.run(evt,stn,det,channels_to_use=[4,5,6], cosmic_ray=True)
-        zenith=stn.get_parameter(stnp.zenith)/units.deg
-        if zenith>85:
-            continue
         eventWriter.run(evt)
     ic('Zen Complete')
     return zen_path
@@ -95,10 +91,7 @@ def Analyze_threshold(input_path,output_path):
         if False in write_bool:
             continue
         writer.run(evt)
-input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Simulation_weighted'
-output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4BL/sim/'
-Analyze_threshold(input_path,output_path)
-exit()
+
 
 def Analyze_3Xcorr(input_path):
     readARIANNAData = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
@@ -293,7 +286,7 @@ def Incop_check(input_path):
 
 
 def get_total_weights(input_path):
-    readARIANNAData = NuRadioRecoio.NuRadioRecoio(get_input(input_path))
+    readARIANNAData = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
     weights=[]
     for evt in readARIANNAData.get_events():
         stn = evt.get_station(51)
@@ -304,8 +297,6 @@ def get_total_weights(input_path):
 # ic(get_total_weights(input_path))
 # Freqs=Analyze_Freqs(input_path)
 # Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Freqs'
-raw_simulation='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Simulation_weighted/'
-Analyze_Freqs(raw_simulation)
 # ic(get_total_weights(Freqs))
 # Freqs_X=Analyze_3Xcorr(Freqs)
 
@@ -333,16 +324,34 @@ def remove_some_evts(input_path,remove_iden):
         if f'R{evt.get_run_number()}E{evt.get_id()}' in remove_iden:
             continue
         eventWriter.run(evt)
-# input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
-# remove_iden=['R247E17','R247E1762','R263E739','R263E749']
-# remove_some_evts(input_path,remove_iden)
+
+input_det_Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs'
+input_det_threshold='/Volumes/Elements/Analyze2/det/Trig_335'
+input_det_Chi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X'
+input_det_SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_SNR'
+
+input_sim_Freqs='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Trig_335_Freqs'
+input_sim_Chi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Trig_335_Freqs_X'
+input_sim_SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Trig_335_Freqs_X_SNR'
+input_sim_threshold='/Volumes/Elements/Analyze2/sim/335'
+input_sim_raw='/Volumes/Elements/Analyze2/CR_BL_Simulation_weighted'
+input_det_SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_SNR'
+
+output_det='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det'
+output_sim='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim'
+
+direct_reconstruct(input_det_SNR,output_det,'Trig_335_Freqs_X_direct')
+direct_reconstruct(input_sim_SNR,output_sim,'Trig_335_Freqs_X_direct')
 
 
-# ic(get_total_weights(Freqs_X_SNR_Zen_Ratio))
-
-
-
-# Incop_check(X)
+# reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_det_threshold))
+# ic(reader.get_n_events())
+# reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_det_Freqs))
+# ic(reader.get_n_events())
+# reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_det_Chi))
+# ic(reader.get_n_events())
+# reader = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_det_SNR))
+# ic(reader.get_n_events())
 
 
 

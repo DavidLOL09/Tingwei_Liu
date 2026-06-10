@@ -104,7 +104,7 @@ def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.i
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
         Xcorr=np.max(Xcorr)
         trace_up=np.max(trace_up)
-        if Xcorr>=SNR_cut_line_cut(trace_up/Vrms):
+        if SNR_cut(trace_up/Vrms,Xcorr):
             SNR_dic_r.append(trace_up/Vrms)  
             X_dic_r.append(Xcorr) 
             iden.append(f'R{evt.get_run_number()}E{evt.get_id()}')
@@ -113,14 +113,53 @@ def SNR_Xcorr_Scatter(ax:plt.axes,name:str,readARIANNAData:NuRadioReco.modules.i
             X_dic_g.append(Xcorr)
     # annotate_scatter(ax,SNR_dic_r,X_dic_r,iden)
     ax.set_ylim(0.2,1)
-    ax.scatter(SNR_dic_r,X_dic_r,s=20,c=color,label=f'{name}:{len(SNR_dic_r)}',zorder=zorder,alpha=alfa)
-    # ax.scatter(SNR_dic_g,X_dic_g,s=5,c='grey',label=f'No-pass:{len(SNR_dic_g)}',zorder=zorder,alpha=alfa)
+    ax.scatter(SNR_dic_r,X_dic_r,s=30,c=color,label=f'{name}:{len(SNR_dic_r)}',zorder=zorder,alpha=alfa)
+    ax.scatter(SNR_dic_g,X_dic_g,s=5,c='grey',label=f'No-pass:{len(SNR_dic_g)}',zorder=zorder,alpha=alfa)
     ax.set_xscale('log')
     # ax.grid()
-def SNR_cut_line_cut(x):
-    k=0.3
-    y=k*np.log10(x)+0.2
-    return y
+def SNR_cut(SNR,Xcorr):
+    def Logeqs(k,b,x):
+        return k*np.log10(x)+b
+    # 2 backlope
+    x=SNR
+    y1=np.full_like(x[x<6.566],0.46)
+
+    x2=x[(x>6.566)&(x<8.32)]
+    y2=Logeqs(k=0.86557,b=-0.24743,x=x2)
+
+    x3=x[(x>8.32)&(x<8.822)]
+    y3=Logeqs(k=0.62884,b=-0.02961,x=x3)
+
+    x4=x[(x>8.822)&(x<11.306)]
+    y4=Logeqs(k=1.37365,b=-0.73388,x=x4)
+    
+    x5=x[(x>11.306)&(x<14.541)]
+    y5=Logeqs(k=0.48497,b=0.20218,x=x5)
+
+    y6=np.full_like(x[x>14.541],0.766)
+    y=np.concatenate((y1,y2,y3,y4,y5,y6))
+
+    # 1 backlope
+    # x=SNR
+    # y1=np.full_like(x[x<6.566],0.46)
+
+    # x2=x[(x>6.566)&(x<8.32)]
+    # y2=Logeqs(k=0.86557,b=-0.24743,x=x2)
+
+    # x3=x[(x>8.32)&(x<8.822)]
+    # y3=Logeqs(k=0.62884,b=-0.02961,x=x3)
+
+    # x4=x[(x>8.822)&(x<11.306)]
+    # y4=Logeqs(k=1.37365,b=-0.73388,x=x4)
+    
+    # x5=x[(x>11.306)]
+    # y5=Logeqs(k=0.48497,b=0.20218,x=x5)
+    # y=np.concatenate((y1,y2,y3,y4,y5))
+
+
+
+
+    return Xcorr>y
 
 def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
     SNR_dic = []
@@ -133,8 +172,8 @@ def SNR_Xcorr_Scatter_sim(ax:plt.axes,readARIANNAData:NuRadioReco.modules.io):
         Xcorr=[] 
         for chn in [4,5,6]:  
             channel = stn.get_channel(chn)
-            # Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
-            Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp]['R243E512']['chi_max'])))
+            Xcorr.append(np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr'])))
+            # Xcorr.append(np.max(np.abs(channel[chp.Chi_Temp]['R243E512']['chi_max'])))
         trace_up    = []
         for channel in stn.iter_channels(use_channels=[0,1,2,3,4,5,6,7]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
@@ -200,19 +239,46 @@ def get_eventWriter(name):
     eventWriter.begin(os.path.join(writ_path,f'{name}.nur'))
     return eventWriter
 
+
 def SNR_cut_line(ax):
+    def Logeqs(k,b,x):
+        return k*np.log10(x)+b
     x=np.linspace(1,1000,1001)
-    k=0.3
-    y=k*np.log10(x)+0.2
-    ax.plot(x,y,color='blue',linestyle='--',zorder=3)
-    # for i in np.linspace(0.4,1,7):
-    #     ax.axhline(y=i,color='blue',linestyle='--',zorder=3)
-    # for i in np.logspace(0.5,2,11):
-    #     ax.axvline(x=i,color='blue',linestyle='--',zorder=3)
+    # 2 backlope
+    y1=np.full_like(x[x<6.566],0.46)
 
-# ic| f'trace: {trace_max}': 'trace: 90.47757795735635'
-# ic| f'Xcorr: {Xcorr}  exp: {SNR_cut_line(trace_max)}': 'Xcorr: 0.6869060315157663  exp: 0.786962289863568'
+    x2=x[(x>6.566)&(x<8.32)]
+    y2=Logeqs(k=0.86557,b=-0.24743,x=x2)
 
+    x3=x[(x>8.32)&(x<8.822)]
+    y3=Logeqs(k=0.62884,b=-0.02961,x=x3)
+
+    x4=x[(x>8.822)&(x<11.306)]
+    y4=Logeqs(k=1.37365,b=-0.73388,x=x4)
+    
+    x5=x[(x>11.306)&(x<14.541)]
+    y5=Logeqs(k=0.48497,b=0.20218,x=x5)
+
+    y6=np.full_like(x[x>14.541],0.766)
+    y=np.concatenate((y1,y2,y3,y4,y5,y6))
+
+    # 1 backlope
+    # y1=np.full_like(x[x<6.566],0.46)
+
+    # x2=x[(x>6.566)&(x<8.32)]
+    # y2=Logeqs(k=0.86557,b=-0.24743,x=x2)
+
+    # x3=x[(x>8.32)&(x<8.822)]
+    # y3=Logeqs(k=0.62884,b=-0.02961,x=x3)
+
+    # x4=x[(x>8.822)&(x<11.306)]
+    # y4=Logeqs(k=1.37365,b=-0.73388,x=x4)
+    
+    # x5=x[(x>11.306)]
+    # y5=Logeqs(k=0.48497,b=0.20218,x=x5)
+    # y=np.concatenate((y1,y2,y3,y4,y5))
+
+    ax.plot(x,y,color='black',linestyle='--',zorder=3)
 
 def SNR_Scattering(path1,name1,
                    path2,name2,
@@ -259,11 +325,11 @@ def SNR_Scattering(path1,name1,
 
 sim='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut'
 sim_bef='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs_X'
-sim_aft = '/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Trig_Freqs_X_SNR_with_direct/Candi_with_direct/withTemp_R243E512'
+sim_aft = '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Trig_335_Freqs_X'
 
 sim_zen='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output/X_Zen_UD'
 candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Final_Candi'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X'
 raw_goso='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw'
 raw_ngoso='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw_non_goso'
 
@@ -274,7 +340,7 @@ raw='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'
 
 fig,ax = plt.subplots(1,1,figsize=(10,8),layout='constrained')
 Reader_candi = NuRadioRecoio.NuRadioRecoio(get_input(candi))
-SNR_Xcorr_Scatter(ax,'CR Candi',Reader_candi,2,color='red')
+SNR_Xcorr_Scatter(ax,'CR Candi',Reader_candi,5,color='red')
 
 # Reader_rem = NuRadioRecoio.NuRadioRecoio(get_input(Before))
 # id_lst=[]
@@ -297,6 +363,7 @@ sim_Reader = NuRadioRecoio.NuRadioRecoio(get_input(sim_aft))
 SNR_Xcorr_Scatter_sim(ax,sim_Reader)
 ax.tick_params(axis='x', labelsize=40)
 ax.tick_params(axis='y', labelsize=40)
+ax.grid()
 
 SNR_cut_line(ax)
 

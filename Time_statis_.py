@@ -10,10 +10,10 @@ import datetime
 import os
 import NuRadioReco.modules.correlationDirectionFitter
 from NuRadioReco.framework.parameters import ARIANNAParameters as apt
-input='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw_non_goso'
+input='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw'
 # input_path=../raw/station_51_run_00242.root.nur
 # input file need to be clustered by run 
-
+import numpy as np
 output='/Users/david/PycharmProjects/Demo1/Research/Repository/live_time'
 if not os.path.isdir(output):
     os.makedirs(output)
@@ -25,9 +25,11 @@ def get_input(input):
     return input_dir
 goso=[242,243,247,249,256,260,263,264,266]
 # Goso run list
-
-Dead_time = datetime.timedelta(minutes=5)
+Trigger_rate = 8
+Dead_time = datetime.timedelta(hours=1)/Trigger_rate
 # Dead_time per Goso event
+
+
 
 def Live_time(input_dir):
     T_interval=datetime.timedelta(seconds=0)
@@ -47,11 +49,10 @@ def Live_time(input_dir):
                 # start_time  = stn.get_parameter(apt.seq_start_time   )
                 start_time = stn.get_parameter(apt.seq_start_time)
                 ic(start_time)
-                exit()
             count+=1
             if count == run_n:
                 stn=evt.get_station(51)
-                stop_time   = stn.get_parameter(apt.seq_stop_time    )
+                stop_time   = stn.get_parameter(apt.seq_stop_time)
                 run_id = evt.get_run_number()
         if run_id in goso:
             T_interval+=stop_time-start_time-(Dead_time*run_n)
@@ -68,7 +69,10 @@ def Live_time_in_run(readARIANNAData:NuRadioRecoio.NuRadioRecoio,critTime:dateti
     count=0
     total = readARIANNAData.get_n_events()
     ic(run,total,   run in goso)
+    time_list = []
     for i in readARIANNAData.get_events():
+        stn = i.get_station(51)
+        time = stn.get_station_time().datetime
         if count == 0:
             stn = i.get_station(51)
             start = stn.get_parameter(apt.seq_start_time)
@@ -80,6 +84,7 @@ def Live_time_in_run(readARIANNAData:NuRadioRecoio.NuRadioRecoio,critTime:dateti
             if critTime<stop:
                 stop=critTime
         count+=1
+        time_list.append((time - start)/datetime.timedelta(hours=1))
 
     if run in goso:
         # this is for Goso run
@@ -91,12 +96,20 @@ def Live_time_in_run(readARIANNAData:NuRadioRecoio.NuRadioRecoio,critTime:dateti
                 count+=1
             else:
                 break
-        return stop-start-Dead_time*count
+        hours = (stop-start)/datetime.timedelta(hours=1)
+        time_list = np.array(time_list)
+        time_list = time_list.astype(int)
+        tot_interval = stop-start
+        for hour in range(0,int(hours)+1):
+            evt_num = np.count_nonzero(time_list==hour)
+            if evt_num > 8:
+                evt_num = 8
+            tot_interval -= evt_num*Dead_time
+        return tot_interval
     else:
         # This is for Non-Goso run
         # return datetime.timedelta(seconds=0)
         # Abandon all the Non-Goso events, live time=0
-
         return (stop-start)*0.8
 
 
@@ -115,6 +128,12 @@ def Live_time_before(critTime,input_dir):
 
 time=datetime.datetime(2020, 1, 1, 00, 00, 00)
 # find the live time before this moment
-
+# ic(745.26*(datetime.timedelta(days=23, seconds=61251).total_seconds()/datetime.timedelta(days=365).total_seconds()))
+reader = NuRadioRecoio.NuRadioRecoio(['/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw_non_goso/station_51_run_00248.root.nur'])
+forced_trigger = Live_time_in_run(reader,time,248)
+ic(forced_trigger)
+ic(forced_trigger/datetime.timedelta(hours=1))
+exit()
 with_goso=Live_time_before(time,input)
-ic(with_goso)
+days = with_goso.total_seconds()/datetime.timedelta(days=1).total_seconds()
+ic(with_goso,days)

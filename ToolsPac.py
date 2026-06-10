@@ -12,12 +12,22 @@ import NuRadioReco.framework.event
 from icecream import ic
 import matplotlib.pyplot as plt
 
-def get_input(input):
+def get_input(input,filename = False):
     input_dir=[]
+    input_filename=[]
+    if filename:
+        for i in os.listdir(input):
+            if i.endswith('.nur'):
+                input_dir.append(os.path.join(input,i))
+                input_filename.append(i)
+        return input_dir,input_filename
+
     for i in os.listdir(input):
         if i.endswith('.nur'):
             input_dir.append(os.path.join(input,i))
     return input_dir
+
+
 def set_writer(output,filename,sub_dir=True):
     if sub_dir:
         output_file = os.path.join(output,filename)

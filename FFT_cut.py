@@ -339,33 +339,62 @@ def plot_direct(direct,ax,alfa=1,zorder=0,color='red'):
     ax.scatter(azi,zen,s=20,alpha=alfa,zorder=zorder,color=color,label=f'direct:{len(direct)}')
     ax.legend()
 
-# # template_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_1backL_Template_processed'
-# template_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Template_final'
-# # events_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/template_with_backlope'
-# events_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/CR_BL_Template_processed'
-# events=find_template_event(events_path,template_path)
-# direct=[]
-# for [evt,id] in events:
-#     sim_shower=evt.get_sim_shower(0)
-#     sim_zen=sim_shower[shp.zenith]/units.deg
-#     sim_azi=sim_shower[shp.azimuth]/units.rad
-#     direct.append([sim_zen,sim_azi])
-
-# fig,ax = plt.subplots(figsize=(10,8),layout='constrained',subplot_kw={'projection': 'polar'})
-
-# plot_direct(direct,ax)
-
-# plt.show()
-
-# ic(len(events))
-# for [evt,id] in events:
-#     ic(id)
-# exit()
-# check_FFT_Chi(input_path)
-# get_cut_example(input_path)
-
-# input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_SNR'
-# output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_SNR/waveform'
-# input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Trig_335_Freqs_X_SNR'
-# output_path=os.path.join(input_path,'waveform')
-# get_Complete_FFT_plot(input_path,output_path)
+def Analyze_Freqs(input_path):
+    output_path = '/Users/david/PycharmProjects/Demo1/Research/Repository/'
+    def get_trace_by_chn(i,evt):
+        stn=evt.get_station(51)
+        chn=stn.get_channel(i)
+        trace_spectrum=chn.get_frequency_spectrum()
+        return trace_spectrum
+    def normalize_wave(trace):
+        trace=np.abs(trace)
+        return trace/np.sqrt(np.dot(trace,trace))
+    def find_closest_index(criti_num,arr:np.array):
+        try:
+            for i in range(len(arr)):
+                if criti_num-arr[i]<=0:
+                    return i
+            raise ValueError
+        except ValueError:
+            ic('Critical Number is bigger than every elemtns in array')
+    def get_low_amp_ratio(criti_amp,evt,chn_num):
+        sample_rate=1*units.GHz
+        spectrum = normalize_wave(get_trace_by_chn(chn_num,evt))
+        freqs = fft.freqs(256,sample_rate)/units.MHz
+        index=find_closest_index(criti_amp,freqs)-1
+        tot_amp = np.sum(spectrum)
+        low_amp = np.sum(spectrum[0:index+1])
+        ratio = low_amp/tot_amp
+        return spectrum,freqs,ratio
+    ic(ToolsPac.get_input(input_path))
+    readARIANNAData = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
+    filename='Freqs'
+    output = os.path.join(output_path,filename)
+    pass_weight = []
+    no_pass_w   = []
+    try:
+        os.makedirs(output)
+    except(FileExistsError):
+        send2trash.send2trash(output)
+        os.makedirs(output)
+    eventWriter.begin(os.path.join(output,f'{filename}.nur'))
+    for evt in readARIANNAData.get_events():
+        stn = evt.get_station(51)
+        run = evt.get_run_number()
+        id = evt.get_id()
+        largest=[0,0]
+        time = stn.get_station_time().datetime
+        # largest:[max_amp,ratio]
+        for i in range(4,7):
+            spectrum,freqs,ratio=get_low_amp_ratio(50,evt,i)
+            if ratio>largest[1]:
+                stn=evt.get_station(51)
+                chn=stn.get_channel(i)
+                trace=np.max(np.abs(chn.get_trace()/units.MeV))
+                largest=[trace,ratio]
+        if largest[1]>=0.115:
+            no_pass_w.append(evt.get_parameter(evtp.event_rate))
+            continue
+        eventWriter.run(evt)
+    ic('Freqs Complete')
+    return output

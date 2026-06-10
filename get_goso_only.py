@@ -2,8 +2,11 @@ goso=[242,243,247,249,256,260,263,264,266]
 from NuRadioReco.modules.io import NuRadioRecoio
 import os
 import NuRadioReco.modules.io.eventWriter
+import numpy as np
+from icecream import ic
 
-
+ic(np.sin(np.deg2rad(85)))**2
+exit()
 def get_input(input):
     input_dir=[]
     for i in os.listdir(input):

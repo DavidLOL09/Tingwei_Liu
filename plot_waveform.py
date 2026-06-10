@@ -19,7 +19,7 @@ det.update(datetime.datetime(2019, 1, 1))
 files = []
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_bef_cut_no_Incorp/sim_bef_cut'
 input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio_Zen'
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_Template/front_back_sep/'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_SNR'
 candidate_path=os.path.join(candi,'Waveform')
 # input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_output/extract'
 output=candidate_path
@@ -126,18 +126,18 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             color = 'green'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
+            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 5:
             ax = axes[2, 1]
             color = 'blue'
             #antenna_type = 'upward LPDA'
             channel = stn.get_channel(i)
-            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
+            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 6:
             ax = axes[3, 0]
@@ -146,9 +146,9 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
             ax.set_ylabel('Amplitude (mV)')
             ax.set_xlabel('Time (ns)')
             channel = stn.get_channel(i)
-            # X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
-            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
-            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
+            X=np.max(np.abs(channel[chp.cr_xcorrelations]['cr_ref_xcorr']))
+            ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f} X:{X:.2f}')
+            # ax.set_title(f'A:{np.max(np.abs(amplitude)):.2f}')
             ax.set_ylabel('Amplitude (mV)')
         elif i == 7:
             ax = axes[3, 1]
@@ -173,7 +173,7 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         ax.grid()
     stn=evt.get_station(51)
     SNR=trace_max/Vrms
-
+    time = stn.get_station_time().datetime
     Xcorr=[]     
     for i in [4,5,6]:
         channel = stn.get_channel(i)
@@ -182,7 +182,10 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
     id=evt.get_id()
     run=evt.get_run_number()
     evt_time=stn.get_station_time().datetime
-    suptitle=f'R{run}E{id} SNR:{SNR:.2f}'
+    if suptitle == 'waveform':
+        suptitle=f'R{run}E{id} SNR:{SNR:.2f} T:{time}'
+    else:
+        suptitle = f'R{run}E{id} SNR:{SNR:.2f} {suptitle} T:{time}'
     # zen=stn.get_parameter(stnp.zenith)/units.deg
     # azi=stn.get_parameter(stnp.azimuth)/units.deg
     # sim_stn = stn.get_sim_station()
@@ -216,9 +219,23 @@ def plot_wave(evt,temp_output='Nothing',filename=None,plt_close=False,suptitle=f
         plt.savefig(os.path.join(temp_output,filename))
     if plt_close:
         plt.close()
-# for evt in data.get_events():
-#     iden=ToolsPac.get_id_info(evt)
-#     plot_wave(evt,temp_output=candidate_path)
+input_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_direct/new_phase_algorithm'
+data = NuRadioRecoio.NuRadioRecoio(ToolsPac.get_input(input_path))
+ic(data.get_n_events())
+for evt in data.get_events():
+    # iden=ToolsPac.get_id_info(evt)
+    stn = evt.get_station(51)
+    zen = stn.get_parameter(stnp.zenith)/units.deg
+    azi = stn.get_parameter(stnp.azimuth)/units.deg
+    if zen>30 and zen<40:
+        if azi>45 and azi<90:
+            plot_wave(evt,temp_output=os.path.join(input_path,'sus_dir/waveform'),suptitle=f'z:{zen:.2f} a:{azi:.2f}')
+            continue
+    if zen<85:
+            plot_wave(evt,temp_output=os.path.join(input_path,'good_dir/waveform'),suptitle=f'z:{zen:.2f} a:{azi:.2f}')
+    else:
+        plot_wave(evt,temp_output=os.path.join(input_path,'fail_dir/waveform'),suptitle=f'z:{zen:.2f} a:{azi:.2f}')
+
 
 # True
 # 0.6955312335093126

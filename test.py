@@ -62,6 +62,49 @@ def test_logeqs(k,b,arr1):
 # ic(test_logeqs(k,b,arr1))
 
 A=np.array([[1,2],[3,4]])
-ic(A[:,:])
+# ic(A[:,:])
+theta = 0.11186
+p_t = 40*np.tan(theta)/np.sqrt(np.tan(theta)**2+1)
+y = np.sqrt(1640-(1600*(np.tan(theta)**2))/np.sqrt(np.tan(theta)+1))+40/np.sqrt(np.tan(theta)**2+1)
+ic(y)
+ic(np.log(np.e))
+
+ic(np.log(1000))
+ic(3*np.log(10))
+ic(np.log(np.e))
+ic(np.e**(-4.2*np.log(10)))
+ic(10*np.e**(-4.2))
+# exit()
+
+# fig,ax = plt.subplots(1,1,figsize=(5,5))
+# x = np.logspace(-1,4,1001)
+# # x=np.array([1,1000])
+# a = 1/(np.log(1000))
+# b = 10**(-4.2)
+# y = a*((1+x**2)/(x**2))*np.log(x/b)
+# ic(y)
+# ax.plot(x,y)
+# ax.set_ylim(1,10)
+# ax.set_xscale('log')
+# ax.set_yscale('log')
+
+# plt.show()
+
+from scipy.integrate import quad
+
+# Define your function
+def integrand(z):
+    a = 1/(3*np.log(10))
+    b = 10**-4.2
+    dE_dx = a*((1+z**2)/(z**2))*np.log(z/b)
+    y = z*100/(dE_dx*np.sqrt(z**2+1))
+    return y
+
+# Integrate from 0 to 1
+result, error = quad(integrand, 0, 1000)
+ic(result-50000)
+ic((result-50000)/result)
+print(f"Result: {result}, Estimated Error: {error}")
+
 # self.__cr_templates[station_id][0][zen_ref][az_ref]
 # 'templates_cr_station_{}.pickle'.format(station_id))

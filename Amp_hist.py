@@ -48,7 +48,7 @@ def get_trace_sim(input_dir):
         for channel in stn.iter_channels(use_channels=[4,5,6]):
             trace_up.append(np.max(np.abs(channel.get_trace()/units.mV)))
         max_trace.append(max(trace_up))
-    return max_trace,np.array(weights)*(datetime.timedelta(days=31, seconds=8844)/datetime.timedelta(days=365))
+    return max_trace,np.array(weights)*(datetime.timedelta(days=31, seconds=21201)/datetime.timedelta(days=365))
 def E_scatter(trace,ax,bins,name=None,weights=None):
     # bins=np.array(bins)/Vrms
     if trace==[]:
@@ -63,7 +63,15 @@ def E_scatter(trace,ax,bins,name=None,weights=None):
         # ax.legend()
     else:
         ax.hist(trace,bins,zorder=0,weights=weights)
-        ax.set_xlabel(f'total:{sum(weights)}')
+        ax.set_xlabel(f'SNR(log)',fontsize=40)
+        ax.set_ylabel('Counts',fontsize=40)
+
+def normalize(norm,trace,weights):
+    if norm:
+        weights=np.array(weights)
+        num=len(trace)
+        weights=(weights*num)/np.sum(weights)
+    return weights
 
 def trace_hist(     
         path1,name1,
@@ -134,11 +142,26 @@ sim_SNR='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/sim/Tri
 
 # trace_hist(Xcorr,'X',Ratio,'X_Ratio',Ratio,'X_Ratio_Zen','Nothing','Nothing',
 #                sim_Xcorr,sim_Ratio,sim_Zen,'Nothing')
-trace_hist('Nothing','X',
-           'Nothing','X_Ratio',
-           'Nothing','X_Ratio_Zen',
-           det_SNR,'SNR',
-               'Nothing',
-               'Nothing',
-               'Nothing',
-               sim_SNR)
+# trace_hist('Nothing','X',
+        #    'Nothing','X_Ratio',
+        #    'Nothing','X_Ratio_Zen',
+        #    det_SNR,'SNR',
+        #        'Nothing',
+        #        'Nothing',
+        #        'Nothing',
+        #        sim_SNR)
+
+fig,ax = plt.subplots(1,1,figsize=(10,8),layout='constrained')
+trace=get_trace_real(det_SNR)
+sim_tra1,weights1=get_trace_sim(sim_SNR)
+# weights1=normalize(True,trace,weights1)
+bins=np.logspace(np.log10(1),np.log10(101), 20)
+E_scatter(trace,ax,bins,'Amplitude hist')
+E_scatter(sim_tra1,ax,bins,weights=weights1)
+ic(np.sum(weights1))
+ax.tick_params(axis='x', labelsize=40)
+ax.tick_params(axis='y', labelsize=40)
+plt.legend()
+plt.show()
+
+

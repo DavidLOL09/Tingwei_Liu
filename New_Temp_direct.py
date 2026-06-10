@@ -70,6 +70,8 @@ def trace_check(input):
             trace = chn.get_trace()/units.mV
             ic(np.max(np.abs(trace)))
         print()
+
+
 temp_path='/Users/david/PycharmProjects/Demo1/Research/Repository/sim_output_Trig/Candi_with_direct/event_sep/Template/Template_R243E512'
 # candi_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig_Freqs_X_SNR_Ratio'
 candi_path='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'

@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
+# sys.path.insert(0,'/Users/david/PycharmProjects/Demo1/Research/Repository/NuRadioMC')
 from NuRadioReco.detector import detector 
 from NuRadioReco.utilities import units
 from NuRadioReco.modules.ARIANNA import hardwareResponseIncorporator as ChardwareResponseIncorporator
@@ -15,7 +15,7 @@ import os
 from NuRadioReco.framework.parameters import channelParameters as chp
 import NuRadioReco.modules.correlationDirectionFitter
 from icecream import ic
-candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Final_Candi'
+candi='/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_direct'
 input_dir='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw'
 # output='/Users/david/PycharmProjects/Demo1/Research/Repository/raw_X_output/X_Ratio_Zen_TrigR8_cut/SNR_cut'
 output='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/sus_wave_only'
@@ -25,7 +25,9 @@ def get_input(input):
         if i.endswith('.nur'):
             input_dir.append(os.path.join(input,i))
     return input_dir
-readARIANNAData=NuRadioRecoio.NuRadioRecoio(get_input(candi))
+# readARIANNAData=NuRadioRecoio.NuRadioRecoio(get_input(candi))
+
+num_per_h = 8
 
 goso=[242,243,247,249,256,260,263,264,266]
 
@@ -72,14 +74,25 @@ for run in input_files:
         triggered_events[run_id].append(time)
         run=evt.get_run_number()
         id=evt.get_id()
-Reader=NuRadioRecoio.NuRadioRecoio(get_input(candi))
-candi_time=[]
-strange=[]
+sus_7 = '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_direct/new_phase_algorithm'
+Reader = NuRadioRecoio.NuRadioRecoio(get_input(sus_7))
+candi_time = []
 for evt in Reader.get_events():
     stn = evt.get_station(51)
-    run = evt.get_run_number()
-    id  = evt.get_id()
-    candi_time.append(stn.get_station_time().datetime)
+    zen = stn.get_parameter(stnp.zenith)/units.deg
+    azi = stn.get_parameter(stnp.azimuth)/units.deg
+    if zen>30 and zen<40:
+        if azi>45 and azi<90:
+            candi_time.append(stn.get_station_time().datetime)
+
+# Reader=NuRadioRecoio.NuRadioRecoio(get_input(candi))
+# candi_time=[]
+# strange=[]
+# for evt in Reader.get_events():
+#     stn = evt.get_station(51)
+#     run = evt.get_run_number()
+#     id  = evt.get_id()
+#     candi_time.append(stn.get_station_time().datetime)
 hour=datetime.timedelta(hours=1)
 Time_xaxis=[]
 for run in triggered_events.keys():
@@ -139,8 +152,8 @@ ic(len(candi_time))
     # for i in plot_candi:
     #     ax.axvline(i,color='r',alpha=0.3)
 plt.subplots_adjust(bottom=0.25, left=0.15)
-# plt.show()
-plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig-rate.png')
+plt.show()
+# plt.savefig('/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate/Trig-rate01.png')
 # ic| candi_time: [datetime.datetime(2018, 7, 31, 16, 44, 49),
 #                  datetime.datetime(2018, 8, 2, 0, 41, 27),
 #                  datetime.datetime(2018, 3, 6, 12, 25, 42),

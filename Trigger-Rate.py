@@ -136,7 +136,6 @@ for evt in readARIANNAData.get_events():
     if f'R{run}E{id}' in pass_trig:
         eventWriter.run(evt)
 
-exit()
 
 raw_run_time='/Users/david/PycharmProjects/Demo1/Research/2020cr_search/data/station_51/raw_non_goso'
 Live_time=Live_time_before(datetime.datetime(2020,1,1),raw)

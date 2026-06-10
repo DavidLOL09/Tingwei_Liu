@@ -32,7 +32,8 @@ def get_events_from(candi_lst,raw_data,output_path):
 input_path=[
     '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze2/det/Trig_335_Freqs_X_SNR',
     '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze1/det/Trig_335_Freqs_X_SNR',
-    '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze/det/Trig_335_Freqs_X_SNR'
+    '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze/det/Trig_335_Freqs_X_SNR',
+    '/Users/david/PycharmProjects/Demo1/Research/Repository/Analyze4/det/Trig_335_Freqs_X_SNR'
 ]
 output_path='/Users/david/PycharmProjects/Demo1/Research/Repository/candidate_events'
 raw_input='/Users/david/PycharmProjects/Demo1/Research/Repository/Trig_rate'
